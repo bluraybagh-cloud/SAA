@@ -10,11 +10,11 @@ app.use(express.json({ limit: '50mb' }));
 
 const SECRET_KEY = "Sada@Agency_Secret_Key_2026";
 
-// الاتصال بقاعدة البيانات السحابية
+// الاتصال بقاعدة البيانات السحابية برابطك الرسمي الصحيح
 mongoose.connect('mongodb+srv://bluraybagh_db_user:Sada@2026%23Secure_Pass99!@cluster0.hrvqt9v.mongodb.net/sada_agency?appName=Cluster0')
   .then(async () => {
       console.log("تم الاتصال بقاعدة البيانات السحابية بنجاح");
-      // إنشاء حساب الآدمن الافتراضي تلقائياً عند التشغيل لضمان عدم ظهور خطأ تسجيل الدخول
+      // إنشاء حساب الآدمن الافتراضي تلقائياً عند التشغيل لضمان دخول لوحة التحكم بسلاسة
       try {
           const existingAdmin = await User.findOne({ username: "admin" });
           if (!existingAdmin) {

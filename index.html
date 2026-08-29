@@ -267,7 +267,13 @@
   .campaigns-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-top: 30px; }
   .campaign-card { background: var(--ink-surface); border: 1px solid var(--border-gold); border-radius: 8px; overflow: hidden; transition: var(--transition); }
   .campaign-card:hover { transform: translateY(-5px); border-color: var(--gold-light); }
-
+/* HERO SECTION */
+  .hero {
+    position: relative; min-height: 90vh; display: flex; align-items: center;
+    padding: 160px 0 100px; overflow: hidden;
+    background: linear-gradient(180deg, rgba(7, 11, 18, 0.75) 0%, rgba(7, 11, 18, 0.98) 100%),
+                url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+  }
   /* إطار ذهبي فاخر يحيط بصور الأخبار بحجمها الطبيعي */
   .campaign-img { 
     width: 100%; 
@@ -928,7 +934,6 @@
 </div>
   <section class="hero" id="home">
     <div class="wrap hero-inner">
-      <div class="eyebrow"><i class="fas fa-hands-helping"></i> مؤسسة إنسانية - إعلامية متكاملة</div>
       <h1>وكالة صدى العطاء<br><span>صوتٌ للحقيقة</span>، وأثرٌ للمجتمع</h1>
       <div class="hero-ctas">
         <button onclick="navigateTo('campaigns-page')" class="nav-cta"><i class="fas fa-bullhorn"></i> استعرض معرض الحملات</button>
@@ -945,17 +950,7 @@
         <b>وكالة صدى العطاء </b>
         <p>مؤسسة إنسانية - إعلامية تقدم خدمات إنتاجية وصحفية متكاملة وفق أعلى المستويات المهنية، لتعزيز الوعي وبناء الأثر المجتمعي المستدام.</p>
       </div>
-      <div class="footer-col">
-        <h5>تنقل سريع</h5>
-        <button onclick="navigateTo('main-page', '#home')">الرئيسية</button>
-        <button onclick="navigateTo('main-page', '#news-section')">الأخبار والتغطيات</button>
-        <button onclick="navigateTo('campaigns-page')">معرض الحملات</button>
-        <button onclick="navigateTo('main-page', '#about')">عن المؤسسة</button>
-        <button onclick="navigateTo('main-page', '#fields')">مجالات العمل</button>
-        <button onclick="navigateTo('main-page', '#departments')">الأقسام</button>
-        <button onclick="handleAdminEntry()">لوحة الإدارة</button>
-      </div>
-      <!-- قسم إحصائيات وأرقام الوكالة المستقل -->
+        <!-- قسم إحصائيات وأرقام الوكالة المستقل -->
 <section style="background: var(--ink-main); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); padding: 70px 0;">
   <div class="wrap">
     <div class="hero-stats" style="margin-top: 0; background: var(--ink-surface); box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
@@ -978,6 +973,7 @@
     </div>
   </div>
 </section>
+
       <div class="footer-col">
         <h5>التواصل والتغطيات</h5>
         <a href="tel:+9647827992437" dir="ltr"><i class="fas fa-phone"></i> +964 782 799 2437</a>

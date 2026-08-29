@@ -274,15 +274,18 @@
     background: linear-gradient(180deg, rgba(7, 11, 18, 0.75) 0%, rgba(7, 11, 18, 0.98) 100%),
                 url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
   }
-  /* إطار ذهبي فاخر يحيط بصور الأخبار بحجمها الطبيعي */
+ /* إطار ذهبي فاخر يحيط بصور الأخبار بحجمها الطبيعي والكامل */
   .campaign-img { 
     width: 100%; 
-    height: 230px; 
-    object-fit: cover; 
+    height: auto; 
+    max-height: 450px;
+    object-fit: contain; 
+    background-color: var(--ink-dark);
     border: 2px solid var(--gold-primary);
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
   }
+  
 
   .campaign-body { padding: 22px; }
   .campaign-title { font-size: 18.5px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; }

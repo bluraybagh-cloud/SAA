@@ -1,0 +1,49 @@
+Microsoft Windows [Version 10.0.26200.9168]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\XPRISTO>npm init -y
+Wrote to C:\Users\XPRISTO\package.json:
+
+{
+  "name": "xpristo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
+
+
+
+C:\Users\XPRISTO>npm install express mongoose cors bcrypt jsonwebtoken dotenv
+
+added 106 packages, and audited 107 packages in 22s
+
+31 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn allow-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn allow-scripts   bcrypt@6.0.0 (install: node-gyp-build)
+npm warn allow-scripts
+npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
+
+C:\Users\XPRISTO>npm install express mongoose cors bcrypt jsonwebtoken dotenv
+
+up to date, audited 107 packages in 3s
+
+31 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn allow-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn allow-scripts   bcrypt@6.0.0 (install: node-gyp-build)
+npm warn allow-scripts
+npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
+
+C:\Users\XPRISTO>

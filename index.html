@@ -378,13 +378,17 @@
 
 <!-- NAVIGATION -->
 <header>
-  <nav class="wrap">
+  <nav class="wrap" style="display: flex; align-items: center; justify-content: space-between; height: 90px;">
+    
+    <!-- الشعار -->
     <div class="brand" onclick="navigateTo('main-page', '#home')">
       <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo-img" onerror="this.src='https://via.placeholder.com/48x48/070B12/D4AF37?text=SADA'">
       <div class="brand-text">
-        <span>عنا </span>
+        <span>عنا</span>
       </div>
     </div>
+
+    <!-- روابط التنقل السريع -->
     <div class="navlinks" id="navLinks">
       <button onclick="navigateTo('main-page', '#home')">الرئيسية</button>
       <button onclick="navigateTo('main-page', '#news-section')">الأخبار والتغطيات</button>
@@ -395,9 +399,35 @@
       <button onclick="navigateTo('main-page', '#departments')">الأقسام</button>
       <button onclick="navigateTo('main-page', '#faq')">الأسئلة الشائعة</button>
       <button onclick="navigateTo('main-page', '#contact')">تواصل معنا</button>
-      <button onclick="handleAdminEntry()" style="color: var(--gold-primary);"><i class="fas fa-user-shield"></i> لوحة الإدارة</button>
     </div>
-    <a href="https://wa.me/9647827992437" target="_blank" class="nav-cta"><i class="fab fa-whatsapp"></i> تواصل معنا</a>
+
+    <!-- قسم وسائل التواصل الاجتماعي ورقم الهاتف بشكل أفقي -->
+    <div style="display: flex; align-items: center; gap: 10px;">
+      
+      <!-- زر الواتساب ورقم الهاتف -->
+      <a href="https://wa.me/9647827992437" target="_blank" title="راسلنا عبر الواتساب" style="display: flex; align-items: center; gap: 6px; background: rgba(212, 175, 55, 0.08); border: 1px solid var(--border-gold); padding: 6px 12px; border-radius: 50px; color: var(--gold-light); font-size: 13px; font-weight: 700; text-decoration: none; transition: var(--transition);">
+        <i class="fab fa-whatsapp" style="color: #25D366; font-size: 15px;"></i>
+        <span dir="ltr">0782 799 2437</span>
+      </a>
+
+      <!-- أيقونات السوشيال ميديا بشكل أفقي -->
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <a href="https://www.facebook.com/share/1GxLdw2heB/" target="_blank" title="فيسبوك 1" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-primary); background: rgba(17, 26, 46, 0.6); transition: var(--transition);">
+          <i class="fab fa-facebook-f" style="font-size: 12px;"></i>
+        </a>
+        <a href="https://www.facebook.com/share/1EDiLqoa3E/" target="_blank" title="فيسبوك 2" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-primary); background: rgba(17, 26, 46, 0.6); transition: var(--transition);">
+          <i class="fab fa-facebook-f" style="font-size: 12px;"></i>
+        </a>
+        <a href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4" target="_blank" title="انستغرام 1" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-primary); background: rgba(17, 26, 46, 0.6); transition: var(--transition);">
+          <i class="fab fa-instagram" style="font-size: 12px;"></i>
+        </a>
+        <a href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1" target="_blank" title="انستغرام 2" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-primary); background: rgba(17, 26, 46, 0.6); transition: var(--transition);">
+          <i class="fab fa-instagram" style="font-size: 12px;"></i>
+        </a>
+      </div>
+
+    </div>
+
     <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
   </nav>
 </header>

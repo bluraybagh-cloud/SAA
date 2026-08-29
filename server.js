@@ -10,8 +10,8 @@ app.use(express.json({ limit: '50mb' }));
 
 const SECRET_KEY = "Sada@Agency_Secret_Key_2026";
 
-// الاتصال بقاعدة البيانات السحابية
-mongoose.connect('mongodb+srv://bluraybagh_db_user:Sada@2026#Secure_Pass99!@cluster0.hrvqt9v.mongodb.net/sada_agency?appName=Cluster0')
+// الاتصال بقاعدة البيانات السحابية مع ترميز الرموز الخاصة في كلمة المرور
+mongoose.connect('mongodb+srv://bluraybagh_db_user:Sada@2026%23Secure_Pass99!@cluster0.hrvqt9v.mongodb.net/sada_agency?appName=Cluster0')
   .then(() => console.log("تم الاتصال بقاعدة البيانات السحابية بنجاح"))
   .catch(err => console.log("خطأ في الاتصال بقاعدة البيانات:", err));
 

@@ -510,7 +510,15 @@ window.addEventListener('click', function(e) {
       <p class="section-desc" style="margin: 0 auto; font-size: 18px;">متابعة مستمرة وتغطيات حية توثق كافة الأنشطة والمبادرات الرسمية والمجتمعية أولاً بأول بجودة وإحترافية عالية.</p>
     </div>
     
+    <!-- حاوية عرض الأخبار -->
     <div class="campaigns-grid" id="liveNewsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px;"></div>
+
+    <!-- أزرار التنقل بين الصفحات (السابقة / الحالية) -->
+    <div id="newsPagination" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 50px;">
+      <button id="prevPageBtn" onclick="changePage(-1)" class="pagination-btn" disabled>الصفحة السابقة</button>
+      <span id="pageIndicator" style="color: var(--gold-light); font-weight: bold; font-size: 16px;">الصفحة 1</span>
+      <button id="nextPageBtn" onclick="changePage(1)" class="pagination-btn">الصفحة التالية</button>
+    </div>
   </div>
 </section>
 
@@ -527,6 +535,11 @@ window.addEventListener('click', function(e) {
     border: 1px solid var(--border-gold) !important;
     box-shadow: 0 15px 35px rgba(0,0,0,0.5);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    border-radius: 12px;
   }
   
   #news-section .campaign-card:hover {
@@ -534,7 +547,149 @@ window.addEventListener('click', function(e) {
     border-color: var(--gold-light) !important;
     box-shadow: 0 20px 45px rgba(212, 175, 55, 0.25);
   }
+
+  .news-text-content {
+    color: #cbd5e1;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+
+  .read-more-btn {
+    background: transparent;
+    border: 1px solid var(--border-gold);
+    color: var(--gold-light);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    transition: 0.3s;
+    align-self: flex-start;
+  }
+
+  .read-more-btn:hover {
+    background: var(--gold-primary);
+    color: #000;
+  }
+
+  .pagination-btn {
+    background: rgba(17, 26, 46, 0.9);
+    border: 1px solid var(--border-gold);
+    color: var(--gold-light);
+    padding: 8px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  .pagination-btn:hover:not(:disabled) {
+    background: var(--gold-primary);
+    color: #000;
+  }
+
+  .pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 </style>
+
+<script>
+// إعدادات التصفح والصفحات
+let currentPage = 1;
+const itemsPerPage = 6; // عدد الأخبار في كل صفحة
+
+// دمج وتجربة عرض الأخبار (يمكنك ربطها بمصفوفة الأخبار الخاصة بك مثل allPosts)
+function renderNewsSection() {
+    // فرضا مصفوفة الأخبار مخزنة في الـ localStorage أو متغير عام باسم allPosts
+    // سنقوم بترتيبها من الأحدث إلى الأقدم تلقائياً بناءً على التاريخ
+    let posts = JSON.parse(localStorage.getItem('sitePosts') || '[]');
+    
+    // إذا لم تكن هناك بيانات مخزنة، يمكنك وضع بيانات تجريبية للتوضيح
+    if(posts.length === 0) {
+        posts = [
+            { id: 1, title: "خبر تجريبي أول", category: "تغطية إنسانية", date: "2026-08-25T10:00:00Z", content: "هذه تفاصيل الخبر التجريبي الأول وهو يحتوي على نص طويل جداً لتجربة خاصية الاختصار وعرض المزيد عند النقر عليها لكي يظهر للمستخدم بشكل مرتب واحترافي." },
+            { id: 2, title: "خبر تجريبي ثاني حديث", category: "ورشة عمل", date: "2026-08-30T12:00:00Z", content: "هذه تفاصيل الخبر التجريبي الثاني الأحدث تاريخياً، تم وضع هذا النص لاختبار عملية الفرز التلقائي من الأحدث إلى الأقدم والتأكد من عمل الأزرار بسلاسة." }
+        ];
+    }
+
+    // الفرز من الأحدث إلى الأقدم (Newest First)
+    posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    const grid = document.getElementById('liveNewsGrid');
+    grid.innerHTML = '';
+
+    // حساب الصفحات
+    const totalPages = Math.ceil(posts.length / itemsPerPage) || 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const start = (currentPage - 1) * itemsPerPage;
+    const paginatedPosts = posts.slice(start, start + itemsPerPage);
+
+    if (paginatedPosts.length === 0) {
+        grid.innerHTML = '<p style="color: #fff; text-align: center; grid-column: 1/-1;">لا توجد أخبار منشورة حالياً.</p>';
+        return;
+    }
+
+    // توليد كاردات الأخبار
+    paginatedPosts.forEach((post, index) => {
+        const globalIndex = start + index;
+        const shortText = post.content.length > 120 ? post.content.substring(0, 120) + '...' : post.content;
+        
+        const card = document.createElement('div');
+        card.className = 'campaign-card';
+        card.innerHTML = `
+            <div>
+                <span style="font-size: 11px; color: var(--gold-light); background: rgba(212,175,55,0.1); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px;">${post.category}</span>
+                <h3 style="color: #fff; font-size: 18px; margin-bottom: 10px;">${post.title}</h3>
+                <div class="news-text-content" id="news-text-${globalIndex}">
+                    ${shortText}
+                </div>
+            </div>
+            <div>
+                <span style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 10px;">${new Date(post.date).toLocaleDateString('ar-IQ')}</span>
+                ${post.content.length > 120 ? `<button class="read-more-btn" onclick="toggleNewsContent(${globalIndex}, \`${encodeURIComponent(post.content)}\`, \`${encodeURIComponent(shortText)}\`)">قراءة المزيد</button>` : ''}
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+
+    // تحديث أزرار التنقل بالأسفل
+    document.getElementById('pageIndicator').innerText = `الصفحة ${currentPage} من ${totalPages}`;
+    document.getElementById('prevPageBtn').disabled = currentPage === 1;
+    document.getElementById('nextPageBtn').disabled = currentPage === totalPages || totalPages === 0;
+}
+
+// دالة تبديل النص (عرض المزيد / إخفاء)
+function toggleNewsContent(index, fullContentEnc, shortContentEnc) {
+    const textDiv = document.getElementById(`news-text-${index}`);
+    const btn = textDiv.nextElementSibling.querySelector('.read-more-btn');
+    
+    const fullContent = decodeURIComponent(fullContentEnc);
+    const shortContent = decodeURIComponent(shortContentEnc);
+
+    if (btn.innerText === 'قراءة المزيد') {
+        textDiv.innerText = fullContent;
+        btn.innerText = 'عرض أقل';
+    } else {
+        textDiv.innerText = shortContent;
+        btn.innerText = 'قراءة المزيد';
+    }
+}
+
+// دالة تغيير الصفحة عبر أزرار السابقة واللاحقة
+function changePage(direction) {
+    currentPage += direction;
+    renderNewsSection();
+    // العودة بسلاسة لأعلى قسم الأخبار عند تغيير الصفحة
+    document.getElementById('news-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+// تشغيل الدالة عند تحميل الصفحة
+window.addEventListener('DOMContentLoaded', renderNewsSection);
+</script>
 
   <!-- ABOUT DETAILED SECTION -->
   <section id="about" class="section-alt">

@@ -953,7 +953,7 @@
       </div>
     </div>
 
-    <!-- نموذج إضافة وتعديل الأخبار -->
+ <!-- نموذج إضافة وتعديل الأخبار -->
     <div class="dash-panel">
       <h3 id="panelFormTitle">إضافة ونشر خبر جديد</h3>
       <form id="postForm" onsubmit="event.preventDefault(); savePostAction();">
@@ -965,6 +965,10 @@
         <div class="form-group">
           <label>القسم أو التصنيف</label>
           <input type="text" id="newsCategory" class="form-control" placeholder="تغطية إنسانية، ورشة عمل، مؤتمر صحفي" required>
+        </div>
+        <div class="form-group">
+          <label>تاريخ ووقت النشر (اختياري، اتركه فارغاً للنشر الحالي)</label>
+          <input type="datetime-local" id="newsCustomDate" class="form-control">
         </div>
         <div class="form-group">
           <label>اختر صور الخبر من جهازك (يمكنك اختيار صورة واحدة أو تحديد أكثر من 10 صور معاً)</label>
@@ -981,7 +985,6 @@
       </form>
     </div>
 
-    <!-- جدول إدارة الأخبار المنشورة -->
     <div class="dash-panel">
       <h3>إدارة وتعديل الأخبار المنشورة</h3>
       <div class="table-responsive">
@@ -1001,7 +1004,6 @@
     </div>
   </div>
 </div>
- 
               <!-- قسم إحصائيات وأرقام الوكالة المستقل -->
 <section style="background: var(--ink-main); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); padding: 70px 0;">
   <div class="wrap">

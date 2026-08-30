@@ -402,34 +402,34 @@
     </div>
 
     <!-- قسم وسائل التواصل الاجتماعي ورقم الهاتف بشكل أفقي -->
+<!-- قسم وسائل التواصل الاجتماعي -->
 <div style="display: flex; align-items: center; gap: 10px;">
       
-  <!-- زر الواتساب ورقم الهاتف -->
-  <a href="https://wa.me/9647827992437" target="_blank" title="راسلنا عبر الواتساب" style="display: flex; align-items: center; gap: 6px; background: rgba(212, 175, 55, 0.08); border: 1px solid var(--border-gold); padding: 6px 12px; border-radius: 50px; color: var(--gold-light); font-size: 13px; font-weight: 700; text-decoration: none; transition: var(--transition);">
+  <!-- زر الواتساب (أيقونة فقط بدون رقم) -->
+  <a href="https://wa.me/9647827992437" target="_blank" title="راسلنا عبر الواتساب" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.08); text-decoration: none; transition: var(--transition);">
     <i class="fab fa-whatsapp" style="color: #25D366; font-size: 15px;"></i>
-    <span dir="ltr">0782 799 2437</span>
   </a>
 
   <!-- حاوية القوائم المنسدلة والسوشيال ميديا -->
   <div style="display: flex; align-items: center; gap: 6px; position: relative;">
     
-    <!-- قائمة فيسبوك المنسدلة -->
+    <!-- قائمة فيسبوك المنسدلة (تنزل لأسفل) -->
     <div class="social-dropdown-wrapper" style="position: relative; display: inline-block;">
       <button onclick="toggleCustomDropdown('fbDropdownMenu')" title="فيسبوك" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-primary); background: rgba(17, 26, 46, 0.6); cursor: pointer; transition: var(--transition);">
         <i class="fab fa-facebook-f" style="font-size: 12px;"></i>
       </button>
-      <div id="fbDropdownMenu" class="custom-dropdown-content" style="display: none; position: absolute; bottom: 125%; right: 0; background: #111a2e; border: 1px solid var(--border-gold); border-radius: 8px; min-width: 110px; box-shadow: 0px 5px 15px rgba(0,0,0,0.3); z-index: 100; overflow: hidden; text-align: right;">
+      <div id="fbDropdownMenu" class="custom-dropdown-content" style="display: none; position: absolute; top: 125%; right: 0; background: #111a2e; border: 1px solid var(--border-gold); border-radius: 8px; min-width: 110px; box-shadow: 0px 5px 15px rgba(0,0,0,0.3); z-index: 100; overflow: hidden; text-align: right;">
         <a href="https://www.facebook.com/share/1GxLdw2heB/" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); transition: 0.2s;">الوكالة</a>
         <a href="https://www.facebook.com/share/1EDiLqoa3E/" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; transition: 0.2s;">المؤسسة</a>
       </div>
     </div>
 
-    <!-- قائمة انستغرام المنسدلة -->
+    <!-- قائمة انستغرام المنسدلة (تنزل لأسفل) -->
     <div class="social-dropdown-wrapper" style="position: relative; display: inline-block;">
       <button onclick="toggleCustomDropdown('igDropdownMenu')" title="انستغرام" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-primary); background: rgba(17, 26, 46, 0.6); cursor: pointer; transition: var(--transition);">
         <i class="fab fa-instagram" style="font-size: 12px;"></i>
       </button>
-      <div id="igDropdownMenu" class="custom-dropdown-content" style="display: none; position: absolute; bottom: 125%; right: 0; background: #111a2e; border: 1px solid var(--border-gold); border-radius: 8px; min-width: 110px; box-shadow: 0px 5px 15px rgba(0,0,0,0.3); z-index: 100; overflow: hidden; text-align: right;">
+      <div id="igDropdownMenu" class="custom-dropdown-content" style="display: none; position: absolute; top: 125%; right: 0; background: #111a2e; border: 1px solid var(--border-gold); border-radius: 8px; min-width: 110px; box-shadow: 0px 5px 15px rgba(0,0,0,0.3); z-index: 100; overflow: hidden; text-align: right;">
         <a href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); transition: 0.2s;">الوكالة</a>
         <a href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; transition: 0.2s;">المؤسسة</a>
       </div>
@@ -438,10 +438,9 @@
   </div>
 </div>
 
-<!-- كود الجافاسكريبت الخاص بفتح وإغلاق القوائم عند النقر -->
+<!-- كود الجافاسكريبت الخاص بفتح وإغلاق القوائم -->
 <script>
 function toggleCustomDropdown(menuId) {
-    // إغلاق جميع القوائم الأخرى المفتوحة
     const allMenus = document.querySelectorAll('.custom-dropdown-content');
     allMenus.forEach(menu => {
         if (menu.id !== menuId) {
@@ -449,7 +448,6 @@ function toggleCustomDropdown(menuId) {
         }
     });
 
-    // تبديل حالة القائمة الحالية (فتح/إغلاق)
     const currentMenu = document.getElementById(menuId);
     if (currentMenu.style.display === 'block') {
         currentMenu.style.display = 'none';
@@ -458,7 +456,6 @@ function toggleCustomDropdown(menuId) {
     }
 }
 
-// إغلاق القوائم عند النقر في أي مكان فارغ بالصفحة
 window.addEventListener('click', function(e) {
     if (!e.target.closest('.social-dropdown-wrapper')) {
         document.querySelectorAll('.custom-dropdown-content').forEach(menu => {
@@ -467,6 +464,13 @@ window.addEventListener('click', function(e) {
     }
 });
 </script>
+
+<style>
+.custom-dropdown-content a:hover {
+    background: rgba(212, 175, 55, 0.15);
+    color: #fff !important;
+}
+</style>
 
 <style>
 /* تأثير إضافي لتغيير لون الخلفية عند تمرير الفأرة على خيارات القائمة المنسدلة */

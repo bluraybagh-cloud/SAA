@@ -504,21 +504,42 @@ window.addEventListener('click', function(e) {
 <section id="news-section" style="position: relative; padding: 140px 0 110px; overflow: hidden; background: linear-gradient(180deg, rgba(7, 11, 18, 0.85) 0%, rgba(11, 18, 32, 0.96) 100%), url('https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;">
   <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.15), transparent 60%); pointer-events: none;"></div>
   <div class="wrap" style="position: relative; z-index: 2;">
-    <div style="text-align: center; max-width: 800px; margin: 0 auto 60px;">
-      <div class="kicker" style="justify-content: center;"><i class="fas fa-satellite-dish" style="animation: pulse 2s infinite;"></i> التغطيات الإخبارية الحية</div>
-      <h2 class="section-title" style="font-size: clamp(32px, 5vw, 50px);">أحدث <b>الأخبار والتقارير الميدانية</b></h2>
-      <p class="section-desc" style="margin: 0 auto; font-size: 18px;">متابعة مستمرة وتغطيات حية توثق كافة الأنشطة والمبادرات الرسمية والمجتمعية أولاً بأول بجودة وإحترافية عالية.</p>
-    </div>
     
-    <!-- حاوية عرض الأخبار -->
-    <div class="campaigns-grid" id="liveNewsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px;"></div>
+    <!-- قسم قائمة الأخبار الرئيسية -->
+    <div id="mainNewsListView">
+      <div style="text-align: center; max-width: 800px; margin: 0 auto 60px;">
+        <div class="kicker" style="justify-content: center;"><i class="fas fa-satellite-dish" style="animation: pulse 2s infinite;"></i> التغطيات الإخبارية الحية</div>
+        <h2 class="section-title" style="font-size: clamp(32px, 5vw, 50px);">أحدث <b>الأخبار والتقارير الميدانية</b></h2>
+        <p class="section-desc" style="margin: 0 auto; font-size: 18px;">متابعة مستمرة وتغطيات حية توثق كافة الأنشطة والمبادرات الرسمية والمجتمعية أولاً بأول بجودة وإحترافية عالية.</p>
+      </div>
+      
+      <!-- شبكة الأخبار -->
+      <div class="campaigns-grid" id="liveNewsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px;"></div>
 
-    <!-- أزرار التنقل بين الصفحات (السابقة / الحالية) -->
-    <div id="newsPagination" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 50px;">
-      <button id="prevPageBtn" onclick="changePage(-1)" class="pagination-btn" disabled>الصفحة السابقة</button>
-      <span id="pageIndicator" style="color: var(--gold-light); font-weight: bold; font-size: 16px;">الصفحة 1</span>
-      <button id="nextPageBtn" onclick="changePage(1)" class="pagination-btn">الصفحة التالية</button>
+      <!-- أزرار التنقل بين الصفحات -->
+      <div id="newsPagination" style="display: none; justify-content: center; align-items: center; gap: 15px; margin-top: 50px;">
+        <button id="prevPageBtn" onclick="changePage(-1)" class="pagination-btn" disabled>الصفحة السابقة</button>
+        <span id="pageIndicator" style="color: var(--gold-light); font-weight: bold; font-size: 16px;">الصفحة 1</span>
+        <button id="nextPageBtn" onclick="changePage(1)" class="pagination-btn">الصفحة التالية</button>
+      </div>
     </div>
+
+    <!-- قسم تفاصيل الخبر المفرد (يفتح عند النقر) -->
+    <div id="singleNewsDetailView" style="display: none; max-width: 900px; margin: 0 auto;">
+      <button onclick="backToNewsList()" class="pagination-btn" style="margin-bottom: 25px;"><i class="fas fa-arrow-right"></i> العودة إلى قائمة الأخبار</button>
+      <div id="singleNewsContentBox" style="background: rgba(17, 26, 46, 0.9); border: 1px solid var(--border-gold); padding: 40px; border-radius: 16px; backdrop-filter: blur(12px);">
+        <!-- المحتوى الكامل للخبر -->
+      </div>
+
+      <!-- قسم قد يروقك (عناوين مختصرة للأخبار الأخرى بالأسفل) -->
+      <div style="margin-top: 60px;">
+        <h3 style="color: var(--gold-light); font-size: 24px; margin-bottom: 25px; border-bottom: 1px solid var(--border-gold); padding-bottom: 10px;">قد يهمك أيضاً</h3>
+        <div id="relatedNewsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;">
+          <!-- المقترحات -->
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -538,7 +559,7 @@ window.addEventListener('click', function(e) {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 20px;
+    padding: 22px;
     border-radius: 12px;
   }
   
@@ -551,15 +572,15 @@ window.addEventListener('click', function(e) {
   .news-text-content {
     color: #cbd5e1;
     font-size: 14px;
-    line-height: 1.6;
-    margin-bottom: 15px;
+    line-height: 1.7;
+    margin-bottom: 20px;
   }
 
   .read-more-btn {
     background: transparent;
     border: 1px solid var(--border-gold);
     color: var(--gold-light);
-    padding: 6px 14px;
+    padding: 8px 18px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 13px;
@@ -596,98 +617,137 @@ window.addEventListener('click', function(e) {
 </style>
 
 <script>
-// إعدادات التصفح والصفحات
 let currentPage = 1;
-const itemsPerPage = 6; // عدد الأخبار في كل صفحة
+const itemsPerPage = 6;
 
-// دمج وتجربة عرض الأخبار (يمكنك ربطها بمصفوفة الأخبار الخاصة بك مثل allPosts)
-function renderNewsSection() {
-    // فرضا مصفوفة الأخبار مخزنة في الـ localStorage أو متغير عام باسم allPosts
-    // سنقوم بترتيبها من الأحدث إلى الأقدم تلقائياً بناءً على التاريخ
+// جلب الأخبار المنشورة حصرياً من التخزين (بدون أي بيانات وهمية)
+function getActualPosts() {
     let posts = JSON.parse(localStorage.getItem('sitePosts') || '[]');
     
-    // إذا لم تكن هناك بيانات مخزنة، يمكنك وضع بيانات تجريبية للتوضيح
-    if(posts.length === 0) {
-        posts = [
-            { id: 1, title: "خبر تجريبي أول", category: "تغطية إنسانية", date: "2026-08-25T10:00:00Z", content: "هذه تفاصيل الخبر التجريبي الأول وهو يحتوي على نص طويل جداً لتجربة خاصية الاختصار وعرض المزيد عند النقر عليها لكي يظهر للمستخدم بشكل مرتب واحترافي." },
-            { id: 2, title: "خبر تجريبي ثاني حديث", category: "ورشة عمل", date: "2026-08-30T12:00:00Z", content: "هذه تفاصيل الخبر التجريبي الثاني الأحدث تاريخياً، تم وضع هذا النص لاختبار عملية الفرز التلقائي من الأحدث إلى الأقدم والتأكد من عمل الأزرار بسلاسة." }
-        ];
-    }
+    // إذا كنت تخزن الأخبار في مصفوفة عامة أخرى باسم مختلف في مشروعك، يمكنك دمجها هنا هكذا:
+    // if(typeof allPosts !== 'undefined' && posts.length === 0) posts = allPosts;
 
-    // الفرز من الأحدث إلى الأقدم (Newest First)
+    // فرز الأخبار تلقائياً من الأحدث إلى الأقدم بناءً على تاريخ النشر
     posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    return posts;
+}
 
+function renderNewsSection() {
+    const posts = getActualPosts();
     const grid = document.getElementById('liveNewsGrid');
+    const paginationDiv = document.getElementById('newsPagination');
     grid.innerHTML = '';
 
-    // حساب الصفحات
-    const totalPages = Math.ceil(posts.length / itemsPerPage) || 1;
+    if (posts.length === 0) {
+        grid.innerHTML = '<p style="color: #cbd5e1; text-align: center; grid-column: 1/-1; font-size: 16px; padding: 30px;">لا توجد أخبار منشورة حالياً في الصفحة.</p>';
+        paginationDiv.style.display = 'none';
+        return;
+    }
+
+    const totalPages = Math.ceil(posts.length / itemsPerPage);
+    if (totalPages > 1) {
+        paginationDiv.style.display = 'flex';
+    } else {
+        paginationDiv.style.display = 'none';
+    }
+
     if (currentPage > totalPages) currentPage = totalPages;
     if (currentPage < 1) currentPage = 1;
 
     const start = (currentPage - 1) * itemsPerPage;
     const paginatedPosts = posts.slice(start, start + itemsPerPage);
 
-    if (paginatedPosts.length === 0) {
-        grid.innerHTML = '<p style="color: #fff; text-align: center; grid-column: 1/-1;">لا توجد أخبار منشورة حالياً.</p>';
-        return;
-    }
-
-    // توليد كاردات الأخبار
-    paginatedPosts.forEach((post, index) => {
-        const globalIndex = start + index;
-        const shortText = post.content.length > 120 ? post.content.substring(0, 120) + '...' : post.content;
+    paginatedPosts.forEach((post) => {
+        // اقتصاص النص لعرضه بشكل مختصر
+        const contentText = post.content || '';
+        const shortText = contentText.length > 130 ? contentText.substring(0, 130) + '...' : contentText;
+        const postDate = post.date ? new Date(post.date).toLocaleDateString('ar-IQ') : '';
         
         const card = document.createElement('div');
         card.className = 'campaign-card';
         card.innerHTML = `
             <div>
-                <span style="font-size: 11px; color: var(--gold-light); background: rgba(212,175,55,0.1); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px;">${post.category}</span>
+                <span style="font-size: 11px; color: var(--gold-light); background: rgba(212,175,55,0.1); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px;">${post.category || 'عام'}</span>
                 <h3 style="color: #fff; font-size: 18px; margin-bottom: 10px;">${post.title}</h3>
-                <div class="news-text-content" id="news-text-${globalIndex}">
+                <div class="news-text-content">
                     ${shortText}
                 </div>
             </div>
             <div>
-                <span style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 10px;">${new Date(post.date).toLocaleDateString('ar-IQ')}</span>
-                ${post.content.length > 120 ? `<button class="read-more-btn" onclick="toggleNewsContent(${globalIndex}, \`${encodeURIComponent(post.content)}\`, \`${encodeURIComponent(shortText)}\`)">قراءة المزيد</button>` : ''}
+                <span style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 12px;">${postDate}</span>
+                <button class="read-more-btn" onclick="openSingleNews('${post.id}')">قراءة المزيد</button>
             </div>
         `;
         grid.appendChild(card);
     });
 
-    // تحديث أزرار التنقل بالأسفل
     document.getElementById('pageIndicator').innerText = `الصفحة ${currentPage} من ${totalPages}`;
     document.getElementById('prevPageBtn').disabled = currentPage === 1;
-    document.getElementById('nextPageBtn').disabled = currentPage === totalPages || totalPages === 0;
+    document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
 }
 
-// دالة تبديل النص (عرض المزيد / إخفاء)
-function toggleNewsContent(index, fullContentEnc, shortContentEnc) {
-    const textDiv = document.getElementById(`news-text-${index}`);
-    const btn = textDiv.nextElementSibling.querySelector('.read-more-btn');
+// عرض تفاصيل الخبر عند النقر عليه
+function openSingleNews(postId) {
+    const posts = getActualPosts();
+    const post = posts.find(p => p.id == postId || p.id === Number(postId));
     
-    const fullContent = decodeURIComponent(fullContentEnc);
-    const shortContent = decodeURIComponent(shortContentEnc);
+    if(!post) return;
 
-    if (btn.innerText === 'قراءة المزيد') {
-        textDiv.innerText = fullContent;
-        btn.innerText = 'عرض أقل';
+    document.getElementById('mainNewsListView').style.display = 'none';
+    document.getElementById('singleNewsDetailView').style.display = 'block';
+
+    const detailBox = document.getElementById('singleNewsContentBox');
+    const postDate = post.date ? new Date(post.date).toLocaleDateString('ar-IQ') : '';
+
+    detailBox.innerHTML = `
+        <span style="font-size: 12px; color: var(--gold-light); background: rgba(212,175,55,0.15); padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 12px;">${post.category || 'عام'}</span>
+        <h2 style="color: #fff; font-size: 28px; margin-bottom: 15px;">${post.title}</h2>
+        <span style="font-size: 13px; color: #94a3b8; display: block; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">تاريخ النشر: ${postDate}</span>
+        <div style="color: #e2e8f0; font-size: 16px; line-height: 1.9; white-space: pre-line;">
+            ${post.content || ''}
+        </div>
+    `;
+
+    // تعبئة قسم "قد يروقك" بالأسفل (أخبار أخرى مختصرة)
+    const relatedGrid = document.getElementById('relatedNewsGrid');
+    relatedGrid.innerHTML = '';
+    
+    const otherPosts = posts.filter(p => p.id != postId && p.id !== Number(postId)).slice(0, 3);
+    
+    if(otherPosts.length === 0) {
+        relatedGrid.innerHTML = '<p style="color: #94a3b8; font-size: 14px;">لا توجد أخبار أخرى حالياً.</p>';
     } else {
-        textDiv.innerText = shortContent;
-        btn.innerText = 'قراءة المزيد';
+        otherPosts.forEach(item => {
+            const relCard = document.createElement('div');
+            relCard.className = 'campaign-card';
+            relCard.style.padding = '15px';
+            relCard.innerHTML = `
+                <div>
+                    <span style="font-size: 10px; color: var(--gold-light);">${item.category || 'عام'}</span>
+                    <h4 style="color: #fff; font-size: 15px; margin: 6px 0 10px;">${item.title}</h4>
+                </div>
+                <button class="read-more-btn" style="padding: 4px 10px; font-size: 12px;" onclick="openSingleNews('${item.id}')">عرض الخبر</button>
+            `;
+            relatedGrid.appendChild(relCard);
+        });
     }
-}
 
-// دالة تغيير الصفحة عبر أزرار السابقة واللاحقة
-function changePage(direction) {
-    currentPage += direction;
-    renderNewsSection();
-    // العودة بسلاسة لأعلى قسم الأخبار عند تغيير الصفحة
     document.getElementById('news-section').scrollIntoView({ behavior: 'smooth' });
 }
 
-// تشغيل الدالة عند تحميل الصفحة
+// العودة للقائمة الرئيسية
+function backToNewsList() {
+    document.getElementById('singleNewsDetailView').style.display = 'none';
+    document.getElementById('mainNewsListView').style.display = 'block';
+    document.getElementById('news-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function changePage(direction) {
+    currentPage += direction;
+    renderNewsSection();
+    document.getElementById('news-section').scrollIntoView({ behavior: 'smooth' });
+}
+
 window.addEventListener('DOMContentLoaded', renderNewsSection);
 </script>
 

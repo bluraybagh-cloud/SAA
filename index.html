@@ -373,6 +373,30 @@
     .network-grid { grid-template-columns: 1fr; }
     .footer-grid { grid-template-columns: 1fr; gap: 36px; }
   }
+  /* الألوان الافتراضية (الوضع الداكن الحالي) */
+:root {
+  --bg-color: #070B12;
+  --text-color: #F4F6F8;
+  --surface-color: #111A2E;
+  --surface-light: #18243D;
+  --dim-color: #A3B1C2;
+}
+
+/* الألوان الخاصة بالوضع المضيء (Light Mode) */
+[data-theme="light"] {
+  --bg-color: #F8F9FA;
+  --text-color: #111A2E;
+  --surface-color: #FFFFFF;
+  --surface-light: #E9ECEF;
+  --dim-color: #495057;
+}
+
+/* تطبيق المتغيرات على الجسم (Body) لتتغير تلقائياً */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 </style>
 </head>
 <body>
@@ -429,6 +453,10 @@
 
     <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
   </nav>
+  <!-- زر تبديل المود -->
+<button onclick="toggleTheme()" id="themeToggleBtn" style="background: none; border: 1px solid var(--border-gold); color: var(--gold-primary); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s;" title="تغيير المظهر">
+  <i class="fas fa-moon" id="themeIcon"></i>
+</button>
 </header>
 
 <!-- HERO SECTION -->
@@ -1443,6 +1471,46 @@ window.addEventListener('click', function(e) {
 });
 
 renderLiveNews();
+// ... دوال الموقع الموجودة لديك مسبقاً (مثل navigateTo و renderLiveNews وغيرها) ...
+
+// قم بلصق كود تبديل المود هنا في الأسفل مع باقي الدّوال:
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const themeIcon = document.getElementById('themeIcon');
+    
+    if (currentTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('sada_theme', 'dark');
+        if(themeIcon) {
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('sada_theme', 'light');
+        if(themeIcon) {
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('sada_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    const themeIcon = document.getElementById('themeIcon');
+    if(themeIcon) {
+        if (savedTheme === 'light') {
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        } else {
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+    }
+});
 </script>
 </body>
 </html>

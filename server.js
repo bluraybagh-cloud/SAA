@@ -15,15 +15,29 @@ mongoose.connect('mongodb+srv://sada_admin:Sada%402026%23Secure_Pass99!@cluster0
   .then(async () => {
       console.log("تم الاتصال بقاعدة البيانات السحابية بنجاح");
       try {
-          // تحديث أو إنشاء حساب المسؤول مباشرة لضمان مطابقة كلمة المرور
+          // 1. تحديث أو إنشاء حساب المسؤول
           await User.findOneAndUpdate(
               { username: "sada_admin" },
               { username: "sada_admin", password: "Sada@2026#Secure_Pass99!", role: "ADMIN" },
               { upsert: true, new: true }
           );
-          console.log("تم تثبيت وتحديث حساب المشرف بنجاح (sada_admin)");
+
+          // 2. إنشاء وتثبيت جدول الزيارات فوراً في قاعدة البيانات
+          const existingStat = await Stat.findOne({ key: 'global_visits' });
+          if (!existingStat) {
+              await new Stat({ key: 'global_visits', visits: 0 }).save();
+              console.log("تم إنشاء سجل الزيارات الأولي في قاعدة البيانات");
+          }
+
+          // 3. إضافة حقل المشاهدات (views: 0) لجميع الأخبار الموجودة تلقائياً
+          await Post.updateMany(
+              { views: { $exists: false } },
+              { $set: { views: 0, status: 'published', isPinned: false } }
+          );
+          console.log("تم تحديث وتهيئة المشاهدات لجميع الأخبار في قاعدة البيانات");
+
       } catch (e) {
-          console.log("خطأ في تحديث الآدمن التلقائي:", e);
+          console.log("خطأ في التهيئة التلقائية:", e);
       }
   })
   .catch(err => console.log("خطأ في الاتصال بقاعدة البيانات:", err));
@@ -69,20 +83,18 @@ const verifyToken = (req, res, next) => {
 };
 
 // ==========================================
-// مسار تسجيل الدخول المباشر المضمون
+// مسارات تسجيل الدخول
 // ==========================================
 app.post('/api/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         const normalizedUsername = (username || '').trim().toLowerCase();
 
-        // 1. تحقق مباشر لحساب المشرف الرئيسي
         if (normalizedUsername === 'sada_admin' && password === 'Sada@2026#Secure_Pass99!') {
             const token = jwt.sign({ id: 'sada_admin_master', role: 'ADMIN' }, SECRET_KEY, { expiresIn: '7d' });
             return res.json({ token, username: 'sada_admin' });
         }
 
-        // 2. فحص قاعدة البيانات للمستخدمين الآخرين
         const user = await User.findOne({ username: normalizedUsername });
         if (!user || password !== user.password) {
             return res.status(400).json({ error: "الاسم أو كلمة المرور غير صحيحة" });

@@ -4,14 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>وكالة صدى العطاء - صوتٌ يصنع الأثر... و خبرٌ له صدى</title>
-  <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-QJX7Y8D8X2');
-</script>
 
-<!-- بطاقات الميتا الاجتماعية Open Graph & Twitter Cards -->
+<!-- بطاقات الميتا الاجتماعية -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="وكالة صدى العطاء">
 <meta property="og:title" content="وكالة صدى العطاء - صوتٌ يصنع الأثر... و خبرٌ له صدى" id="ogTitle">
@@ -28,7 +22,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-  /* تعريف الثيمات الثلاثة (داكن، مضيء، نيون) */
   :root {
     --gold-primary: #D4AF37;
     --gold-light: #F3E5AB;
@@ -40,7 +33,7 @@
     --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     --max-w: 1280px;
 
-    /* الثيم الداكن (الافتراضي) */
+    /* الثيم الداكن */
     --bg-color: #070B12;
     --main-bg: #0B1220;
     --text-color: #F4F6F8;
@@ -51,7 +44,6 @@
     --border-subtle: rgba(255, 255, 255, 0.06);
   }
 
-  /* الثيم المضيء (Light) */
   [data-theme="light"] {
     --bg-color: #F4F6F8;
     --main-bg: #FFFFFF;
@@ -63,7 +55,6 @@
     --border-subtle: rgba(0, 0, 0, 0.08);
   }
 
-  /* الثيم الليلي النيون (Neon) */
   [data-theme="neon"] {
     --bg-color: #030712;
     --main-bg: #0b0f19;
@@ -116,7 +107,7 @@
     height: 85px;
   }
 
-  .brand { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+  .brand { display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; }
   .brand-logo-img {
     height: 48px; width: auto; border-radius: 4px;
     border: 1px solid var(--gold-primary);
@@ -143,7 +134,7 @@
   .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35); }
   .menu-toggle { display: none; color: var(--gold-primary); font-size: 24px; cursor: pointer; }
 
-  /* شريط الأخبار العاجلة السلس المتواصل */
+  /* شريط الأخبار العاجلة */
   .ticker-container {
     position: fixed;
     top: 85px;
@@ -548,7 +539,6 @@
   .btn-export { background: #1f7a43; color: #ffffff; border: 1px solid #2ecc71; }
   .btn-export:hover { background: #27ae60; }
 
-  /* شريط مجموع المشاهدات أسفل الجدول */
   .views-summary-bar {
     margin-top: 22px;
     padding: 16px 24px;
@@ -575,7 +565,7 @@
     color: var(--gold-primary);
   }
 
-  /* نظام الإشعارات المنبثقة العصري Toast */
+  /* نظام الإشعارات Toast */
   #toastContainer {
     position: fixed;
     bottom: 30px;
@@ -643,7 +633,7 @@
 
 <div class="ambient-bg"></div>
 
-<!-- شريط الأخبار العاجلة الذكي والمتواصل بدون أي تأخير -->
+<!-- شريط الأخبار العاجلة -->
 <div id="liveTickerBar" class="ticker-container" style="display: none;">
   <div class="wrap ticker-inner">
     <div class="ticker-badge">
@@ -663,10 +653,12 @@
 <header>
   <nav class="wrap" style="display: flex; align-items: center; justify-content: space-between; height: 90px;">
     
-    <div class="brand" onclick="navigateTo('main-page', '#home')">
+    <!-- النقر المزدوج على الشعار لفتح لوحة الدخول السرية -->
+    <div class="brand" onclick="navigateTo('main-page', '#home')" ondblclick="handleSecretAdminEntry()" title="وكالة صدى العطاء">
       <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo-img" onerror="this.src='https://via.placeholder.com/48x48/070B12/D4AF37?text=SADA'">
     </div>
 
+    <!-- قائمة الروابط العامة (مخفي منها زر الإدارة تماماً) -->
     <div class="navlinks" id="navLinks">
       <button onclick="navigateTo('main-page', '#home')">الرئيسية</button>
       <button onclick="navigateTo('main-page', '#news-section')">الأخبار والتغطيات</button>
@@ -676,7 +668,6 @@
       <button onclick="navigateTo('main-page', '#process')">آلية العمل</button>
       <button onclick="navigateTo('main-page', '#departments')">الأقسام</button>
       <button onclick="navigateTo('main-page', '#faq')">الأسئلة الشائعة</button>
-      <button onclick="handleAdminEntry()" style="color: var(--gold-primary);"><i class="fas fa-user-shield"></i> لوحة الإدارة</button>
     </div>
 
     <div style="display: flex; align-items: center; gap: 10px;">
@@ -734,7 +725,6 @@
     <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.15), transparent 60%); pointer-events: none;"></div>
     <div class="wrap" style="position: relative; z-index: 2;">
       
-      <!-- قسم قائمة الأخبار الرئيسية -->
       <div id="mainNewsListView">
         <div style="text-align: center; max-width: 800px; margin: 0 auto 60px;">
           <div class="kicker" style="justify-content: center;"><i class="fas fa-satellite-dish" style="animation: pulse 2s infinite;"></i> التغطيات الإخبارية الحية</div>
@@ -744,7 +734,6 @@
         
         <div class="campaigns-grid" id="liveNewsGrid"></div>
 
-        <!-- أزرار التنقل بين الصفحات -->
         <div id="newsPagination" style="display: none; justify-content: center; align-items: center; gap: 15px; margin-top: 50px;">
           <button id="prevPageBtn" onclick="changeNewsPage(-1)" class="pagination-btn">الصفحة السابقة</button>
           <span id="pageIndicator" style="color: var(--gold-light); font-weight: bold; font-size: 16px;">الصفحة 1</span>
@@ -752,7 +741,6 @@
         </div>
       </div>
 
-      <!-- قسم تفاصيل الخبر المفرد (يفتح عند النقر) -->
       <div id="singleNewsDetailView" style="display: none; max-width: 900px; margin: 0 auto;">
         <button onclick="backToNewsList()" class="pagination-btn" style="margin-bottom: 25px;"><i class="fas fa-arrow-right"></i> العودة إلى قائمة الأخبار</button>
         <div id="singleNewsContentBox" style="background: var(--surface-color); border: 1px solid var(--border-gold); padding: 40px; border-radius: 16px; backdrop-filter: blur(12px);"></div>
@@ -796,66 +784,18 @@
       <p class="section-desc">نقل الأخبار والمعلومات بمهنية ودقة وموضوعية..</p>
 
       <div class="fields-grid">
-        <div class="field-card">
-          <i class="fas fa-newspaper field-icon"></i>
-          <div class="field-title">الاعداد</div>
-          <p class="field-desc">إعداد وإنتاج ونشر الأخبار والتقارير والتحقيقات والحوارات.</p>
-        </div>
-        <div class="field-card">
-          <i class="fas fa-camera-retro field-icon"></i>
-          <div class="field-title">انتاج</div>
-          <p class="field-desc">انتاج وتقديم البرامج والمحتوى المرئي والمسموع والرقمي.</p>
-        </div>
-        <div class="field-card">
-          <i class="fas fa-film field-icon"></i>
-          <div class="field-title">تغطية</div>
-          <p class="field-desc">تغطية الأحداث والنشاطات المحلية والوطنية.</p>
-        </div>
-        <div class="field-card">
-          <i class="fas fa-tv field-icon"></i>
-          <div class="field-title">تسليط الضوء</div>
-          <p class="field-desc">تسليط الضوء على المبادرات الإنسانية والتنموية والمجتمعية.</p>
-        </div>
-        <div class="field-card">
-          <i class="fas fa-pen-nib field-icon"></i>
-          <div class="field-title">دعم</div>
-          <p class="field-desc">دعم أهداف التنمية المستدامة من خلال العمل الإعلامي.</p>
-        </div>
-        <div class="field-card">
-          <i class="fas fa-hashtag field-icon"></i>
-          <div class="field-title">الاخبار المضللة</div>
-          <p class="field-desc">مكافحة الأخبار الكاذبة والمعلومات المضللة والشائعات وفق الأساليب المهنية.</p>
-        </div>
-        <div class="field-card">
-          <i class="fas fa-shield-alt field-icon"></i>
-          <div class="field-title">الأمن الفكري والإعلامي</div>
-          <p class="field-desc">المساهمة في مواجهة خطاب الكراهية والطائفية والتطرف العنيف إعلامياً.</p>
-        </div>
-        <div class="field-card">
-          <i class="fas fa-user-graduate field-icon"></i>
-          <div class="field-title">رعاية الكفاءات الشابة</div>
-          <p class="field-desc">تطوير قدرات الشباب والعاملين في المجالات الإعلامية ودعم المواهب والكفاءات.</p>
-        </div>
-        <div class="field-card">
-          <i class="fas fa-laptop-code field-icon"></i>
-          <div class="field-title">إدارة المنصات الرقمية</div>
-          <p class="field-desc">صناعة وإدارة المحتوى الرقمي والتعريف بأنشطة وبرامج ومشاريع مؤسسة صدى العطاء ومراكزها.</p>
-        </div>
-        <div class="field-card">
-          <i class="fas fa-handshake field-icon"></i>
-          <div class="field-title">الشراكات الاستراتيجية</div>
-          <p class="field-desc">إقامة علاقات وتعاون إعلامي مع المؤسسات والجهات ذات العلاقة.</p>
-        </div>
-        <div class="field-card">
-          <i class="fas fa-calendar-alt field-icon"></i>
-          <div class="field-title">الملتقيات والأنشطة العامة</div>
-          <p class="field-desc">المشاركة في تنظيم المؤتمرات والمهرجانات والندوات والورش والفعاليات الإعلامية.</p>
-        </div>
-        <div class="field-card">
-          <i class="fas fa-network-wired field-icon"></i>
-          <div class="field-title">التغطية الميدانية الشاملة</div>
-          <p class="field-desc">إنشاء شبكة من المراسلين والمكاتب والفروع في المحافظات العراقية.</p>
-        </div>
+        <div class="field-card"><i class="fas fa-newspaper field-icon"></i><div class="field-title">الاعداد</div><p class="field-desc">إعداد وإنتاج ونشر الأخبار والتقارير والتحقيقات والحوارات.</p></div>
+        <div class="field-card"><i class="fas fa-camera-retro field-icon"></i><div class="field-title">انتاج</div><p class="field-desc">انتاج وتقديم البرامج والمحتوى المرئي والمسموع والرقمي.</p></div>
+        <div class="field-card"><i class="fas fa-film field-icon"></i><div class="field-title">تغطية</div><p class="field-desc">تغطية الأحداث والنشاطات المحلية والوطنية.</p></div>
+        <div class="field-card"><i class="fas fa-tv field-icon"></i><div class="field-title">تسليط الضوء</div><p class="field-desc">تسليط الضوء على المبادرات الإنسانية والتنموية والمجتمعية.</p></div>
+        <div class="field-card"><i class="fas fa-pen-nib field-icon"></i><div class="field-title">دعم</div><p class="field-desc">دعم أهداف التنمية المستدامة من خلال العمل الإعلامي.</p></div>
+        <div class="field-card"><i class="fas fa-hashtag field-icon"></i><div class="field-title">الاخبار المضللة</div><p class="field-desc">مكافحة الأخبار الكاذبة والمعلومات المضللة والشائعات وفق الأساليب المهنية.</p></div>
+        <div class="field-card"><i class="fas fa-shield-alt field-icon"></i><div class="field-title">الأمن الفكري والإعلامي</div><p class="field-desc">المساهمة في مواجهة خطاب الكراهية والطائفية والتطرف العنيف إعلامياً.</p></div>
+        <div class="field-card"><i class="fas fa-user-graduate field-icon"></i><div class="field-title">رعاية الكفاءات الشابة</div><p class="field-desc">تطوير قدرات الشباب والعاملين في المجالات الإعلامية ودعم المواهب والكفاءات.</p></div>
+        <div class="field-card"><i class="fas fa-laptop-code field-icon"></i><div class="field-title">إدارة المنصات الرقمية</div><p class="field-desc">صناعة وإدارة المحتوى الرقمي والتعريف بأنشطة وبرامج ومشاريع مؤسسة صدى العطاء ومراكزها.</p></div>
+        <div class="field-card"><i class="fas fa-handshake field-icon"></i><div class="field-title">الشراكات الاستراتيجية</div><p class="field-desc">إقامة علاقات وتعاون إعلامي مع المؤسسات والجهات ذات العلاقة.</p></div>
+        <div class="field-card"><i class="fas fa-calendar-alt field-icon"></i><div class="field-title">الملتقيات والأنشطة العامة</div><p class="field-desc">المشاركة في تنظيم المؤتمرات والمهرجانات والندوات والورش والفعاليات الإعلامية.</p></div>
+        <div class="field-card"><i class="fas fa-network-wired field-icon"></i><div class="field-title">التغطية الميدانية الشاملة</div><p class="field-desc">إنشاء شبكة من المراسلين والمكاتب والفروع في المحافظات العراقية.</p></div>
       </div>
     </div>
   </section>
@@ -868,26 +808,10 @@
       <p class="section-desc">نتبع منهجية عمل دقيقة ومنظمة لضمان خروج كل مهمة إعلامية أو حملة إنسانية بأعلى معايير الجودة.</p>
 
       <div class="process-grid">
-        <div class="process-card">
-          <span class="process-step">01</span>
-          <h4>الدراسة والتخطيط</h4>
-          <p>جلسة عصف ذهني لفهم أهداف الحملة أو التغطية، وتحديد الجمهور المستهدف والرسائل الأساسية المراد إيصالها.</p>
-        </div>
-        <div class="process-card">
-          <span class="process-step">02</span>
-          <h4>إعداد السيناريو والنص</h4>
-          <p>كتابة النصوص الإبداعية وصياغة المحتوى الصحفي أو السينمائي باحترافية وتدقيقه لغوياً وفنياً.</p>
-        </div>
-        <div class="process-card">
-          <span class="process-step">03</span>
-          <h4>التنفيذ الميداني والتصوير</h4>
-          <p>انتقال فرق التصوير والإخراج للموقع واستخدام الميكروفونات والمعدات السينمائية لتوثيق المشاهد.</p>
-        </div>
-        <div class="process-card">
-          <span class="process-step">04</span>
-          <h4>المونتاج والإنتاج الفني</h4>
-          <p>معالجة الألوان، الهندسة الصوتية، إضافة المؤثرات البصرية وتجميع المادة لخروج المنتج النهائي بأجمل صورة.</p>
-        </div>
+        <div class="process-card"><span class="process-step">01</span><h4>الدراسة والتخطيط</h4><p>جلسة عصف ذهني لفهم أهداف الحملة أو التغطية، وتحديد الجمهور المستهدف والرسائل الأساسية المراد إيصالها.</p></div>
+        <div class="process-card"><span class="process-step">02</span><h4>إعداد السيناريو والنص</h4><p>كتابة النصوص الإبداعية وصياغة المحتوى الصحفي أو السينمائي باحترافية وتدقيقه لغوياً وفنياً.</p></div>
+        <div class="process-card"><span class="process-step">03</span><h4>التنفيذ الميداني والتصوير</h4><p>انتقال فرق التصوير والإخراج للموقع واستخدام الميكروفونات والمعدات السينمائية لتوثيق المشاهد.</p></div>
+        <div class="process-card"><span class="process-step">04</span><h4>المونتاج والإنتاج الفني</h4><p>معالجة الألوان، الهندسة الصوتية، إضافة المؤثرات البصرية وتجميع المادة لخروج المنتج النهائي بأجمل صورة.</p></div>
       </div>
     </div>
   </section>
@@ -900,70 +824,14 @@
       <p class="section-desc">تتكون مؤسستنا من 8 أقسام متخصصة تعمل بشكل مترابط ومكمل لبعضه البعض للوصول إلى أعلى مستويات الأداء.</p>
 
       <div class="dept-list">
-        <div class="dept-row">
-          <span class="dept-num">٠١</span>
-          <div class="dept-info">
-            <span class="dept-name">قسم الأخبار والتحرير</span>
-            <span class="dept-sub">مسؤول عن صياغة الأخبار، بيانات الصحافة، والتقارير المكتوبة.</span>
-          </div>
-          <i class="fas fa-arrow-left dept-arrow"></i>
-        </div>
-        <div class="dept-row">
-          <span class="dept-num">٠٢</span>
-          <div class="dept-info">
-            <span class="dept-name">قسم التصوير والإنتاج الميداني</span>
-            <span class="dept-sub">يضم المصورين الفوتوغرافيين والسينمائيين وموجهي الإضاءة والصوت.</span>
-          </div>
-          <i class="fas fa-arrow-left dept-arrow"></i>
-        </div>
-        <div class="dept-row">
-          <span class="dept-num">٠٣</span>
-          <div class="dept-info">
-            <span class="dept-name">قسم المونتاج والمؤثرات البصرية</span>
-            <span class="dept-sub">يتولى قص الفيديو، تصحيح الألوان Color Grading، والموشن جرافيك.</span>
-          </div>
-          <i class="fas fa-arrow-left dept-arrow"></i>
-        </div>
-        <div class="dept-row">
-          <span class="dept-num">٠٤</span>
-          <div class="dept-info">
-            <span class="dept-name">قسم التصميم والهوية البصرية</span>
-            <span class="dept-sub">تصميم الإعلانات، البوسترات، وتشكيل الهويات للمؤسسات والأنشطة.</span>
-          </div>
-          <i class="fas fa-arrow-left dept-arrow"></i>
-        </div>
-        <div class="dept-row">
-          <span class="dept-num">٠٥</span>
-          <div class="dept-info">
-            <span class="dept-name">قسم الإعلام الرقمي</span>
-            <span class="dept-sub">إدارة جميع المنصات الرسمية وحملات النشر والاستجابة للتفاعلات.</span>
-          </div>
-          <i class="fas fa-arrow-left dept-arrow"></i>
-        </div>
-        <div class="dept-row">
-          <span class="dept-num">٠٦</span>
-          <div class="dept-info">
-            <span class="dept-name">قسم العلاقات العامة والشراكات</span>
-            <span class="dept-sub">بناء الجسور مع المؤسسات الحكومية والمنظمات والقطاع الخاص.</span>
-          </div>
-          <i class="fas fa-arrow-left dept-arrow"></i>
-        </div>
-        <div class="dept-row">
-          <span class="dept-num">٠٧</span>
-          <div class="dept-info">
-            <span class="dept-name">قسم التدريب والتطوير المؤسسي</span>
-            <span class="dept-sub">تنظيم الورش التدريبية وتأهيل الطاقات الشبابية الإعلامية.</span>
-          </div>
-          <i class="fas fa-arrow-left dept-arrow"></i>
-        </div>
-        <div class="dept-row">
-          <span class="dept-num">٠٨</span>
-          <div class="dept-info">
-            <span class="dept-name">القسم الإداري والمالي</span>
-            <span class="dept-sub">إدارة الشؤون اللوجستية، التخطيط التنظيمي، والتنسيق العام.</span>
-          </div>
-          <i class="fas fa-arrow-left dept-arrow"></i>
-        </div>
+        <div class="dept-row"><span class="dept-num">٠١</span><div class="dept-info"><span class="dept-name">قسم الأخبار والتحرير</span><span class="dept-sub">مسؤول عن صياغة الأخبار، بيانات الصحافة، والتقارير المكتوبة.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
+        <div class="dept-row"><span class="dept-num">٠٢</span><div class="dept-info"><span class="dept-name">قسم التصوير والإنتاج الميداني</span><span class="dept-sub">يضم المصورين الفوتوغرافيين والسينمائيين وموجهي الإضاءة والصوت.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
+        <div class="dept-row"><span class="dept-num">٠٣</span><div class="dept-info"><span class="dept-name">قسم المونتاج والمؤثرات البصرية</span><span class="dept-sub">يتولى قص الفيديو، تصحيح الألوان Color Grading، والموشن جرافيك.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
+        <div class="dept-row"><span class="dept-num">٠٤</span><div class="dept-info"><span class="dept-name">قسم التصميم والهوية البصرية</span><span class="dept-sub">تصميم الإعلانات، البوسترات، وتشكيل الهويات للمؤسسات والأنشطة.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
+        <div class="dept-row"><span class="dept-num">٠٥</span><div class="dept-info"><span class="dept-name">قسم الإعلام الرقمي</span><span class="dept-sub">إدارة جميع المنصات الرسمية وحملات النشر والاستجابة للتفاعلات.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
+        <div class="dept-row"><span class="dept-num">٠٦</span><div class="dept-info"><span class="dept-name">قسم العلاقات العامة والشراكات</span><span class="dept-sub">بناء الجسور مع المؤسسات الحكومية والمنظمات والقطاع الخاص.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
+        <div class="dept-row"><span class="dept-num">٠٧</span><div class="dept-info"><span class="dept-name">قسم التدريب والتطوير المؤسسي</span><span class="dept-sub">تنظيم الورش التدريبية وتأهيل الطاقات الشبابية الإعلامية.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
+        <div class="dept-row"><span class="dept-num">٠٨</span><div class="dept-info"><span class="dept-name">القسم الإداري والمالي</span><span class="dept-sub">إدارة الشؤون اللوجستية، التخطيط التنظيمي، والتنسيق العام.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
       </div>
     </div>
   </section>
@@ -976,36 +844,12 @@
       <p class="section-desc">نلتزم بمجموعة من المبادئ الأخلاقية والمهنية الصارمة التي تشكل هوية "صدى العطاء".</p>
 
       <div class="values-grid">
-        <div class="value-box">
-          <i class="fas fa-shield-alt"></i>
-          <h4>المصداقية والشفافية</h4>
-          <p>تحري الحقيقة ونقل الأحداث بكل أمانة ودون أي تحريف أو تزييف للواقع.</p>
-        </div>
-        <div class="value-box">
-          <i class="fas fa-award"></i>
-          <h4>المهنية العالية</h4>
-          <p>تطبيق أحدث المعايير الإعلامية والإنتاجية في كل تفصيلة من أعمالنا.</p>
-        </div>
-        <div class="value-box">
-          <i class="fas fa-balance-scale"></i>
-          <h4>الحياد والاستقلالية</h4>
-          <p>الوقوف على مسافة واحدة ونقل الصوت الإنساني والمجتمعي بانتظام.</p>
-        </div>
-        <div class="value-box">
-          <i class="fas fa-lightbulb"></i>
-          <h4>الإبداع والابتكار</h4>
-          <p>تقديم أفكار جديدة وزوايا تصوير غير تقليدية تجذب الجمهور وتؤثر فيه.</p>
-        </div>
-        <div class="value-box">
-          <i class="fas fa-hands-helping"></i>
-          <h4>المسؤولية المجتمعية</h4>
-          <p>تسخير الإعلام لخدمة القضايا الإنسانية والتنموية وتطوير المجتمع.</p>
-        </div>
-        <div class="value-box">
-          <i class="fas fa-users"></i>
-          <h4>روح الفريق الواحد</h4>
-          <p>العمل بتناغم كامل بين مختلف الأقسام لضمان سلاسة التنفيذ والإنجاز.</p>
-        </div>
+        <div class="value-box"><i class="fas fa-shield-alt"></i><h4>المصداقية والشفافية</h4><p>تحري الحقيقة ونقل الأحداث بكل أمانة ودون أي تحريف أو تزييف للواقع.</p></div>
+        <div class="value-box"><i class="fas fa-award"></i><h4>المهنية العالية</h4><p>تطبيق أحدث المعايير الإعلامية والإنتاجية في كل تفصيلة من أعمالنا.</p></div>
+        <div class="value-box"><i class="fas fa-balance-scale"></i><h4>الحياد والاستقلالية</h4><p>الوقوف على مسافة واحدة ونقل الصوت الإنساني والمجتمعي بانتظام.</p></div>
+        <div class="value-box"><i class="fas fa-lightbulb"></i><h4>الإبداع والابتكار</h4><p>تقديم أفكار جديدة وزوايا تصوير غير تقليدية تجذب الجمهور وتؤثر فيه.</p></div>
+        <div class="value-box"><i class="fas fa-hands-helping"></i><h4>المسؤولية المجتمعية</h4><p>تسخير الإعلام لخدمة القضايا الإنسانية والتنموية وتطوير المجتمع.</p></div>
+        <div class="value-box"><i class="fas fa-users"></i><h4>روح الفريق الواحد</h4><p>العمل بتناغم كامل بين مختلف الأقسام لضمان سلاسة التنفيذ والإنجاز.</p></div>
       </div>
     </div>
   </section>
@@ -1018,22 +862,10 @@
       <p class="section-desc">إجابات على أبرز الاستفسارات التي تردنا حول طبيعة عمل المؤسسة وكيفية التعاون.</p>
 
       <div class="faq-grid">
-        <div class="faq-item">
-          <h4><i class="fas fa-question-circle"></i> هل تقتصر خدماتكم على المحافظة أم كافة العراق؟</h4>
-          <p>فرقنا الميدانية مستعدة للتغطية والإنتاج في مختلف محافظات العراق، مع تركيز دائم على خدمة وتغطية الأنشطة في محافظة بابل والفرات الأوسط.</p>
-        </div>
-        <div class="faq-item">
-          <h4><i class="fas fa-question-circle"></i> كيف يمكن الاتفاق على تغطية مؤتمر أو فعالية؟</h4>
-          <p>يمكن التواصل معنا عبر الواتساب أو الهاتف قبل موعد الفعالية بوقت كافٍ لتحديد المتطلبات اللوجستية وإرسال فريق التصوير المناسب.</p>
-        </div>
-        <div class="faq-item">
-          <h4><i class="fas fa-question-circle"></i> هل تقدم الوكالة ورشاً تدريبية للشباب؟</h4>
-          <p>نعم، يختص قسم التدريب والتطوير بتقديم ورش دورية في مجالات التصوير، المونتاج، وإدارة الإعلام الرقمي لبناء قدرات الشباب.</p>
-        </div>
-        <div class="faq-item">
-          <h4><i class="fas fa-question-circle"></i> ما هي طبيعة الشراكات مع المنظمات الإنسانية؟</h4>
-          <p>نقدم خدمات التوثيق الإعلامي وصناعة الأفلام الوثائقية للمبادرات الإنسانية لضمان إيصال رسالتهم السامية للجمهور والداعمين.</p>
-        </div>
+        <div class="faq-item"><h4><i class="fas fa-question-circle"></i> هل تقتصر خدماتكم على المحافظة أم كافة العراق؟</h4><p>فرقنا الميدانية مستعدة للتغطية والإنتاج في مختلف محافظات العراق، مع تركيز دائم على خدمة وتغطية الأنشطة في محافظة بابل والفرات الأوسط.</p></div>
+        <div class="faq-item"><h4><i class="fas fa-question-circle"></i> كيف يمكن الاتفاق على تغطية مؤتمر أو فعالية؟</h4><p>يمكن التواصل معنا عبر الواتساب أو الهاتف قبل موعد الفعالية بوقت كافٍ لتحديد المتطلبات اللوجستية وإرسال فريق التصوير المناسب.</p></div>
+        <div class="faq-item"><h4><i class="fas fa-question-circle"></i> هل تقدم الوكالة ورشاً تدريبية للشباب؟</h4><p>نعم، يختص قسم التدريب والتطوير بتقديم ورش دورية في مجالات التصوير، المونتاج، وإدارة الإعلام الرقمي لبناء قدرات الشباب.</p></div>
+        <div class="faq-item"><h4><i class="fas fa-question-circle"></i> ما هي طبيعة الشراكات مع المنظمات الإنسانية؟</h4><p>نقدم خدمات التوثيق الإعلامي وصناعة الأفلام الوثائقية للمبادرات الإنسانية لضمان إيصال رسالتهم السامية للجمهور والداعمين.</p></div>
       </div>
     </div>
   </section>
@@ -1051,28 +883,16 @@
       <p class="section-desc">نعمل كشريك إعلامي موثوق لمختلف المؤسسات والجهات لنشكل معاً عماد التنمية والمجتمع.</p>
 
       <div class="network-grid">
-        <div class="network-card">
-          <div class="num">01</div>
-          <h4>المؤسسات الحكومية</h4>
-          <p>تغطية النشاطات الرسمية، إعداد التقارير الخدمية، وإبراز المشاريع العمرانية والتنموية.</p>
-        </div>
-        <div class="network-card">
-          <div class="num">02</div>
-          <h4>منظمات المجتمع المدني</h4>
-          <p>توثيق المبادرات الإنسانية، التوعية الميدانية، وتسليط الضوء على حملات الإغاثة والدعم.</p>
-        </div>
-        <div class="network-card">
-          <div class="num">03</div>
-          <h4>القطاع الخاص والشركات</h4>
-          <p>صناعة الهويات البصرية، الإعلانات السينمائية، وإدارة الإعلام المؤسسي والعلاقات العامة.</p>
-        </div>
+        <div class="network-card"><div class="num">01</div><h4>المؤسسات الحكومية</h4><p>تغطية النشاطات الرسمية، إعداد التقارير الخدمية، وإبراز المشاريع العمرانية والتنموية.</p></div>
+        <div class="network-card"><div class="num">02</div><h4>منظمات المجتمع المدني</h4><p>توثيق المبادرات الإنسانية، التوعية الميدانية، وتسليط الضوء على حملات الإغاثة والدعم.</p></div>
+        <div class="network-card"><div class="num">03</div><h4>القطاع الخاص والشركات</h4><p>صناعة الهويات البصرية، الإعلانات السينمائية، وإدارة الإعلام المؤسسي والعلاقات العامة.</p></div>
       </div>
     </div>
   </section>
 
 </div>
 
-<!-- ================= صفحة الحملات ================= -->
+<!-- صفحة الحملات -->
 <div id="campaigns-page" class="page-view hidden-page">
   <div class="wrap">
     <div class="back-btn-container">
@@ -1088,111 +908,39 @@
     </div>
 
     <div class="campaigns-grid">
-      <div class="campaign-card">
-        <img src="https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg" alt="ورشة صناعة الشخصية المؤثرة - 1" class="campaign-img">
-        <div class="campaign-body">
-          <h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3>
-          <p class="campaign-desc">جانب من الدورة التخصصية لتطوير المهارات القيادية وتأهيل الشخصيات المؤثرة في المشهد الإعلامي.</p>
-        </div>
-      </div>
-      <div class="campaign-card">
-        <img src="https://i.postimg.cc/3RHNKfdx/IMG-6998.jpg" alt="ورشة صناعة الشخصية المؤثرة - 2" class="campaign-img">
-        <div class="campaign-body">
-          <h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3>
-          <p class="campaign-desc">تطبيقات عملية ومشاركات تفاعلية في بناء المحتوى الهادف والمؤثر.</p>
-        </div>
-      </div>
-      <div class="campaign-card">
-        <img src="https://i.postimg.cc/1tZX97fs/IMG-6999.jpg" alt="ورشة صناعة الشخصية المؤثرة - 3" class="campaign-img">
-        <div class="campaign-body">
-          <h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3>
-          <p class="campaign-desc">توثيق فعاليات الورشة وتوزيع الشهادات والتفاعل الميداني مع المشاركين.</p>
-        </div>
-      </div>
-      <div class="campaign-card">
-        <img src="https://i.postimg.cc/PxkJtVPX/IMG-7001.jpg" alt="ورشة صناعة الشخصية المؤثرة - 4" class="campaign-img">
-        <div class="campaign-body">
-          <h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3>
-          <p class="campaign-desc">جانب من التغطية الفوتوغرافية للجلسات التدريبية المباشرة.</p>
-        </div>
-      </div>
-      <div class="campaign-card">
-        <img src="https://i.postimg.cc/rmLs8ZKy/IMG-7002.jpg" alt="ورشة من الخبر للتأثير - 1" class="campaign-img">
-        <div class="campaign-body">
-          <h3 class="campaign-title">ورشة من الخبر للتأثير</h3>
-          <p class="campaign-desc">برنامج تدريبي حول صياغة الأخبار والتقارير الصحفية وتحويل المعلومة إلى أثر مجتمعي ملموس.</p>
-        </div>
-      </div>
-      <div class="campaign-card">
-        <img src="https://i.postimg.cc/W3Pz2Yhj/IMG-7003.jpg" alt="ورشة من الخبر للتأثير - 2" class="campaign-img">
-        <div class="campaign-body">
-          <h3 class="campaign-title">ورشة من الخبر للتأثير</h3>
-          <p class="campaign-desc">شرح المبادئ الأساسية للتغطيات الإعلامية وصناعة الخبر المسؤول.</p>
-        </div>
-      </div>
-      <div class="campaign-card">
-        <img src="https://i.postimg.cc/rmLs8ZKq/IMG-7004.jpg" alt="ورشة من الخبر للتأثير - 3" class="campaign-img">
-        <div class="campaign-body">
-          <h3 class="campaign-title">ورشة من الخبر للتأثير</h3>
-          <p class="campaign-desc">لقطات من الجلسات الحوارية والتطبيقات الميدانية لكتابة وتنسيق الأخبار.</p>
-        </div>
-      </div>
-      <div class="campaign-card">
-        <img src="https://i.postimg.cc/C1V5Frz0/IMG-7005.jpg" alt="ورشة من الخبر للتأثير - 4" class="campaign-img">
-        <div class="campaign-body">
-          <h3 class="campaign-title">ورشة من الخبر للتأثير</h3>
-          <p class="campaign-desc">جانب من النقاشات الميدانية وتبادل الخبرات بين المشاركين.</p>
-        </div>
-      </div>
-      <div class="campaign-card">
-        <img src="https://i.postimg.cc/ydzxVpkq/IMG-7006.jpg" alt="ورشة فريق الإسناد الطبي - 1" class="campaign-img">
-        <div class="campaign-body">
-          <h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3>
-          <p class="campaign-desc">التغطية الإعلامية والتوثيق الميداني للورشة الخاصة بفريق الإسناد الطبي بالتنسيق مع مكتب وزير الصحة.</p>
-        </div>
-      </div>
-      <div class="campaign-card">
-        <img src="https://i.postimg.cc/4dTyJ2nD/IMG-7009.jpg" alt="ورشة فريق الإسناد الطبي - 2" class="campaign-img">
-        <div class="campaign-body">
-          <h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3>
-          <p class="campaign-desc">توثيق الجهود والبرامج التنسيقية الطبية الموجهة لدعم القطاع الصحي والإنساني.</p>
-        </div>
-      </div>
-      <div class="campaign-card">
-        <img src="https://i.postimg.cc/cJ36GG4s/IMG-7010.jpg" alt="ورشة فريق الإسناد الطبي - 3" class="campaign-img">
-        <div class="campaign-body">
-          <h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3>
-          <p class="campaign-desc">استعراض الخطط التنفيذية والتوصيات الصادرة عن الورشة الطبية.</p>
-        </div>
-      </div>
-      <div class="campaign-card">
-        <img src="https://i.postimg.cc/JnW01YGV/IMG-7012.jpg" alt="ورشة فريق الإسناد الطبي - 4" class="campaign-img">
-        <div class="campaign-body">
-          <h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3>
-          <p class="campaign-desc">لقطات ختامية وتكريم المشاركين والمنظمين في الورشة.</p>
-        </div>
-      </div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg" alt="ورشة صناعة الشخصية المؤثرة - 1" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3><p class="campaign-desc">جانب من الدورة التخصصية لتطوير المهارات القيادية وتأهيل الشخصيات المؤثرة في المشهد الإعلامي.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/3RHNKfdx/IMG-6998.jpg" alt="ورشة صناعة الشخصية المؤثرة - 2" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3><p class="campaign-desc">تطبيقات عملية ومشاركات تفاعلية في بناء المحتوى الهادف والمؤثر.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/1tZX97fs/IMG-6999.jpg" alt="ورشة صناعة الشخصية المؤثرة - 3" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3><p class="campaign-desc">توثيق فعاليات الورشة وتوزيع الشهادات والتفاعل الميداني مع المشاركين.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/PxkJtVPX/IMG-7001.jpg" alt="ورشة صناعة الشخصية المؤثرة - 4" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3><p class="campaign-desc">جانب من التغطية الفوتوغرافية للجلسات التدريبية المباشرة.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/rmLs8ZKy/IMG-7002.jpg" alt="ورشة من الخبر للتأثير - 1" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة من الخبر للتأثير</h3><p class="campaign-desc">برنامج تدريبي حول صياغة الأخبار والتقارير الصحفية وتحويل المعلومة إلى أثر مجتمعي ملموس.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/W3Pz2Yhj/IMG-7003.jpg" alt="ورشة من الخبر للتأثير - 2" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة من الخبر للتأثير</h3><p class="campaign-desc">شرح المبادئ الأساسية للتغطيات الإعلامية وصناعة الخبر المسؤول.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/rmLs8ZKq/IMG-7004.jpg" alt="ورشة من الخبر للتأثير - 3" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة من الخبر للتأثير</h3><p class="campaign-desc">لقطات من الجلسات الحوارية والتطبيقات الميدانية لكتابة وتنسيق الأخبار.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/C1V5Frz0/IMG-7005.jpg" alt="ورشة من الخبر للتأثير - 4" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة من الخبر للتأثير</h3><p class="campaign-desc">جانب من النقاشات الميدانية وتبادل الخبرات بين المشاركين.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/ydzxVpkq/IMG-7006.jpg" alt="ورشة فريق الإسناد الطبي - 1" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3><p class="campaign-desc">التغطية الإعلامية والتوثيق الميداني للورشة الخاصة بفريق الإسناد الطبي بالتنسيق مع مكتب وزير الصحة.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/4dTyJ2nD/IMG-7009.jpg" alt="ورشة فريق الإسناد الطبي - 2" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3><p class="campaign-desc">توثيق الجهود والبرامج التنسيقية الطبية الموجهة لدعم القطاع الصحي والإنساني.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/cJ36GG4s/IMG-7010.jpg" alt="ورشة فريق الإسناد الطبي - 3" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3><p class="campaign-desc">استعراض الخطط التنفيذية والتوصيات الصادرة عن الورشة الطبية.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/JnW01YGV/IMG-7012.jpg" alt="ورشة فريق الإسناد الطبي - 4" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3><p class="campaign-desc">لقطات ختامية وتكريم المشاركين والمنظمين في الورشة.</p></div></div>
     </div>
   </div>
 </div>
 
-<!-- ================= صفحة تسجيل دخول الآدمن ================= -->
+<!-- صفحة تسجيل دخول الآدمن السرية -->
 <div id="login-page" class="page-view hidden-page">
   <div class="wrap">
     <div class="auth-box">
       <div style="text-align: center; margin-bottom: 20px;">
         <i class="fas fa-user-shield" style="font-size: 40px; color: var(--gold-primary);"></i>
       </div>
-      <h2>دخول لوحة التحكم</h2>
+      <h2>دخول لوحة الإدارة</h2>
       <div id="loginAlert" class="alert-box alert-danger"></div>
       <form onsubmit="event.preventDefault(); processLogin();">
         <div class="form-group">
-          <label>اسم المستخدم أو البريد الإلكتروني</label>
-          <input type="text" id="loginId" class="form-control" placeholder="admin أو admin@sada.iq" required>
+          <label>اسم المستخدم</label>
+          <input type="text" id="loginId" class="form-control" placeholder="sada_admin" required>
         </div>
         <div class="form-group">
           <label>كلمة المرور</label>
-          <input type="password" id="loginPass" class="form-control" placeholder="كلمة المرور" required>
+          <input type="password" id="loginPass" class="form-control" placeholder="كلمة المرور السرية" required>
         </div>
         <button type="submit" class="form-btn">تسجيل الدخول</button>
       </form>
@@ -1205,7 +953,7 @@
   </div>
 </div>
 
-<!-- ================= لوحة تحكم الآدمن ================= -->
+<!-- لوحة تحكم الآدمن المحمية والسرية -->
 <div id="dashboard-page" class="page-view hidden-page">
   <div class="wrap dash-container">
     <div class="dash-header">
@@ -1252,7 +1000,7 @@
       </div>
     </div>
 
-    <!-- قسم إدارة شريط الأخبار العاجلة (News Ticker) -->
+    <!-- قسم إدارة شريط الأخبار العاجلة -->
     <div class="dash-panel">
       <h3 style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-bullhorn" style="color: var(--gold-primary);"></i> إدارة شريط الأخبار العاجلة (News Ticker)</h3>
       <p style="color: var(--dim-color); font-size: 13.5px; margin-bottom: 20px;">اكتب نص الخبر العاجل ليظهر كشريط متحرك في أعلى الموقع للزوار مباشرة، مع إمكانية إيقاف تفعيله أو تغييره متى شئت.</p>
@@ -1273,7 +1021,7 @@
       </div>
     </div>
 
-    <!-- قسم إضافة ونشر خبر جديد مع المسودات والتثبيت -->
+    <!-- قسم إضافة ونشر خبر جديد -->
     <div class="dash-panel">
       <h3 id="panelFormTitle">إضافة ونشر خبر جديد</h3>
       <form id="postForm" onsubmit="event.preventDefault(); savePostAction();">
@@ -1323,7 +1071,7 @@
       </form>
     </div>
 
-    <!-- قسم إدارة وتعديل الأخبار مع زر تصدير البيانات وإظهار المشاهدات -->
+    <!-- قسم إدارة وتعديل الأخبار -->
     <div class="dash-panel">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 14px;">
         <h3 style="margin-bottom: 0;">إدارة وتعديل الأخبار المنشورة والمسودات</h3>
@@ -1349,7 +1097,6 @@
         </table>
       </div>
 
-      <!-- شريط إجمالي مشاهدات جميع المنشورات أسفل الجدول -->
       <div class="views-summary-bar">
         <div class="views-summary-title">
           <i class="fas fa-chart-bar" style="color: var(--gold-primary); font-size: 18px;"></i>
@@ -1362,7 +1109,6 @@
   </div>
 </div>
 
-<!-- نظام الإشعارات المنبثقة التفاعلي (Toast Notification Container) -->
 <div id="toastContainer"></div>
 
 <!-- FOOTER -->
@@ -1386,7 +1132,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>جميع الحقوق محفوظة &copy; 2026 - وكالة صدى العطاء</span>
+      <span>جميع الحقوق محفوظة <span onclick="handleSecretAdminEntry()" style="cursor: pointer; opacity: 0.8;" title="إدارة">&copy;</span> 2026 - وكالة صدى العطاء</span>
     </div>
   </div>
 </footer>
@@ -1398,9 +1144,6 @@ let currentNewsPage = 1;
 const newsPerPage = 6;
 let globalVisitsCount = 0;
 
-/* ========================================================
-   نظام الإشعارات الفاخر (Toast Notifications)
-   ======================================================== */
 function showToast(message, type = 'info') {
   const container = document.getElementById('toastContainer');
   if (!container) return;
@@ -1421,9 +1164,7 @@ function showToast(message, type = 'info') {
   `;
 
   container.appendChild(toast);
-
   setTimeout(() => toast.classList.add('show'), 20);
-
   setTimeout(() => {
     toast.classList.remove('show');
     setTimeout(() => {
@@ -1432,9 +1173,6 @@ function showToast(message, type = 'info') {
   }, 4000);
 }
 
-/* ========================================================
-   ضغط وتصغير حجم الصور تلقائياً قبل الرفع
-   ======================================================== */
 function compressImage(file, maxWidth = 1200, quality = 0.75) {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -1465,39 +1203,30 @@ function compressImage(file, maxWidth = 1200, quality = 0.75) {
   });
 }
 
-/* ========================================================
-   نظام حساب وتوحيد الزيارات المركزية واستثناء الآدمن
-   ======================================================== */
-// جلب عدد الزيارات الموحد من قاعدة بيانات السيرفر
+// جلب إحصائيات الزيارات بتصريح الآدمن المشفر فقط
 async function fetchGlobalVisits() {
+  const token = localStorage.getItem('sada_token');
+  if (!token) return;
+
   try {
-    const res = await fetch(`${API_URL}/visits`);
+    const res = await fetch(`${API_URL}/visits`, {
+      headers: { 'Authorization': token }
+    });
     if (res.ok) {
       const data = await res.json();
-      globalVisitsCount = (typeof data === 'number') ? data : (data.count || data.visits || data.totalVisits || 0);
+      globalVisitsCount = (typeof data === 'number') ? data : (data.count || 0);
     }
-  } catch (e) {
-    console.log("جاري قراءة إحصائيات الزيارات الموحدة");
-  }
+  } catch (e) {}
 }
 
-// تسجيل الزيارة الحقيقية (للجمهور فقط واستثناء الآدمن كلياً)
+// تسجيل كل إعادة تحميل أو دخول للرابط كزيارة حقيقية موحدة
 async function trackPageVisit() {
-  // 1. استثناء تام: إذا كان المستخدم مسجلاً كآدمن، لا تسجل زيارة نهائياً
-  const token = localStorage.getItem('sada_token');
-  if (token) return;
-
-  // 2. التحقق من أنه زائر خارجي يتصفح الموقع وليس في لوحة التحكم
-  const isViewingDashboard = window.location.hash.includes('dashboard') || window.location.hash.includes('login');
-  if (isViewingDashboard) return;
-
-  // 3. إرسال الزيارة للسيرفر السحابي لحفظها مركزياً
   try {
     const res = await fetch(`${API_URL}/visit`, { method: 'POST' });
     if (res.ok) {
       const data = await res.json();
       if (data) {
-        globalVisitsCount = (typeof data === 'number') ? data : (data.count || data.visits || globalVisitsCount + 1);
+        globalVisitsCount = (typeof data === 'number') ? data : (data.count || globalVisitsCount + 1);
       }
     }
   } catch(e) {}
@@ -1508,9 +1237,7 @@ function getPostViews(postId) {
   return (post && post.views) ? post.views : 0;
 }
 
-// زيادة مشاهدات الخبر عند فتحه من زائر عادي (واستثناء الآدمن)
 async function incrementPostViews(postId) {
-  // إذا كان آدمن يتفقد الخبر، لا تحتسب المشاهدة
   if (localStorage.getItem('sada_token')) return;
 
   try {
@@ -1531,9 +1258,6 @@ function getTotalPostViewsSum() {
   return total;
 }
 
-/* ========================================================
-   إدارة شريط الأخبار العاجلة السلس (News Ticker)
-   ======================================================== */
 function initTicker() {
   const tickerBar = document.getElementById('liveTickerBar');
   const tickerText = document.getElementById('liveTickerText');
@@ -1576,9 +1300,6 @@ function saveTickerFromDashboard() {
   showToast('تم حفظ وتحديث إعدادات الشريط العاجل بنجاح!', 'success');
 }
 
-/* ========================================================
-   تصدير البيانات والتقارير إلى Excel / CSV مع المشاهدات
-   ======================================================== */
 function exportNewsToCSV() {
   if (!allPosts || allPosts.length === 0) {
     showToast('لا توجد بيانات أخبار متاحة للتصدير حالياً.', 'danger');
@@ -1617,7 +1338,7 @@ function exportNewsToCSV() {
 }
 
 /* ========================================================
-   التنقل وإدارة الصفحات
+   التنقل وحماية الصفحات السرية
    ======================================================== */
 function navigateTo(pageId, targetSectionId = null) {
   const pages = ['main-page', 'campaigns-page', 'login-page', 'dashboard-page'];
@@ -1648,7 +1369,8 @@ function navigateTo(pageId, targetSectionId = null) {
   if (pageId === 'dashboard-page') renderDashboard();
 }
 
-function handleAdminEntry() {
+// دالة الدخول السري للآدمن
+function handleSecretAdminEntry() {
   const token = localStorage.getItem('sada_token');
   if (token) {
     navigateTo('dashboard-page');
@@ -1694,7 +1416,7 @@ function processLogout() {
   localStorage.removeItem('sada_token');
   localStorage.removeItem('sada_admin_name');
   showToast('تم تسجيل الخروج بنجاح', 'info');
-  navigateTo('login-page');
+  navigateTo('main-page', '#home');
 }
 
 async function fetchPostsFromServer() {
@@ -1716,9 +1438,6 @@ async function fetchPostsFromServer() {
   }
 }
 
-/* ========================================================
-   عرض الأخبار السريع والفوري (Instant Render)
-   ======================================================== */
 function displayPostsGrid() {
   const grid = document.getElementById('liveNewsGrid');
   const paginationDiv = document.getElementById('newsPagination');
@@ -1799,6 +1518,13 @@ function displayPostsGrid() {
   if(nextBtn) nextBtn.disabled = currentNewsPage === totalPages;
 }
 
+function checkUrlHashForAdmin() {
+  const hash = window.location.hash;
+  if (hash === '#admin' || hash === '#login') {
+    handleSecretAdminEntry();
+  }
+}
+
 async function renderLiveNews() {
   const grid = document.getElementById('liveNewsGrid');
   const mainListView = document.getElementById('mainNewsListView');
@@ -1815,6 +1541,12 @@ async function renderLiveNews() {
     }
   }
 
+  // دعم فتح لوحة الدخول عبر كتابة #admin في الرابط
+  if (hash === '#admin' || hash === '#login') {
+    handleSecretAdminEntry();
+    return;
+  }
+
   if (mainListView) mainListView.style.display = 'block';
   if (detailView) detailView.style.display = 'none';
 
@@ -1828,27 +1560,9 @@ async function renderLiveNews() {
     
     if (allPosts.length === 0) {
       grid.innerHTML = `
-        <div class="skeleton-card">
-          <div class="skeleton-box skeleton-img"></div>
-          <div class="skeleton-box skeleton-title"></div>
-          <div class="skeleton-box skeleton-desc"></div>
-          <div class="skeleton-box skeleton-desc-short"></div>
-          <div class="skeleton-box skeleton-btn"></div>
-        </div>
-        <div class="skeleton-card">
-          <div class="skeleton-box skeleton-img"></div>
-          <div class="skeleton-box skeleton-title"></div>
-          <div class="skeleton-box skeleton-desc"></div>
-          <div class="skeleton-box skeleton-desc-short"></div>
-          <div class="skeleton-box skeleton-btn"></div>
-        </div>
-        <div class="skeleton-card">
-          <div class="skeleton-box skeleton-img"></div>
-          <div class="skeleton-box skeleton-title"></div>
-          <div class="skeleton-box skeleton-desc"></div>
-          <div class="skeleton-box skeleton-desc-short"></div>
-          <div class="skeleton-box skeleton-btn"></div>
-        </div>
+        <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+        <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+        <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
       `;
     }
   }
@@ -1933,7 +1647,6 @@ function openPublicSingleNews(postId, updateHash = true) {
       ${post.content || ''}
     </div>
     
-    <!-- قسم أزرار المشاركة المباشرة للسوشيال ميديا -->
     <div class="social-share-container">
       <span style="font-size: 14px; font-weight: 700; color: var(--gold-light); margin-left: 10px;">مشاركة الخبر:</span>
       
@@ -2011,7 +1724,7 @@ function changeNewsPage(direction) {
 }
 
 /* ========================================================
-   لوحة التحكم وتحديث الإحصائيات الموحدة من السيرفر
+   لوحة التحكم وتحديث الإحصائيات مع الحماية
    ======================================================== */
 async function updateDashboardStats() {
   const visitsEl = document.getElementById('dashTotalVisitsCount');
@@ -2019,7 +1732,6 @@ async function updateDashboardStats() {
   const tickerStatusEl = document.getElementById('dashTickerStatusText');
   const totalPostViewsSumEl = document.getElementById('dashTotalPostViewsSum');
 
-  // جلب إحصائيات الزيارات الموحدة من السيرفر مباشرة
   await fetchGlobalVisits();
   if (visitsEl) visitsEl.innerText = Number(globalVisitsCount).toLocaleString('ar-IQ');
   
@@ -2051,10 +1763,10 @@ async function renderDashboard() {
     return;
   }
 
-  document.getElementById('dashUserName').innerText = localStorage.getItem('sada_admin_name') || 'المدير';
+  document.getElementById('dashUserName').innerText = localStorage.getItem('sada_admin_name') || 'sada_admin';
   await fetchPostsFromServer();
   
-  updateDashboardStats();
+  await updateDashboardStats();
   initTicker();
 
   const tableBody = document.getElementById('dashPostsTable');
@@ -2258,14 +1970,24 @@ function cycleTheme() {
   showToast(`تم التبديل إلى الثيم: ${nextTheme === 'dark' ? 'الداكن' : nextTheme === 'light' ? 'المضيء' : 'النيون'}`, 'info');
 }
 
+window.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a' || e.key === 'ش')) {
+    e.preventDefault();
+    handleSecretAdminEntry();
+  }
+});
+
+window.addEventListener('hashchange', checkUrlHashForAdmin);
+
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('sada_theme') || 'dark';
   document.documentElement.setAttribute('data-theme', savedTheme);
   
-  // تسجيل زيارة الزوار الحقيقيين فقط
+  // تسجيل الزيارة فورياً مع كل فتح للصفحة
   trackPageVisit();
   initTicker();
   renderLiveNews();
+  checkUrlHashForAdmin();
 });
 </script>
 </body>

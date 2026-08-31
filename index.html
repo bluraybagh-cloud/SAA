@@ -32,7 +32,6 @@
     --danger: #e74c3c;
     --success: #2ecc71;
 
-    /* ربط المتغيرات بالوضع الافتراضي (الداكن) */
     --bg-color: #070B12;
     --text-color: #F4F6F8;
     --surface-color: #111A2E;
@@ -40,7 +39,6 @@
     --dim-color: #A3B1C2;
   }
 
-  /* الألوان الخاصة بالوضع المضيء (Light Mode) */
   [data-theme="light"] {
     --bg-color: #F8F9FA;
     --text-color: #111A2E;
@@ -74,7 +72,6 @@
       radial-gradient(circle at 0% 50%, rgba(17, 26, 46, 0.8), transparent 60%);
   }
 
-  /* HEADER & NAV */
   header {
     position: fixed; top: 0; right: 0; left: 0; z-index: 1000;
     background: rgba(7, 11, 18, 0.92);
@@ -107,7 +104,7 @@
     background: var(--gold-primary); transition: var(--transition);
   }
   .navlinks a:hover, .navlinks button:hover { color: var(--gold-light); }
-  .navlinks a:hover::after, .navlinks button::hover::after { width: 100%; }
+  .navlinks a:hover::after, .navlinks button:hover::after { width: 100%; }
 
   .nav-cta {
     background: var(--gold-gradient); color: var(--ink-dark);
@@ -118,11 +115,9 @@
   .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35); }
   .menu-toggle { display: none; color: var(--gold-primary); font-size: 24px; cursor: pointer; }
 
-  /* PAGE SYSTEM */
   .page-view { display: block; }
   .page-view.hidden-page { display: none !important; }
 
-  /* HERO SECTION */
   .hero {
     position: relative; min-height: 90vh; display: flex; align-items: center;
     padding: 160px 0 100px; overflow: hidden;
@@ -322,7 +317,6 @@
     cursor: not-allowed;
   }
 
-  /* AUTH & DASHBOARD STYLES */
   .auth-box {
     max-width: 460px; margin: 150px auto 80px; background: var(--ink-surface);
     border: 1px solid var(--border-gold); border-radius: 8px; padding: 40px;
@@ -1132,11 +1126,21 @@ async function renderLiveNews() {
   const mainListView = document.getElementById('mainNewsListView');
   const detailView = document.getElementById('singleNewsDetailView');
 
-  if (mainListView) mainListView.style.display = 'block';
-  if (detailView) detailView.style.display = 'none';
-
   if (!grid) return;
   grid.innerHTML = '';
+
+  // التحقق هل يوجد معرف خبر في الرابط (مثل #news-ID) لفتحه مباشرة
+  const hash = window.location.hash;
+  if (hash && hash.startsWith('#news-')) {
+    const targetId = hash.replace('#news-', '');
+    if (allPosts.length > 0) {
+      openPublicSingleNews(targetId, false);
+      return;
+    }
+  }
+
+  if (mainListView) mainListView.style.display = 'block';
+  if (detailView) detailView.style.display = 'none';
 
   if (allPosts.length === 0) {
     grid.innerHTML = '<p style="color: #cbd5e1; text-align: center; grid-column: 1/-1; font-size: 16px; padding: 30px;">لا توجد أخبار منشورة حالياً في الصفحة.</p>';
@@ -1190,7 +1194,7 @@ async function renderLiveNews() {
         <div style="font-size: 11.5px; color: var(--paper-dim); margin-bottom: 14px;">
           <i class="fas fa-calendar-alt" style="color: var(--gold-primary);"></i> ${postDate}
         </div>
-        <button class="read-more-btn" onclick="openPublicSingleNews('${p._id}')">قراءة المزيد</button>
+        <button class="read-more-btn" onclick="openPublicSingleNews('${p._id}', true)">قراءة المزيد</button>
       </div>
     `;
     grid.appendChild(card);
@@ -1205,13 +1209,18 @@ async function renderLiveNews() {
   if(nextBtn) nextBtn.disabled = currentNewsPage === totalPages;
 }
 
-// عرض صفحة تفاصيل الخبر الكاملة + تغيير الهيدلاين لعنوان الخبر
-function openPublicSingleNews(postId) {
+// عرض صفحة تفاصيل الخبر الكاملة وتحديث الـ URL الخاص بالخبر
+function openPublicSingleNews(postId, updateHash = true) {
   const post = allPosts.find(p => String(p._id) === String(postId));
   if(!post) return;
 
-  // تغيير هيدلاين الصفحة (العنوان) ليصبح نفس عنوان الخبر
+  // تغيير عنوان الصفحة (الهيدلاين) ليكون مطابقاً للخبر تماماً
   document.title = `${post.title} - وكالة صدى العطاء`;
+
+  // تحديث الـ URL في المتصفح ليحتوي على معرف الخبر المباشر
+  if (updateHash) {
+    history.pushState(null, null, `#news-${post._id}`);
+  }
 
   document.getElementById('mainNewsListView').style.display = 'none';
   document.getElementById('singleNewsDetailView').style.display = 'block';
@@ -1238,8 +1247,8 @@ function openPublicSingleNews(postId) {
       ${post.content || ''}
     </div>
     
-    <!-- زر نسخ الرابط المختصر -->
-    <button onclick="copyNewsLink('${post._id}', '${escapeText(post.title)}')" class="read-more-btn" style="background: rgba(212,175,55,0.15); display: inline-flex; align-items: center; gap: 8px;">
+    <!-- زر نسخ الرابط المباشر للخبر -->
+    <button onclick="copyNewsLink('${post._id}')" class="read-more-btn" style="background: rgba(212,175,55,0.15); display: inline-flex; align-items: center; gap: 8px;">
       <i class="fas fa-link"></i> نسخ رابط الخبر
     </button>
   `;
@@ -1262,7 +1271,7 @@ function openPublicSingleNews(postId) {
             <span style="font-size: 10px; color: var(--gold-light);">${escapeText(item.category || 'عام')}</span>
             <h4 style="color: #fff; font-size: 15px; margin: 6px 0 10px;">${escapeText(item.title || '')}</h4>
           </div>
-          <button class="read-more-btn" style="padding: 4px 10px; font-size: 12px;" onclick="openPublicSingleNews('${item._id}')">عرض الخبر</button>
+          <button class="read-more-btn" style="padding: 4px 10px; font-size: 12px;" onclick="openPublicSingleNews('${item._id}', true)">عرض الخبر</button>
         `;
         relatedGrid.appendChild(relCard);
       });
@@ -1272,9 +1281,10 @@ function openPublicSingleNews(postId) {
   document.getElementById('news-section').scrollIntoView({ behavior: 'smooth' });
 }
 
-// دالة نسخ رابط الخبر
-function copyNewsLink(postId, postTitle) {
-    const newsUrl = `${window.location.origin}#news-${postId}`;
+// دالة نسخ الرابط المباشر للخبر الفعلي
+function copyNewsLink(postId) {
+    const cleanUrl = window.location.href.split('#')[0];
+    const newsUrl = `${cleanUrl}#news-${postId}`;
     navigator.clipboard.writeText(newsUrl).then(() => {
         alert(`تم نسخ رابط الخبر بنجاح!`);
     }).catch(err => {
@@ -1282,9 +1292,9 @@ function copyNewsLink(postId, postTitle) {
     });
 }
 
-// العودة للقائمة الرئيسية وإعادة العنوان الافتراضي للموقع
 function backToNewsList() {
   document.title = "وكالة صدى العطاء - صوتٌ يصنع الأثر... و خبرٌ له صدى";
+  history.pushState(null, null, window.location.pathname);
   document.getElementById('singleNewsDetailView').style.display = 'none';
   document.getElementById('mainNewsListView').style.display = 'block';
   document.getElementById('news-section').scrollIntoView({ behavior: 'smooth' });
@@ -1481,7 +1491,6 @@ window.addEventListener('click', function(e) {
     }
 });
 
-// دوال تبديل المود (فاتح / داكن)
 function toggleTheme() {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const themeIcon = document.getElementById('themeIcon');

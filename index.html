@@ -3,9 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>وكالة صدى العطاء 
-صوتٌ يصنع الأثر... و خبرٌ له صدى
-</title>
+<title>وكالة صدى العطاء - صوتٌ يصنع الأثر... و خبرٌ له صدى</title>
+
+<!-- بطاقات الميتا الاجتماعية Open Graph & Twitter Cards -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="وكالة صدى العطاء">
+<meta property="og:title" content="وكالة صدى العطاء - صوتٌ يصنع الأثر... و خبرٌ له صدى" id="ogTitle">
+<meta property="og:description" content="تغطيات إخبارية حية وتقارير ميدانية توثق كافة الأنشطة والمبادرات الرسمية والمجتمعية أولاً بأول." id="ogDesc">
+<meta property="og:image" content="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" id="ogImage">
+<meta property="og:url" content="https://sadaalataa.com" id="ogUrl">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="وكالة صدى العطاء" id="twTitle">
+<meta name="twitter:description" content="وكالة صدى العطاء الإعلامية" id="twDesc">
+<meta name="twitter:image" content="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" id="twImage">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -382,6 +393,39 @@
   }
   .pagination-btn:hover:not(:disabled) { background: var(--gold-primary); color: var(--bg-color); }
   .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* أزرار المشاركة الاجتماعية الفاخرة */
+  .social-share-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .share-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #ffffff;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    font-family: 'Tajawal', sans-serif;
+    transition: var(--transition);
+  }
+  .share-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+  .share-wa { background: #25D366; }
+  .share-tg { background: #0088cc; }
+  .share-fb { background: #1877F2; }
+  .share-x { background: #111111; border: 1px solid rgba(255,255,255,0.2); }
+  .share-copy { background: rgba(212,175,55,0.18); color: var(--gold-light); border: 1px solid var(--border-gold); }
+  .share-copy:hover { background: var(--gold-primary); color: var(--bg-color); }
 
   /* بطاقات التحميل التفاعلية Skeleton Loader */
   .skeleton-card {
@@ -1183,7 +1227,7 @@
 
       <div class="dash-stat-card">
         <div class="stat-card-info">
-          <h4>إجمالي الأخبار والتغطيات</h4>
+          <h4>إجمالي الأخبار (منشورة / مسودات)</h4>
           <div class="stat-val" id="dashTotalPostsCount">0</div>
         </div>
         <div class="stat-card-icon">
@@ -1223,7 +1267,7 @@
       </div>
     </div>
 
-    <!-- قسم إضافة ونشر خبر جديد مع ضغط الصور التلقائي -->
+    <!-- قسم إضافة ونشر خبر جديد مع المسودات والتثبيت -->
     <div class="dash-panel">
       <h3 id="panelFormTitle">إضافة ونشر خبر جديد</h3>
       <form id="postForm" onsubmit="event.preventDefault(); savePostAction();">
@@ -1232,10 +1276,28 @@
           <label>عنوان الخبر أو التغطية</label>
           <input type="text" id="newsTitle" class="form-control" placeholder="اكتب عنواناً معبراً" required>
         </div>
-        <div class="form-group">
-          <label>القسم أو التصنيف</label>
-          <input type="text" id="newsCategory" class="form-control" placeholder="تغطية إنسانية، ورشة عمل، مؤتمر صحفي" required>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label>القسم أو التصنيف</label>
+            <input type="text" id="newsCategory" class="form-control" placeholder="تغطية إنسانية، ورشة عمل، مؤتمر صحفي" required>
+          </div>
+          <div class="form-group">
+            <label>حالة النشر</label>
+            <select id="newsStatus" class="form-control" style="cursor: pointer;">
+              <option value="published">منشور فوراً للجمهور</option>
+              <option value="draft">حفظ كمسودة (خاص بالإدارة)</option>
+            </select>
+          </div>
         </div>
+
+        <div class="form-group">
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--gold-light); font-size: 14px; font-weight: 700; margin-top: 5px;">
+            <input type="checkbox" id="newsIsPinned" style="width: 18px; height: 18px; accent-color: var(--gold-primary); cursor: pointer;">
+            <i class="fas fa-thumbtack" style="color: var(--gold-primary);"></i> تثبيت الخبر في أعلى الموقع (خبر مميز)
+          </label>
+        </div>
+
         <div class="form-group">
           <label>تاريخ ووقت النشر (اختياري، اتركه فارغاً للنشر الحالي)</label>
           <input type="datetime-local" id="newsCustomDate" class="form-control">
@@ -1249,7 +1311,7 @@
           <textarea id="newsContent" rows="4" class="form-control" placeholder="اكتب تفاصيل التغطية أو المبادرة..." required></textarea>
         </div>
         <div style="display: flex; gap: 12px; margin-top: 15px;">
-          <button type="submit" class="form-btn" id="saveSubmitBtn" style="width: auto; padding: 12px 35px; margin-top: 0;">نشر الخبر الآن</button>
+          <button type="submit" class="form-btn" id="saveSubmitBtn" style="width: auto; padding: 12px 35px; margin-top: 0;">حفظ ونشر الخبر</button>
           <button type="button" class="action-btn" id="cancelEditBtn" style="display: none; background: var(--surface-light); color: var(--text-color);" onclick="resetNewsForm()">إلغاء التعديل</button>
         </div>
       </form>
@@ -1258,7 +1320,7 @@
     <!-- قسم إدارة وتعديل الأخبار مع زر تصدير البيانات وإظهار المشاهدات -->
     <div class="dash-panel">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 14px;">
-        <h3 style="margin-bottom: 0;">إدارة وتعديل الأخبار المنشورة</h3>
+        <h3 style="margin-bottom: 0;">إدارة وتعديل الأخبار المنشورة والمسودات</h3>
         <button onclick="exportNewsToCSV()" class="action-btn btn-export" title="تصدير جميع الأخبار إلى ملف إكسل لتوثيق النشاط">
           <i class="fas fa-file-excel"></i> تصدير البيانات والتقارير (Excel / CSV)
         </button>
@@ -1270,6 +1332,7 @@
             <tr>
               <th>العنوان</th>
               <th>التصنيف</th>
+              <th>الحالة</th>
               <th>المشاهدات</th>
               <th>نوع الوسائط</th>
               <th>تاريخ النشر</th>
@@ -1490,18 +1553,20 @@ function exportNewsToCSV() {
   }
 
   let csvContent = "\uFEFF";
-  csvContent += "المعرف,عنوان الخبر,القسم / التصنيف,عدد المشاهدات الحقيقية,تاريخ النشر,عدد الصور المرفقة,رابط الخبر المباشر\n";
+  csvContent += "المعرف,عنوان الخبر,القسم / التصنيف,الحالة,مثبت,عدد المشاهدات الحقيقية,تاريخ النشر,عدد الصور المرفقة,رابط الخبر المباشر\n";
 
   allPosts.forEach((post, index) => {
     const title = `"${(post.title || '').replace(/"/g, '""')}"`;
     const category = `"${(post.category || '').replace(/"/g, '""')}"`;
+    const status = post.status === 'draft' ? "مسودة" : "منشور";
+    const isPinned = post.isPinned ? "نعم" : "لا";
     const views = getPostViews(post._id);
     const date = `"${post.date ? new Date(post.date).toLocaleDateString('ar-IQ') : 'اليوم'}"`;
     const imgCount = post.mediaUrls ? post.mediaUrls.length : (post.mediaUrl ? 1 : 0);
     const cleanUrl = window.location.href.split('#')[0];
     const link = `"${cleanUrl}#news-${post._id}"`;
 
-    csvContent += `${index + 1},${title},${category},${views},${date},${imgCount},${link}\n`;
+    csvContent += `${index + 1},${title},${category},${status},${isPinned},${views},${date},${imgCount},${link}\n`;
   });
 
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1605,8 +1670,13 @@ async function fetchPostsFromServer() {
     if (res.ok) {
       const fetched = await res.json();
       allPosts = fetched;
-      allPosts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-      // حفظ في الكاش المحلي لسرعة العرض في المرات القادمة
+      // ترتيب الأخبار: الأخبار المثبتة أولاً ثم الأحدث تاريخاً
+      allPosts.sort((a, b) => {
+        const aPinned = a.isPinned ? 1 : 0;
+        const bPinned = b.isPinned ? 1 : 0;
+        if (bPinned !== aPinned) return bPinned - aPinned;
+        return new Date(b.date || 0) - new Date(a.date || 0);
+      });
       localStorage.setItem('sada_cached_posts', JSON.stringify(allPosts));
     }
   } catch (err) {
@@ -1622,14 +1692,17 @@ function displayPostsGrid() {
   const paginationDiv = document.getElementById('newsPagination');
   if (!grid) return;
 
-  if (allPosts.length === 0) {
+  // عرض الأخبار المنشورة فقط واستثناء المسودات للزوار
+  const publishedPosts = allPosts.filter(p => p.status !== 'draft');
+
+  if (publishedPosts.length === 0) {
     grid.innerHTML = '<p style="color: var(--dim-color); text-align: center; grid-column: 1/-1; font-size: 16px; padding: 30px;">لا توجد أخبار منشورة حالياً في الصفحة.</p>';
     if (paginationDiv) paginationDiv.style.display = 'none';
     return;
   }
 
   grid.innerHTML = '';
-  const totalPages = Math.ceil(allPosts.length / newsPerPage);
+  const totalPages = Math.ceil(publishedPosts.length / newsPerPage);
   if (totalPages > 1 && paginationDiv) {
     paginationDiv.style.display = 'flex';
   } else if (paginationDiv) {
@@ -1640,7 +1713,7 @@ function displayPostsGrid() {
   if (currentNewsPage < 1) currentNewsPage = 1;
 
   const start = (currentNewsPage - 1) * newsPerPage;
-  const paginatedPosts = allPosts.slice(start, start + newsPerPage);
+  const paginatedPosts = publishedPosts.slice(start, start + newsPerPage);
 
   paginatedPosts.forEach((p) => {
     let mediaHtml = '';
@@ -1660,13 +1733,19 @@ function displayPostsGrid() {
     const shortText = fullContent.length > 130 ? fullContent.substring(0, 130) + '...' : fullContent;
     const postDate = p.date ? new Date(p.date).toLocaleDateString('ar-IQ') : 'اليوم';
 
+    // شارة التثبيت للخبر المميز
+    const pinnedBadgeHtml = p.isPinned ? `<span style="display:inline-flex; align-items:center; gap:5px; font-size:11px; background:rgba(212,175,55,0.2); color:var(--gold-light); border:1px solid var(--gold-primary); padding:3px 8px; border-radius:4px; margin-left:6px;"><i class="fas fa-thumbtack" style="color:var(--gold-primary);"></i> خبر مثبت</span>` : '';
+
     const card = document.createElement('div');
     card.className = 'campaign-card';
     card.innerHTML = `
       <div>
         ${mediaHtml}
         <div class="campaign-body">
-          <span class="news-badge" style="display:inline-block; font-size: 11.5px; color: var(--gold-primary); border: 1px solid var(--border-gold); padding: 3px 10px; border-radius: 4px; margin-bottom: 10px;">${escapeText(p.category)}</span>
+          <div style="display:flex; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
+            ${pinnedBadgeHtml}
+            <span class="news-badge" style="display:inline-block; font-size: 11.5px; color: var(--gold-primary); border: 1px solid var(--border-gold); padding: 3px 10px; border-radius: 4px;">${escapeText(p.category)}</span>
+          </div>
           <h3 class="campaign-title">${escapeText(p.title)}</h3>
           <div class="news-text-content">${shortText}</div>
         </div>
@@ -1709,7 +1788,6 @@ async function renderLiveNews() {
   if (mainListView) mainListView.style.display = 'block';
   if (detailView) detailView.style.display = 'none';
 
-  // التحميل الفوري من الكاش أولاً (Instant Cache)
   if (allPosts.length === 0) {
     const cached = localStorage.getItem('sada_cached_posts');
     if (cached) {
@@ -1718,7 +1796,6 @@ async function renderLiveNews() {
       } catch(e) {}
     }
     
-    // إذا لم يتوفر كاش سابق، عرض مؤشرات تحميل متحركة (Skeleton)
     if (allPosts.length === 0) {
       grid.innerHTML = `
         <div class="skeleton-card">
@@ -1746,12 +1823,10 @@ async function renderLiveNews() {
     }
   }
 
-  // رسم الأخبار المخزنة مباشرة
   if (allPosts.length > 0) {
     displayPostsGrid();
   }
 
-  // تحديث البيانات من السيرفر السحابي في الخلفية
   fetchPostsFromServer().then(() => {
     displayPostsGrid();
   });
@@ -1764,6 +1839,26 @@ function openPublicSingleNews(postId, updateHash = true) {
   if(!post) return;
 
   document.title = `${post.title} - وكالة صدى العطاء`;
+
+  // تحديث وسوم الميتا تاغ ديناميكياً عند فتح الخبر
+  const firstImg = (post.mediaUrls && post.mediaUrls[0]) || post.mediaUrl || "https://i.postimg.cc/vBQyqJ4V/IMG-7018.png";
+  const shortDesc = post.content ? post.content.substring(0, 160) : 'وكالة صدى العطاء الإخبارية';
+
+  const ogTitle = document.getElementById('ogTitle');
+  const ogDesc = document.getElementById('ogDesc');
+  const ogImage = document.getElementById('ogImage');
+  const ogUrl = document.getElementById('ogUrl');
+  if (ogTitle) ogTitle.content = post.title;
+  if (ogDesc) ogDesc.content = shortDesc;
+  if (ogImage) ogImage.content = firstImg;
+  if (ogUrl) ogUrl.content = `${window.location.href.split('#')[0]}#news-${post._id}`;
+
+  const twTitle = document.getElementById('twTitle');
+  const twDesc = document.getElementById('twDesc');
+  const twImage = document.getElementById('twImage');
+  if (twTitle) twTitle.content = post.title;
+  if (twDesc) twDesc.content = shortDesc;
+  if (twImage) twImage.content = firstImg;
 
   if (updateHash) {
     history.pushState(null, null, `#news-${post._id}`);
@@ -1784,9 +1879,21 @@ function openPublicSingleNews(postId, updateHash = true) {
 
   const detailBox = document.getElementById('singleNewsContentBox');
   const postDate = post.date ? new Date(post.date).toLocaleDateString('ar-IQ') : 'اليوم';
+  
+  // توليد روابط المشاركة الاجتماعية
+  const cleanUrl = window.location.href.split('#')[0];
+  const directNewsUrl = `${cleanUrl}#news-${post._id}`;
+  const encodedUrl = encodeURIComponent(directNewsUrl);
+  const encodedTitle = encodeURIComponent(post.title || 'وكالة صدى العطاء');
+
+  const pinnedBadgeHtml = post.isPinned ? `<span style="font-size:12px; color:var(--gold-light); background:rgba(212,175,55,0.25); border:1px solid var(--gold-primary); padding:4px 10px; border-radius:4px; display:inline-flex; align-items:center; gap:5px; margin-left:8px;"><i class="fas fa-thumbtack" style="color:var(--gold-primary);"></i> خبر مثبت</span>` : '';
 
   detailBox.innerHTML = `
-    <span style="font-size: 12px; color: var(--gold-light); background: rgba(212,175,55,0.15); padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 12px;">${escapeText(post.category || 'عام')}</span>
+    <div style="display: flex; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+      ${pinnedBadgeHtml}
+      <span style="font-size: 12px; color: var(--gold-light); background: rgba(212,175,55,0.15); padding: 4px 10px; border-radius: 4px;">${escapeText(post.category || 'عام')}</span>
+    </div>
+    
     <h2 style="color: var(--text-color); font-size: 28px; margin-bottom: 15px;">${escapeText(post.title || '')}</h2>
     
     <div style="font-size: 13px; color: var(--dim-color); margin-bottom: 25px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px;">
@@ -1798,15 +1905,36 @@ function openPublicSingleNews(postId, updateHash = true) {
       ${post.content || ''}
     </div>
     
-    <button onclick="copyNewsLink('${post._id}')" class="read-more-btn" style="background: rgba(212,175,55,0.15); display: inline-flex; align-items: center; gap: 8px;">
-      <i class="fas fa-link"></i> نسخ رابط الخبر
-    </button>
+    <!-- قسم أزرار المشاركة المباشرة للسوشيال ميديا -->
+    <div class="social-share-container">
+      <span style="font-size: 14px; font-weight: 700; color: var(--gold-light); margin-left: 10px;">مشاركة الخبر:</span>
+      
+      <a href="https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}" target="_blank" class="share-btn share-wa" title="مشاركة عبر واتساب">
+        <i class="fab fa-whatsapp"></i> واتساب
+      </a>
+
+      <a href="https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}" target="_blank" class="share-btn share-tg" title="مشاركة عبر تيليجرام">
+        <i class="fab fa-telegram-plane"></i> تيليجرام
+      </a>
+
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}" target="_blank" class="share-btn share-fb" title="مشاركة عبر فيسبوك">
+        <i class="fab fa-facebook-f"></i> فيسبوك
+      </a>
+
+      <a href="https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}" target="_blank" class="share-btn share-x" title="مشاركة عبر منصة X">
+        <i class="fab fa-x-twitter"></i> منصة X
+      </a>
+
+      <button onclick="copyNewsLink('${post._id}')" class="share-btn share-copy" title="نسخ رابط الخبر">
+        <i class="fas fa-link"></i> نسخ الرابط
+      </button>
+    </div>
   `;
 
   const relatedGrid = document.getElementById('relatedNewsGrid');
   if(relatedGrid) {
     relatedGrid.innerHTML = '';
-    const otherPosts = allPosts.filter(p => String(p._id) !== String(postId)).slice(0, 3);
+    const otherPosts = allPosts.filter(p => String(p._id) !== String(postId) && p.status !== 'draft').slice(0, 3);
     
     if(otherPosts.length === 0) {
       relatedGrid.innerHTML = '<p style="color: var(--dim-color); font-size: 14px;">لا توجد أخبار أخرى حالياً.</p>';
@@ -1865,7 +1993,10 @@ function updateDashboardStats() {
 
   const totalVisits = localStorage.getItem('sada_real_visits') || '0';
   if (visitsEl) visitsEl.innerText = Number(totalVisits).toLocaleString('ar-IQ');
-  if (postsEl) postsEl.innerText = Number(allPosts.length).toLocaleString('ar-IQ');
+  
+  const publishedCount = allPosts.filter(p => p.status !== 'draft').length;
+  const draftsCount = allPosts.filter(p => p.status === 'draft').length;
+  if (postsEl) postsEl.innerText = `${allPosts.length} (${publishedCount} منشور / ${draftsCount} مسودة)`;
 
   if (totalPostViewsSumEl) {
     const totalViews = getTotalPostViewsSum();
@@ -1905,9 +2036,18 @@ async function renderDashboard() {
     let count = item.mediaUrls ? item.mediaUrls.length : (item.mediaUrl ? 1 : 0);
     const postViews = getPostViews(item._id);
 
+    // حالة الخبر (منشور أم مسودة)
+    const statusBadge = item.status === 'draft' 
+      ? `<span style="background:rgba(231,76,60,0.15); color:#ff9b9b; border:1px solid var(--danger); padding:2px 8px; border-radius:4px; font-size:11px;"><i class="fas fa-file-alt"></i> مسودة</span>`
+      : `<span style="background:rgba(46,204,113,0.15); color:#8bedb1; border:1px solid var(--success); padding:2px 8px; border-radius:4px; font-size:11px;"><i class="fas fa-check"></i> منشور</span>`;
+
+    // علامة التثبيت
+    const pinIcon = item.isPinned ? `<i class="fas fa-thumbtack" style="color:var(--gold-primary); margin-left:6px;" title="خبر مثبت"></i>` : '';
+
     tr.innerHTML = `
-      <td><b>${escapeText(item.title)}</b></td>
+      <td>${pinIcon}<b>${escapeText(item.title)}</b></td>
       <td><span class="news-badge" style="display:inline-block; font-size:11px; padding:2px 8px; border:1px solid var(--border-gold); border-radius:4px; color:var(--gold-light);">${escapeText(item.category)}</span></td>
+      <td>${statusBadge}</td>
       <td><span style="color:var(--gold-primary); font-weight:bold;"><i class="fas fa-eye"></i> ${postViews}</span></td>
       <td><span style="color:var(--dim-color);"><i class="fas fa-images"></i> ${count} صورة</span></td>
       <td>${item.date ? new Date(item.date).toLocaleDateString('ar-IQ') : 'اليوم'}</td>
@@ -1924,6 +2064,8 @@ async function savePostAction() {
   const editId = document.getElementById('editPostId').value;
   const title = document.getElementById('newsTitle').value.trim();
   const category = document.getElementById('newsCategory').value.trim();
+  const status = document.getElementById('newsStatus').value;
+  const isPinned = document.getElementById('newsIsPinned').checked;
   const content = document.getElementById('newsContent').value.trim();
   const customDateInput = document.getElementById('newsCustomDate').value;
   const fileInput = document.getElementById('newsImageFile');
@@ -1942,7 +2084,7 @@ async function savePostAction() {
     mediaUrls = ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"];
   }
 
-  const postData = { title, category, mediaType: 'image', mediaUrls, content, date: postDate };
+  const postData = { title, category, status, isPinned, mediaType: 'image', mediaUrls, content, date: postDate };
 
   try {
     let response;
@@ -1961,7 +2103,7 @@ async function savePostAction() {
     }
 
     if (response.ok) {
-      showToast(editId ? 'تم تحديث بيانات الخبر بنجاح!' : 'تم نشر الخبر الجديد بنجاح!', 'success');
+      showToast(editId ? 'تم تحديث بيانات الخبر بنجاح!' : (status === 'draft' ? 'تم حفظ المسودة بنجاح!' : 'تم نشر الخبر الجديد بنجاح!'), 'success');
       resetNewsForm();
       await fetchPostsFromServer();
       renderDashboard();
@@ -1982,6 +2124,8 @@ function startEditPost(id) {
   document.getElementById('editPostId').value = post._id;
   document.getElementById('newsTitle').value = post.title;
   document.getElementById('newsCategory').value = post.category;
+  document.getElementById('newsStatus').value = post.status || 'published';
+  document.getElementById('newsIsPinned').checked = !!post.isPinned;
   document.getElementById('newsContent').value = post.content;
   document.getElementById('newsCustomDate').value = post.date ? post.date.slice(0, 16) : '';
 
@@ -1995,7 +2139,7 @@ function resetNewsForm() {
   document.getElementById('postForm').reset();
   document.getElementById('editPostId').value = '';
   document.getElementById('panelFormTitle').innerText = 'إضافة ونشر خبر جديد';
-  document.getElementById('saveSubmitBtn').innerText = 'نشر الخبر الآن';
+  document.getElementById('saveSubmitBtn').innerText = 'حفظ ونشر الخبر';
   document.getElementById('cancelEditBtn').style.display = 'none';
 }
 

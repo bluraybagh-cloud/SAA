@@ -31,17 +31,34 @@
 
     --danger: #e74c3c;
     --success: #2ecc71;
+
+    /* ربط المتغيرات بالوضع الافتراضي (الداكن) */
+    --bg-color: #070B12;
+    --text-color: #F4F6F8;
+    --surface-color: #111A2E;
+    --surface-light: #18243D;
+    --dim-color: #A3B1C2;
+  }
+
+  /* الألوان الخاصة بالوضع المضيء (Light Mode) */
+  [data-theme="light"] {
+    --bg-color: #F8F9FA;
+    --text-color: #111A2E;
+    --surface-color: #FFFFFF;
+    --surface-light: #E9ECEF;
+    --dim-color: #495057;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
 
   body {
-    background-color: var(--ink-dark);
-    color: var(--paper);
+    background-color: var(--bg-color);
+    color: var(--text-color);
     font-family: 'Tajawal', sans-serif;
     line-height: 1.8;
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1, h2, h3, .font-arabic { font-family: 'Tajawal', sans-serif; font-weight: 900; }
@@ -90,7 +107,7 @@
     background: var(--gold-primary); transition: var(--transition);
   }
   .navlinks a:hover, .navlinks button:hover { color: var(--gold-light); }
-  .navlinks a:hover::after, .navlinks button:hover::after { width: 100%; }
+  .navlinks a:hover::after, .navlinks button::hover::after { width: 100%; }
 
   .nav-cta {
     background: var(--gold-gradient); color: var(--ink-dark);
@@ -373,30 +390,6 @@
     .network-grid { grid-template-columns: 1fr; }
     .footer-grid { grid-template-columns: 1fr; gap: 36px; }
   }
-  /* الألوان الافتراضية (الوضع الداكن الحالي) */
-:root {
-  --bg-color: #070B12;
-  --text-color: #F4F6F8;
-  --surface-color: #111A2E;
-  --surface-light: #18243D;
-  --dim-color: #A3B1C2;
-}
-
-/* الألوان الخاصة بالوضع المضيء (Light Mode) */
-[data-theme="light"] {
-  --bg-color: #F8F9FA;
-  --text-color: #111A2E;
-  --surface-color: #FFFFFF;
-  --surface-light: #E9ECEF;
-  --dim-color: #495057;
-}
-
-/* تطبيق المتغيرات على الجسم (Body) لتتغير تلقائياً */
-body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
 </style>
 </head>
 <body>
@@ -451,12 +444,13 @@ body {
       </div>
     </div>
 
+    <!-- زر تبديل المود -->
+    <button onclick="toggleTheme()" id="themeToggleBtn" style="background: none; border: 1px solid var(--border-gold); color: var(--gold-primary); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; margin-right: 5px;" title="تغيير المظهر">
+      <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
     <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
   </nav>
-  <!-- زر تبديل المود -->
-<button onclick="toggleTheme()" id="themeToggleBtn" style="background: none; border: 1px solid var(--border-gold); color: var(--gold-primary); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s;" title="تغيير المظهر">
-  <i class="fas fa-moon" id="themeIcon"></i>
-</button>
 </header>
 
 <!-- HERO SECTION -->
@@ -472,7 +466,7 @@ body {
 
 <div id="main-page" class="page-view">
 
-  <!-- NEWS LIVE STREAM (محدث ليعمل بنظام الاختصار والانتقال والترتيب من الأحدث للأقدم) -->
+  <!-- NEWS LIVE STREAM -->
   <section id="news-section" style="position: relative; padding: 140px 0 110px; overflow: hidden; background: linear-gradient(180deg, rgba(7, 11, 18, 0.85) 0%, rgba(11, 18, 32, 0.96) 100%), url('https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;">
     <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.15), transparent 60%); pointer-events: none;"></div>
     <div class="wrap" style="position: relative; z-index: 2;">
@@ -1124,7 +1118,6 @@ async function fetchPostsFromServer() {
     const res = await fetch(`${API_URL}/posts`);
     if (res.ok) {
       allPosts = await res.json();
-      // ترتيب الأخبار تلقائياً من الأحدث إلى الأقدم بناءً على تاريخ النشر
       allPosts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
     }
   } catch (err) {
@@ -1132,7 +1125,6 @@ async function fetchPostsFromServer() {
   }
 }
 
-// دالة عرض الأخبار المحدثة (مختصرة + نظام صفحات + زر قراءة المزيد)
 async function renderLiveNews() {
   await fetchPostsFromServer();
   const grid = document.getElementById('liveNewsGrid');
@@ -1213,10 +1205,13 @@ async function renderLiveNews() {
   if(nextBtn) nextBtn.disabled = currentNewsPage === totalPages;
 }
 
-// عرض صفحة تفاصيل الخبر الكاملة عند النقر
+// عرض صفحة تفاصيل الخبر الكاملة + تغيير الهيدلاين لعنوان الخبر
 function openPublicSingleNews(postId) {
   const post = allPosts.find(p => String(p._id) === String(postId));
   if(!post) return;
+
+  // تغيير هيدلاين الصفحة (العنوان) ليصبح نفس عنوان الخبر
+  document.title = `${post.title} - وكالة صدى العطاء`;
 
   document.getElementById('mainNewsListView').style.display = 'none';
   document.getElementById('singleNewsDetailView').style.display = 'block';
@@ -1239,9 +1234,14 @@ function openPublicSingleNews(postId) {
     <h2 style="color: #fff; font-size: 28px; margin-bottom: 15px;">${escapeText(post.title || '')}</h2>
     <span style="font-size: 13px; color: #94a3b8; display: block; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">تاريخ النشر: ${postDate}</span>
     ${mediaHtml}
-    <div style="color: #e2e8f0; font-size: 16px; line-height: 1.9; white-space: pre-line;">
+    <div style="color: #e2e8f0; font-size: 16px; line-height: 1.9; white-space: pre-line; margin-bottom: 25px;">
       ${post.content || ''}
     </div>
+    
+    <!-- زر نسخ الرابط المختصر -->
+    <button onclick="copyNewsLink('${post._id}', '${escapeText(post.title)}')" class="read-more-btn" style="background: rgba(212,175,55,0.15); display: inline-flex; align-items: center; gap: 8px;">
+      <i class="fas fa-link"></i> نسخ رابط الخبر
+    </button>
   `;
 
   // تعبئة قسم "قد يهمك أيضاً" بالأسفل (عناوين مختصرة)
@@ -1272,7 +1272,19 @@ function openPublicSingleNews(postId) {
   document.getElementById('news-section').scrollIntoView({ behavior: 'smooth' });
 }
 
+// دالة نسخ رابط الخبر
+function copyNewsLink(postId, postTitle) {
+    const newsUrl = `${window.location.origin}#news-${postId}`;
+    navigator.clipboard.writeText(newsUrl).then(() => {
+        alert(`تم نسخ رابط الخبر بنجاح!`);
+    }).catch(err => {
+        alert('تعذر نسخ الرابط');
+    });
+}
+
+// العودة للقائمة الرئيسية وإعادة العنوان الافتراضي للموقع
 function backToNewsList() {
+  document.title = "وكالة صدى العطاء - صوتٌ يصنع الأثر... و خبرٌ له صدى";
   document.getElementById('singleNewsDetailView').style.display = 'none';
   document.getElementById('mainNewsListView').style.display = 'block';
   document.getElementById('news-section').scrollIntoView({ behavior: 'smooth' });
@@ -1323,7 +1335,6 @@ async function savePostAction() {
   const fileInput = document.getElementById('newsImageFile');
   const token = localStorage.getItem('sada_token');
 
-  // معالجة تاريخ النشر (المخصص أو الحالي تلقائياً)
   const postDate = customDateInput ? new Date(customDateInput).toISOString() : new Date().toISOString();
 
   const convertFilesToasts = (files) => {
@@ -1470,11 +1481,7 @@ window.addEventListener('click', function(e) {
     }
 });
 
-renderLiveNews();
-// ... دوال الموقع الموجودة لديك مسبقاً (مثل navigateTo و renderLiveNews وغيرها) ...
-
-// قم بلصق كود تبديل المود هنا في الأسفل مع باقي الدّوال:
-
+// دوال تبديل المود (فاتح / داكن)
 function toggleTheme() {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const themeIcon = document.getElementById('themeIcon');
@@ -1510,6 +1517,7 @@ window.addEventListener('DOMContentLoaded', () => {
             themeIcon.classList.add('fa-moon');
         }
     }
+    renderLiveNews();
 });
 </script>
 </body>

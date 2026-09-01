@@ -199,7 +199,7 @@
       <p style="font-size: 13.5px; color: var(--dim-color);">سجل الدخول أو أنشئ حساباً جديداً لمتابعة حجز ونشر إعلاناتك</p>
     </div>
 
-    <!-- التبويبات مع معرفات مباشرة للتبديل الفوري -->
+    <!-- التبويبات المباشرة -->
     <div class="auth-tabs" id="authTabsBar">
       <button type="button" id="loginTabBtn" class="auth-tab-btn active" onclick="switchAuthTab('login')">تسجيل الدخول</button>
       <button type="button" id="registerTabBtn" class="auth-tab-btn" onclick="switchAuthTab('register')">إنشاء حساب جديد</button>
@@ -466,7 +466,7 @@ function showToast(msg, type = 'info') {
   setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 4000);
 }
 
-// دالة التبديل الدقيقة والمباشرة بين التبويبات
+// دالة التبديل الدقيقة بين التبويبات
 function switchAuthTab(tab) {
   const loginTabBtn = document.getElementById('loginTabBtn');
   const registerTabBtn = document.getElementById('registerTabBtn');

@@ -14,7 +14,7 @@
 <meta property="og:url" content="https://sadaalataa.com" id="ogUrl">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="وكالة صدى العطاء" id="twTitle">
-<meta name="twitter:description" content="وكالة صدى العطاء الإعلامية" id="twDesc">
+<meta name="twitter:description" content="وكالة صدى العطاء " id="twDesc">
 <meta name="twitter:image" content="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" id="twImage">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -316,7 +316,7 @@
   .campaign-body { padding: 0; }
   .campaign-title { font-size: 18.5px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; }
   .campaign-desc { font-size: 14px; color: var(--dim-color); line-height: 1.6; }
-  .back-btn- { margin-bottom: 35px; }
+  .back-btn-container { margin-bottom: 35px; }
 
   .news-text-content { color: var(--dim-color); font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
   .read-more-btn {
@@ -335,30 +335,25 @@
   .pagination-btn:hover:not(:disabled) { background: var(--gold-primary); color: var(--bg-color); }
   .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* أزرار المشاركة الاجتماعية */
- <div class="social-share-container">
-      <span style="font-size: 14px; font-weight: 700; color: var(--gold-light); margin-left: 10px;">مشاركة الخبر:</span>
-      
-      <a href="https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}" target="_blank" onclick="trackShare('${post._id}')" class="share-btn share-wa" title="مشاركة عبر واتساب">
-        <i class="fab fa-whatsapp"></i> واتساب
-      </a>
+  /* أزرار المشاركة الاجتماعية داخل تفاصيل الخبر */
+  .social-share-container {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-subtle);
+  }
+  .share-btn {
+    padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 8px; color: #ffffff;
+    text-decoration: none; cursor: pointer; border: none; font-family: 'Tajawal', sans-serif;
+    transition: var(--transition);
+  }
+  .share-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+  .share-wa { background: #25D366; }
+  .share-tg { background: #0088cc; }
+  .share-fb { background: #1877F2; }
+  .share-x { background: #111111; border: 1px solid rgba(255,255,255,0.2); }
+  .share-copy { background: rgba(212,175,55,0.18); color: var(--gold-light); border: 1px solid var(--border-gold); }
+  .share-copy:hover { background: var(--gold-primary); color: var(--bg-color); }
 
-      <a href="https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}" target="_blank" onclick="trackShare('${post._id}')" class="share-btn share-tg" title="مشاركة عبر تيليجرام">
-        <i class="fab fa-telegram-plane"></i> تيليجرام
-      </a>
-
-      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}" target="_blank" onclick="trackShare('${post._id}')" class="share-btn share-fb" title="مشاركة عبر فيسبوك">
-        <i class="fab fa-facebook-f"></i> فيسبوك
-      </a>
-
-      <a href="https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}" target="_blank" onclick="trackShare('${post._id}')" class="share-btn share-x" title="مشاركة عبر منصة X">
-        <i class="fab fa-x-twitter"></i> منصة X
-      </a>
-
-      <button onclick="trackShare('${post._id}'); copyNewsLink('${post._id}');" class="share-btn share-copy" title="نسخ رابط الخبر">
-        <i class="fas fa-link"></i> نسخ الرابط
-      </button>
-    </div>
   /* بطاقات التحميل التفاعلية Skeleton Loader */
   .skeleton-card {
     background: var(--surface-color); border: 1px solid var(--border-subtle);
@@ -626,13 +621,13 @@
     <div class="wrap">
       <div class="kicker">الهوية والتوجه</div>
       <h2 class="section-title">من نحن... <b> وكالة صدى العطاء الذراع الاعلامي لمؤسسة صدى العطاء </b></h2>
-      <p class="section-desc">تأسست وكالة صدى العطاء الإعلامية لتكون جسراً ينقل الحقيقة ويصنع التغيير الإيجابي، تجمع بين قوة التوثيق الإعلامي ونبل الرسالة الإنسانية لتسليط الضوء على القضايا المجتمعية ودعم التنمية.</p>
+      <p class="section-desc">تأسست وكالة صدى العطاء  لتكون جسراً ينقل الحقيقة ويصنع التغيير الإيجابي، تجمع بين قوة التوثيق الإعلامي ونبل الرسالة الإنسانية لتسليط الضوء على القضايا المجتمعية ودعم التنمية.</p>
       
       <div class="about-grid">
         <div class="vm-card">
           <div class="vm-icon"><i class="fas fa-eye"></i></div>
           <h3>الرؤية الاستراتيجية</h3>
-          <p>بناء وكالة إعلامية مهنية وموثوقة تسهم في نقل الحقيقة وصناعة محتوى مسؤول يخدم المجتمع ويساند مسارات الإعلام والتنمية المستدامة.</p>
+          <p>بناء وكالة  مهنية وموثوقة تسهم في نقل الحقيقة وصناعة محتوى مسؤول يخدم المجتمع ويساند مسارات الإعلام والتنمية المستدامة.</p>
         </div>
         <div class="vm-card">
           <div class="vm-icon"><i class="fas fa-bullseye"></i></div>
@@ -658,10 +653,10 @@
         <div class="field-card"><i class="fas fa-pen-nib field-icon"></i><div class="field-title">دعم</div><p class="field-desc">دعم أهداف التنمية المستدامة من خلال العمل الإعلامي.</p></div>
         <div class="field-card"><i class="fas fa-hashtag field-icon"></i><div class="field-title">الاخبار المضللة</div><p class="field-desc">مكافحة الأخبار الكاذبة والمعلومات المضللة والشائعات وفق الأساليب المهنية.</p></div>
         <div class="field-card"><i class="fas fa-shield-alt field-icon"></i><div class="field-title">الأمن الفكري والإعلامي</div><p class="field-desc">المساهمة في مواجهة خطاب الكراهية والطائفية والتطرف العنيف إعلامياً.</p></div>
-        <div class="field-card"><i class="fas fa-user-graduate field-icon"></i><div class="field-title">رعاية الكفاءات الشابة</div><p class="field-desc">تطوير قدرات الشباب والعاملين في المجالات الإعلامية ودعم المواهب والكفاءات.</p></div>
+        <div class="field-card"><i class="fas fa-user-graduate field-icon"></i><div class="field-title">رعاية الكفاءات الشابة</div><p class="field-desc">تطوير قدرات الشباب والعاملين في جميع المجالات  ودعم المواهب والكفاءات.</p></div>
         <div class="field-card"><i class="fas fa-laptop-code field-icon"></i><div class="field-title">إدارة المنصات الرقمية</div><p class="field-desc">صناعة وإدارة المحتوى الرقمي والتعريف بأنشطة وبرامج ومشاريع مؤسسة صدى العطاء ومراكزها.</p></div>
         <div class="field-card"><i class="fas fa-handshake field-icon"></i><div class="field-title">الشراكات الاستراتيجية</div><p class="field-desc">إقامة علاقات وتعاون إعلامي مع المؤسسات والجهات ذات العلاقة.</p></div>
-        <div class="field-card"><i class="fas fa-calendar-alt field-icon"></i><div class="field-title">الملتقيات والأنشطة العامة</div><p class="field-desc">المشاركة في تنظيم المؤتمرات والمهرجانات والندوات والورش والفعاليات الإعلامية.</p></div>
+        <div class="field-card"><i class="fas fa-calendar-alt field-icon"></i><div class="field-title">الملتقيات والأنشطة العامة</div><p class="field-desc">المشاركة في تنظيم المؤتمرات والمهرجانات والندوات والورش والفعاليات </p></div>
         <div class="field-card"><i class="fas fa-network-wired field-icon"></i><div class="field-title">التغطية الميدانية الشاملة</div><p class="field-desc">إنشاء شبكة من المراسلين والمكاتب والفروع في المحافظات العراقية.</p></div>
       </div>
     </div>
@@ -978,7 +973,7 @@
               <th>التصنيف</th>
               <th>الحالة</th>
               <th>المشاهدات</th>
-<th>المشاركات</th>
+              <th>المشاركات</th>
               <th>نوع الوسائط</th>
               <th>تاريخ النشر</th>
               <th>التحكم والعمليات</th>
@@ -1151,7 +1146,7 @@ function getTotalPostViewsSum() {
   return total;
 }
 
-// زيادة المشاهدات فورياً
+// زيادة المشاهدات فورياً عند فتح الخبر
 async function incrementPostViews(postId) {
   if (localStorage.getItem('sada_token')) return;
 
@@ -1167,7 +1162,7 @@ async function incrementPostViews(postId) {
   } catch(e) {}
 }
 
-// احتساب المشاركات
+// احتساب المشاركات عند الضغط على أزرار النشر
 async function trackShare(postId) {
   try {
     const res = await fetch(`${API_URL}/posts/${postId}/share`, { method: 'POST' });
@@ -1186,7 +1181,7 @@ function initTicker() {
   const tickerText = document.getElementById('liveTickerText');
   const tickerTextDup = document.getElementById('liveTickerTextDup');
   
-  const savedTicker = localStorage.getItem('sada_ticker_text') || 'أهلاً بكم في الموقع الرسمي لوكالة صدى العطاء الإعلامية - صوتٌ يصنع الأثر وخبرٌ له صدى.';
+  const savedTicker = localStorage.getItem('sada_ticker_text') || 'أهلاً بكم في الموقع الرسمي لوكالة صدى العطاء  - صوتٌ يصنع الأثر وخبرٌ له صدى.';
   const isEnabled = localStorage.getItem('sada_ticker_active') !== 'false';
 
   if (tickerText) tickerText.innerText = savedTicker;

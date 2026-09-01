@@ -61,13 +61,12 @@ const PostSchema = new mongoose.Schema({
     mediaType: String,
     mediaUrls: [String], 
     content: String,
-    status: { type: String, default: 'published' }, // منشور أو مسودة
-    isPinned: { type: Boolean, default: false },    // تثبيت الخبر
-    views: { type: Number, default: 0 },           // عدد المشاهدات الحقيقية
+    status: { type: String, default: 'published' },
+    isPinned: { type: Boolean, default: false },
+    views: { type: Number, default: 0 },   // المشاهدات
+    shares: { type: Number, default: 0 },  // عدد المشاركات
     date: { type: String, default: () => new Date().toISOString().split('T')[0] }
 });
-const Post = mongoose.model('Post', PostSchema);
-
 // 3. جدول إحصائيات الزيارات الموحدة
 const StatSchema = new mongoose.Schema({
     key: { type: String, default: 'global_visits' },
@@ -278,6 +277,7 @@ app.get('/api/visits', verifyToken, async (req, res) => {
 });
 
 // مسار زيادة مشاهدات خبر محدد عند فتحه
+// مسار زيادة مشاهدات الخبر (مباشر وسريع)
 app.post('/api/posts/:id/view', async (req, res) => {
     try {
         const post = await Post.findByIdAndUpdate(
@@ -291,6 +291,19 @@ app.post('/api/posts/:id/view', async (req, res) => {
     }
 });
 
+// مسار زيادة عدد مشاركات الخبر عند المشاركة
+app.post('/api/posts/:id/share', async (req, res) => {
+    try {
+        const post = await Post.findByIdAndUpdate(
+            req.params.id,
+            { $inc: { shares: 1 } },
+            { new: true }
+        );
+        res.json({ shares: post ? post.shares : 0 });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 // ==========================================
 // مسارات الأخبار والإعلانات
 // ==========================================

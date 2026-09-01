@@ -278,8 +278,12 @@ app.get('/api/visits', verifyToken, async (req, res) => {
 
 // مسار زيادة مشاهدات خبر محدد عند فتحه
 // مسار زيادة مشاهدات الخبر (مباشر وسريع)
+// مسار زيادة مشاهدات الخبر (مؤمن ضد خطأ 500)
 app.post('/api/posts/:id/view', async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.json({ views: 0 });
+        }
         const post = await Post.findByIdAndUpdate(
             req.params.id,
             { $inc: { views: 1 } },
@@ -287,13 +291,16 @@ app.post('/api/posts/:id/view', async (req, res) => {
         );
         res.json({ views: post ? post.views : 0 });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.json({ views: 0 });
     }
 });
 
-// مسار زيادة عدد مشاركات الخبر عند المشاركة
+// مسار زيادة عدد المشاركات (مؤمن ضد خطأ 500)
 app.post('/api/posts/:id/share', async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.json({ shares: 0 });
+        }
         const post = await Post.findByIdAndUpdate(
             req.params.id,
             { $inc: { shares: 1 } },
@@ -301,7 +308,7 @@ app.post('/api/posts/:id/share', async (req, res) => {
         );
         res.json({ shares: post ? post.shares : 0 });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.json({ shares: 0 });
     }
 });
 // ==========================================

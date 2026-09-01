@@ -316,7 +316,7 @@
   .campaign-body { padding: 0; }
   .campaign-title { font-size: 18.5px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; }
   .campaign-desc { font-size: 14px; color: var(--dim-color); line-height: 1.6; }
-  .back-btn-container { margin-bottom: 35px; }
+  .back-btn- { margin-bottom: 35px; }
 
   .news-text-content { color: var(--dim-color); font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
   .read-more-btn {
@@ -336,24 +336,29 @@
   .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   /* أزرار المشاركة الاجتماعية */
-  .social-share-container {
-    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-    margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-subtle);
-  }
-  .share-btn {
-    padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700;
-    display: inline-flex; align-items: center; gap: 8px; color: #ffffff;
-    text-decoration: none; cursor: pointer; border: none; font-family: 'Tajawal', sans-serif;
-    transition: var(--transition);
-  }
-  .share-btn:hover { transform: translateY(-2px); opacity: 0.9; }
-  .share-wa { background: #25D366; }
-  .share-tg { background: #0088cc; }
-  .share-fb { background: #1877F2; }
-  .share-x { background: #111111; border: 1px solid rgba(255,255,255,0.2); }
-  .share-copy { background: rgba(212,175,55,0.18); color: var(--gold-light); border: 1px solid var(--border-gold); }
-  .share-copy:hover { background: var(--gold-primary); color: var(--bg-color); }
+ <div class="social-share-container">
+      <span style="font-size: 14px; font-weight: 700; color: var(--gold-light); margin-left: 10px;">مشاركة الخبر:</span>
+      
+      <a href="https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}" target="_blank" onclick="trackShare('${post._id}')" class="share-btn share-wa" title="مشاركة عبر واتساب">
+        <i class="fab fa-whatsapp"></i> واتساب
+      </a>
 
+      <a href="https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}" target="_blank" onclick="trackShare('${post._id}')" class="share-btn share-tg" title="مشاركة عبر تيليجرام">
+        <i class="fab fa-telegram-plane"></i> تيليجرام
+      </a>
+
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}" target="_blank" onclick="trackShare('${post._id}')" class="share-btn share-fb" title="مشاركة عبر فيسبوك">
+        <i class="fab fa-facebook-f"></i> فيسبوك
+      </a>
+
+      <a href="https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}" target="_blank" onclick="trackShare('${post._id}')" class="share-btn share-x" title="مشاركة عبر منصة X">
+        <i class="fab fa-x-twitter"></i> منصة X
+      </a>
+
+      <button onclick="trackShare('${post._id}'); copyNewsLink('${post._id}');" class="share-btn share-copy" title="نسخ رابط الخبر">
+        <i class="fas fa-link"></i> نسخ الرابط
+      </button>
+    </div>
   /* بطاقات التحميل التفاعلية Skeleton Loader */
   .skeleton-card {
     background: var(--surface-color); border: 1px solid var(--border-subtle);
@@ -973,6 +978,7 @@
               <th>التصنيف</th>
               <th>الحالة</th>
               <th>المشاهدات</th>
+<th>المشاركات</th>
               <th>نوع الوسائط</th>
               <th>تاريخ النشر</th>
               <th>التحكم والعمليات</th>
@@ -1122,25 +1128,25 @@ function getPostViews(postId) {
   return (post && post.views) ? post.views : 0;
 }
 
+// زيادة المشاهدات فورياً في السيرفر وتحديث القيمة
 async function incrementPostViews(postId) {
-  if (localStorage.getItem('sada_token')) return;
-
   try {
-    await fetch(`${API_URL}/posts/${postId}/view`, { method: 'POST' });
+    const res = await fetch(`${API_URL}/posts/${postId}/view`, { method: 'POST' });
+    if (res.ok) {
+      const data = await res.json();
+      const post = allPosts.find(p => String(p._id) === String(postId));
+      if (post) post.views = data.views;
+    }
   } catch(e) {}
-
-  const post = allPosts.find(p => String(p._id) === String(postId));
-  if (post) {
-    post.views = (post.views || 0) + 1;
-  }
 }
 
-function getTotalPostViewsSum() {
-  let total = 0;
-  allPosts.forEach(p => {
-    total += getPostViews(p._id);
-  });
-  return total;
+// احتساب المشاركة عند النقر على أي زر مشاركة
+async function trackShare(postId) {
+  try {
+    fetch(`${API_URL}/posts/${postId}/share`, { method: 'POST' }).catch(() => {});
+    const post = allPosts.find(p => String(p._id) === String(postId));
+    if (post) post.shares = (post.shares || 0) + 1;
+  } catch(e) {}
 }
 
 function initTicker() {
@@ -1728,7 +1734,7 @@ async function renderDashboard() {
   
   await updateDashboardStats();
   initTicker();
-  renderDashboardAds();
+renderDashboardAds();
 
   const tableBody = document.getElementById('dashPostsTable');
   tableBody.innerHTML = '';
@@ -1736,7 +1742,8 @@ async function renderDashboard() {
   allPosts.forEach(item => {
     const tr = document.createElement('tr');
     let count = item.mediaUrls ? item.mediaUrls.length : (item.mediaUrl ? 1 : 0);
-    const postViews = getPostViews(item._id);
+    const postViews = item.views || 0;
+    const postShares = item.shares || 0;
 
     const statusBadge = item.status === 'draft' 
       ? `<span style="background:rgba(231,76,60,0.15); color:#ff9b9b; border:1px solid var(--danger); padding:2px 8px; border-radius:4px; font-size:11px;"><i class="fas fa-file-alt"></i> مسودة</span>`
@@ -1749,6 +1756,7 @@ async function renderDashboard() {
       <td><span class="news-badge" style="display:inline-block; font-size:11px; padding:2px 8px; border:1px solid var(--border-gold); border-radius:4px; color:var(--gold-light);">${escapeText(item.category)}</span></td>
       <td>${statusBadge}</td>
       <td><span style="color:var(--gold-primary); font-weight:bold;"><i class="fas fa-eye"></i> ${postViews}</span></td>
+      <td><span style="color:#2ecc71; font-weight:bold;"><i class="fas fa-share-alt"></i> ${postShares}</span></td>
       <td><span style="color:var(--dim-color);"><i class="fas fa-images"></i> ${count} صورة</span></td>
       <td>${item.date ? new Date(item.date).toLocaleDateString('ar-IQ') : 'اليوم'}</td>
       <td>

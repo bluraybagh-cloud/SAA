@@ -1035,6 +1035,9 @@ let currentNewsPage = 1;
 const newsPerPage = 6;
 let globalVisitsCount = 0;
 
+/* ========================================================
+   نظام الإشعارات Toast
+   ======================================================== */
 function showToast(message, type = 'info') {
   const container = document.getElementById('toastContainer');
   if (!container) return;
@@ -1064,6 +1067,9 @@ function showToast(message, type = 'info') {
   }, 4000);
 }
 
+/* ========================================================
+   ضغط وتصغير حجم الصور تلقائياً قبل الرفع
+   ======================================================== */
 function compressImage(file, maxWidth = 1200, quality = 0.75) {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -1094,7 +1100,9 @@ function compressImage(file, maxWidth = 1200, quality = 0.75) {
   });
 }
 
-// جلب إحصائيات الزيارات بتصريح الآدمن المشفر فقط
+/* ========================================================
+   دوال الإحصائيات والمشاهدات والمشاركات الموحدة
+   ======================================================== */
 async function fetchGlobalVisits() {
   const token = localStorage.getItem('sada_token');
   if (!token) return;
@@ -1110,7 +1118,6 @@ async function fetchGlobalVisits() {
   } catch (e) {}
 }
 
-// تسجيل كل إعادة تحميل أو دخول للرابط كزيارة حقيقية موحدة
 async function trackPageVisit() {
   try {
     const res = await fetch(`${API_URL}/visit`, { method: 'POST' });
@@ -1128,27 +1135,52 @@ function getPostViews(postId) {
   return (post && post.views) ? post.views : 0;
 }
 
-// زيادة المشاهدات فورياً في السيرفر وتحديث القيمة
+function getPostShares(postId) {
+  const post = allPosts.find(item => String(item._id) === String(postId));
+  return (post && post.shares) ? post.shares : 0;
+}
+
+// دالة حساب مجموع المشاهدات لجميع الأخبار
+function getTotalPostViewsSum() {
+  let total = 0;
+  if (Array.isArray(allPosts)) {
+    allPosts.forEach(p => {
+      total += (p.views || 0);
+    });
+  }
+  return total;
+}
+
+// زيادة المشاهدات فورياً
 async function incrementPostViews(postId) {
+  if (localStorage.getItem('sada_token')) return;
+
   try {
     const res = await fetch(`${API_URL}/posts/${postId}/view`, { method: 'POST' });
     if (res.ok) {
       const data = await res.json();
       const post = allPosts.find(p => String(p._id) === String(postId));
-      if (post) post.views = data.views;
+      if (post && data.views !== undefined) {
+        post.views = data.views;
+      }
     }
   } catch(e) {}
 }
 
-// احتساب المشاركة عند النقر على أي زر مشاركة
+// احتساب المشاركات
 async function trackShare(postId) {
   try {
-    fetch(`${API_URL}/posts/${postId}/share`, { method: 'POST' }).catch(() => {});
+    const res = await fetch(`${API_URL}/posts/${postId}/share`, { method: 'POST' });
     const post = allPosts.find(p => String(p._id) === String(postId));
-    if (post) post.shares = (post.shares || 0) + 1;
+    if (post) {
+      post.shares = (post.shares || 0) + 1;
+    }
   } catch(e) {}
 }
 
+/* ========================================================
+   إدارة شريط الأخبار العاجلة (News Ticker)
+   ======================================================== */
 function initTicker() {
   const tickerBar = document.getElementById('liveTickerBar');
   const tickerText = document.getElementById('liveTickerText');
@@ -1191,6 +1223,9 @@ function saveTickerFromDashboard() {
   showToast('تم حفظ وتحديث إعدادات الشريط العاجل بنجاح!', 'success');
 }
 
+/* ========================================================
+   تصدير التقارير إلى Excel / CSV
+   ======================================================== */
 function exportNewsToCSV() {
   if (!allPosts || allPosts.length === 0) {
     showToast('لا توجد بيانات أخبار متاحة للتصدير حالياً.', 'danger');
@@ -1198,20 +1233,21 @@ function exportNewsToCSV() {
   }
 
   let csvContent = "\uFEFF";
-  csvContent += "المعرف,عنوان الخبر,القسم / التصنيف,الحالة,مثبت,عدد المشاهدات الحقيقية,تاريخ النشر,عدد الصور المرفقة,رابط الخبر المباشر\n";
+  csvContent += "المعرف,عنوان الخبر,القسم / التصنيف,الحالة,مثبت,عدد المشاهدات الحقيقية,المشاركات,تاريخ النشر,عدد الصور المرفقة,رابط الخبر المباشر\n";
 
   allPosts.forEach((post, index) => {
     const title = `"${(post.title || '').replace(/"/g, '""')}"`;
     const category = `"${(post.category || '').replace(/"/g, '""')}"`;
     const status = post.status === 'draft' ? "مسودة" : "منشور";
     const isPinned = post.isPinned ? "نعم" : "لا";
-    const views = getPostViews(post._id);
+    const views = post.views || 0;
+    const shares = post.shares || 0;
     const date = `"${post.date ? new Date(post.date).toLocaleDateString('ar-IQ') : 'اليوم'}"`;
     const imgCount = post.mediaUrls ? post.mediaUrls.length : (post.mediaUrl ? 1 : 0);
     const cleanUrl = window.location.href.split('#')[0];
     const link = `"${cleanUrl}#news-${post._id}"`;
 
-    csvContent += `${index + 1},${title},${category},${status},${isPinned},${views},${date},${imgCount},${link}\n`;
+    csvContent += `${index + 1},${title},${category},${status},${isPinned},${views},${shares},${date},${imgCount},${link}\n`;
   });
 
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1229,7 +1265,7 @@ function exportNewsToCSV() {
 }
 
 /* ========================================================
-   التنقل وحماية الصفحات السرية
+   التنقل بين الصفحات
    ======================================================== */
 function navigateTo(pageId, targetSectionId = null) {
   const pages = ['main-page', 'campaigns-page', 'login-page', 'dashboard-page'];
@@ -1314,7 +1350,7 @@ async function fetchPostsFromServer() {
     const res = await fetch(`${API_URL}/posts`);
     if (res.ok) {
       const fetched = await res.json();
-      allPosts = fetched;
+      allPosts = Array.isArray(fetched) ? fetched : [];
       allPosts.sort((a, b) => {
         const aPinned = a.isPinned ? 1 : 0;
         const bPinned = b.isPinned ? 1 : 0;
@@ -1324,7 +1360,7 @@ async function fetchPostsFromServer() {
       localStorage.setItem('sada_cached_posts', JSON.stringify(allPosts));
     }
   } catch (err) {
-    console.log("لم يتم الاتصال بالسيرفر، يتم الاعتماد على الكاش المحلي.");
+    console.log("استخدام الكاش المحلي للأخبار");
   }
 }
 
@@ -1446,14 +1482,6 @@ async function renderLiveNews() {
         allPosts = JSON.parse(cached);
       } catch(e) {}
     }
-    
-    if (allPosts.length === 0) {
-      grid.innerHTML = `
-        <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
-        <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
-        <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
-      `;
-    }
   }
 
   if (allPosts.length > 0) {
@@ -1539,23 +1567,23 @@ function openPublicSingleNews(postId, updateHash = true) {
     <div class="social-share-container">
       <span style="font-size: 14px; font-weight: 700; color: var(--gold-light); margin-left: 10px;">مشاركة الخبر:</span>
       
-      <a href="https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}" target="_blank" class="share-btn share-wa" title="مشاركة عبر واتساب">
+      <a href="https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}" target="_blank" onclick="trackShare('${post._id}')" class="share-btn share-wa" title="مشاركة عبر واتساب">
         <i class="fab fa-whatsapp"></i> واتساب
       </a>
 
-      <a href="https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}" target="_blank" class="share-btn share-tg" title="مشاركة عبر تيليجرام">
+      <a href="https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}" target="_blank" onclick="trackShare('${post._id}')" class="share-btn share-tg" title="مشاركة عبر تيليجرام">
         <i class="fab fa-telegram-plane"></i> تيليجرام
       </a>
 
-      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}" target="_blank" class="share-btn share-fb" title="مشاركة عبر فيسبوك">
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}" target="_blank" onclick="trackShare('${post._id}')" class="share-btn share-fb" title="مشاركة عبر فيسبوك">
         <i class="fab fa-facebook-f"></i> فيسبوك
       </a>
 
-      <a href="https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}" target="_blank" class="share-btn share-x" title="مشاركة عبر منصة X">
+      <a href="https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}" target="_blank" onclick="trackShare('${post._id}')" class="share-btn share-x" title="مشاركة عبر منصة X">
         <i class="fab fa-x-twitter"></i> منصة X
       </a>
 
-      <button onclick="copyNewsLink('${post._id}')" class="share-btn share-copy" title="نسخ رابط الخبر">
+      <button onclick="trackShare('${post._id}'); copyNewsLink('${post._id}');" class="share-btn share-copy" title="نسخ رابط الخبر">
         <i class="fas fa-link"></i> نسخ الرابط
       </button>
     </div>
@@ -1654,9 +1682,10 @@ async function renderDashboardAds() {
     const res = await fetch(`${API_URL}/ads`, {
       headers: { 'Authorization': token }
     });
+    if (!res.ok) return;
     const ads = await res.json();
 
-    if (ads.length === 0) {
+    if (!Array.isArray(ads) || ads.length === 0) {
       tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);">لا توجد طلبات إعلانات واردة حالياً.</td></tr>';
       return;
     }
@@ -1669,11 +1698,11 @@ async function renderDashboardAds() {
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td><b>${escapeText(ad.name)}</b></td>
-        <td><a href="https://wa.me/${ad.phone}" target="_blank" style="color:#25D366;"><i class="fab fa-whatsapp"></i> ${escapeText(ad.phone)}</a></td>
-        <td>${escapeText(ad.title)}</td>
-        <td>${escapeText(ad.package)}</td>
-        <td><b style="color:var(--gold-primary);">${ad.totalPrice}$</b></td>
+        <td><b>${escapeText(ad.name || '')}</b></td>
+        <td><a href="https://wa.me/${ad.phone}" target="_blank" style="color:#25D366;"><i class="fab fa-whatsapp"></i> ${escapeText(ad.phone || '')}</a></td>
+        <td>${escapeText(ad.title || '')}</td>
+        <td>${escapeText(ad.package || '')}</td>
+        <td><b style="color:var(--gold-primary);">${ad.totalPrice || 0}$</b></td>
         <td>${statusBadge}</td>
         <td>
           ${ad.status === 'pending' ? `
@@ -1707,18 +1736,29 @@ async function approveAdAction(id) {
 }
 
 async function rejectAdAction(id) {
+  const reason = prompt("يرجى كتابة سبب وملاحظات الرفض (ستظهر للمعلن في حسابه):");
+  if (reason === null) return;
+  if (!reason.trim()) {
+    showToast("يرجى كتابة سبب الرفض", "danger");
+    return;
+  }
+
   const token = localStorage.getItem('sada_token');
   try {
     const res = await fetch(`${API_URL}/ads/${id}/reject`, {
       method: 'PUT',
-      headers: { 'Authorization': token }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': token 
+      },
+      body: JSON.stringify({ rejectReason: reason.trim() })
     });
     if (res.ok) {
-      showToast('تم رفض طلب الإعلان', 'info');
+      showToast('تم رفض الإعلان وحفظ الملاحظات بنجاح', 'info');
       renderDashboardAds();
     }
   } catch(e) {
-    showToast('حدث خطأ', 'danger');
+    showToast('حدث خطأ في عملية الرفض', 'danger');
   }
 }
 
@@ -1734,7 +1774,7 @@ async function renderDashboard() {
   
   await updateDashboardStats();
   initTicker();
-renderDashboardAds();
+  renderDashboardAds();
 
   const tableBody = document.getElementById('dashPostsTable');
   tableBody.innerHTML = '';
@@ -1752,8 +1792,8 @@ renderDashboardAds();
     const pinIcon = item.isPinned ? `<i class="fas fa-thumbtack" style="color:var(--gold-primary); margin-left:6px;" title="خبر مثبت"></i>` : '';
 
     tr.innerHTML = `
-      <td>${pinIcon}<b>${escapeText(item.title)}</b></td>
-      <td><span class="news-badge" style="display:inline-block; font-size:11px; padding:2px 8px; border:1px solid var(--border-gold); border-radius:4px; color:var(--gold-light);">${escapeText(item.category)}</span></td>
+      <td>${pinIcon}<b>${escapeText(item.title || '')}</b></td>
+      <td><span class="news-badge" style="display:inline-block; font-size:11px; padding:2px 8px; border:1px solid var(--border-gold); border-radius:4px; color:var(--gold-light);">${escapeText(item.category || '')}</span></td>
       <td>${statusBadge}</td>
       <td><span style="color:var(--gold-primary); font-weight:bold;"><i class="fas fa-eye"></i> ${postViews}</span></td>
       <td><span style="color:#2ecc71; font-weight:bold;"><i class="fas fa-share-alt"></i> ${postShares}</span></td>
@@ -1875,7 +1915,7 @@ async function deletePostAction(id) {
 }
 
 function escapeText(str) {
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 const menuToggle = document.getElementById('menuToggle');

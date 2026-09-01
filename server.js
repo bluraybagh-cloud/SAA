@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const app = express();
@@ -10,39 +9,32 @@ app.use(express.json({ limit: '50mb' }));
 
 const SECRET_KEY = "Sada@Agency_Secret_Key_2026";
 
-// الاتصال بقاعدة البيانات السحابية
 mongoose.connect('mongodb+srv://sada_admin:Sada%402026%23Secure_Pass99!@cluster0.hrvqt9v.mongodb.net/sada_agency?appName=Cluster0')
   .then(async () => {
       console.log("تم الاتصال بقاعدة البيانات السحابية بنجاح");
       try {
-          // 1. تحديث أو إنشاء حساب المشرف الرئيسي لضمان مطابقة كلمة المرور
           await User.findOneAndUpdate(
               { username: "sada_admin" },
               { username: "sada_admin", password: "Sada@2026#Secure_Pass99!", role: "ADMIN" },
               { upsert: true, new: true }
           );
 
-          // 2. تهيئة وتثبيت جدول الزيارات الأولي في قاعدة البيانات إذا لم يكن موجوداً
           const existingStat = await Stat.findOne({ key: 'global_visits' });
           if (!existingStat) {
               await new Stat({ key: 'global_visits', visits: 0 }).save();
-              console.log("تم إنشاء سجل الزيارات الأولي بنجاح");
           }
 
-          // 3. إضافة حقول (views: 0) والتثبيت لجميع المنشورات السابقة تلقائياً
+          // تهيئة الحقول الثلاثة الجديدة للأخبار السابقة
           await Post.updateMany(
-              { views: { $exists: false } },
-              { $set: { views: 0, status: 'published', isPinned: false } }
+              { $or: [{ views: { $exists: false } }, { clicks: { $exists: false } }, { shares: { $exists: false } }] },
+              { $set: { views: 0, clicks: 0, shares: 0, status: 'published', isPinned: false } }
           );
-          console.log("تم تحديث وتهيئة حقول المشاهدات لجميع الأخبار");
-
       } catch (e) {
-          console.log("خطأ في التهيئة التلقائية:", e);
+          console.log("خطأ في التهيئة:", e);
       }
   })
   .catch(err => console.log("خطأ في الاتصال بقاعدة البيانات:", err));
 
-// 1. جدول المستخدمين
 const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -50,31 +42,30 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', UserSchema);
 
-// 2. جدول الأخبار المحدّث
 const PostSchema = new mongoose.Schema({
     title: String,
     category: String,
     mediaType: String,
     mediaUrls: [String], 
     content: String,
-    status: { type: String, default: 'published' }, // منشور أو مسودة
-    isPinned: { type: Boolean, default: false },    // تثبيت الخبر
-    views: { type: Number, default: 0 },           // عدد المشاهدات الحقيقية
+    status: { type: String, default: 'published' },
+    isPinned: { type: Boolean, default: false },
+    views: { type: Number, default: 0 },   // مشاهدات (المرور بالسكريل)
+    clicks: { type: Number, default: 0 },  // نقرات (قراءة المزيد)
+    shares: { type: Number, default: 0 },  // مشاركات السوشيال ميديا
     date: { type: String, default: () => new Date().toISOString().split('T')[0] }
 });
 const Post = mongoose.model('Post', PostSchema);
 
-// 3. جدول إحصائيات الزيارات الموحدة
 const StatSchema = new mongoose.Schema({
     key: { type: String, default: 'global_visits' },
     visits: { type: Number, default: 0 }
 });
 const Stat = mongoose.model('Stat', StatSchema);
 
-// Middleware لحماية مسارات لوحة التحكم
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization'];
-    if (!token) return res.status(403).json({ error: "غير مصرح لك بالوصول" });
+    if (!token) return res.status(403).json({ error: "غير مصرح لك" });
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
         if (err) return res.status(401).json({ error: "الجلسة منتهية" });
         req.user = decoded;
@@ -82,44 +73,29 @@ const verifyToken = (req, res, next) => {
     });
 };
 
-// ==========================================
-// مسارات تسجيل الدخول والتحقق من الجلسة
-// ==========================================
-
-// مسار تسجيل الدخول المباشر
 app.post('/api/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         const normalizedUsername = (username || '').trim().toLowerCase();
-
-        // تحقق مباشر للمشرف الرئيسي
         if (normalizedUsername === 'sada_admin' && password === 'Sada@2026#Secure_Pass99!') {
             const token = jwt.sign({ id: 'sada_admin_master', username: 'sada_admin', role: 'ADMIN' }, SECRET_KEY, { expiresIn: '7d' });
             return res.json({ token, username: 'sada_admin' });
         }
-
         const user = await User.findOne({ username: normalizedUsername });
         if (!user || password !== user.password) {
             return res.status(400).json({ error: "الاسم أو كلمة المرور غير صحيحة" });
         }
-
         const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, SECRET_KEY, { expiresIn: '7d' });
         res.json({ token, username: user.username });
     } catch (err) {
-        res.status(500).json({ error: "حدث خطأ في السيرفر" });
+        res.status(500).json({ error: "خطأ في السيرفر" });
     }
 });
 
-// مسار التحقق من صحة توكن الآدمن
 app.get('/api/verify-auth', verifyToken, (req, res) => {
     res.json({ valid: true, username: req.user.username });
 });
 
-// ==========================================
-// مسارات الزيارات والمشاهدات المركزية الموحدة
-// ==========================================
-
-// مسار تسجيل زيادة زيارة حقيقية فورية (مع كل تحميل أو فتح للرابط)
 app.post('/api/visit', async (req, res) => {
     try {
         const stat = await Stat.findOneAndUpdate(
@@ -133,7 +109,6 @@ app.post('/api/visit', async (req, res) => {
     }
 });
 
-// مسار جلب إجمالي الزيارات الموحدة (محمي للآدمن فقط)
 app.get('/api/visits', verifyToken, async (req, res) => {
     try {
         const stat = await Stat.findOne({ key: 'global_visits' });
@@ -143,25 +118,36 @@ app.get('/api/visits', verifyToken, async (req, res) => {
     }
 });
 
-// مسار زيادة مشاهدات خبر محدد عند فتحه
+// مسار زيادة المشاهدات (عند المرور بالسكريل)
 app.post('/api/posts/:id/view', async (req, res) => {
     try {
-        const post = await Post.findByIdAndUpdate(
-            req.params.id,
-            { $inc: { views: 1 } },
-            { new: true }
-        );
+        const post = await Post.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } }, { new: true });
         res.json({ views: post ? post.views : 0 });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// ==========================================
-// مسارات الأخبار
-// ==========================================
+// مسار زيادة النقرات (عند النقر لعرض الخبر)
+app.post('/api/posts/:id/click', async (req, res) => {
+    try {
+        const post = await Post.findByIdAndUpdate(req.params.id, { $inc: { clicks: 1 } }, { new: true });
+        res.json({ clicks: post ? post.clicks : 0 });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
-// مسار جلب الأخبار للزوار
+// مسار زيادة المشاركات (عند الضغط على أزرار المشاركة)
+app.post('/api/posts/:id/share', async (req, res) => {
+    try {
+        const post = await Post.findByIdAndUpdate(req.params.id, { $inc: { shares: 1 } }, { new: true });
+        res.json({ shares: post ? post.shares : 0 });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.get('/api/posts', async (req, res) => {
     try {
         const posts = await Post.find().sort({ _id: -1 });
@@ -171,7 +157,6 @@ app.get('/api/posts', async (req, res) => {
     }
 });
 
-// مسار نشر خبر جديد (محمي بالتوكن)
 app.post('/api/posts', verifyToken, async (req, res) => {
     try {
         const newPost = new Post(req.body);
@@ -182,7 +167,6 @@ app.post('/api/posts', verifyToken, async (req, res) => {
     }
 });
 
-// مسار تعديل خبر (محمي بالتوكن)
 app.put('/api/posts/:id', verifyToken, async (req, res) => {
     try {
         await Post.findByIdAndUpdate(req.params.id, req.body);
@@ -192,7 +176,6 @@ app.put('/api/posts/:id', verifyToken, async (req, res) => {
     }
 });
 
-// مسار حذف خبر (محمي بالتوكن)
 app.delete('/api/posts/:id', verifyToken, async (req, res) => {
     try {
         await Post.findByIdAndDelete(req.params.id);
@@ -204,5 +187,5 @@ app.delete('/api/posts/:id', verifyToken, async (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`السيرفر يعمل الآن بنجاح على البورت ${PORT}`);
+    console.log(`السيرفر يعمل على البورت ${PORT}`);
 });

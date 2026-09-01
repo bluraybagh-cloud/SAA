@@ -10,51 +10,23 @@ app.use(express.json({ limit: '50mb' }));
 
 const SECRET_KEY = "Sada@Agency_Secret_Key_2026";
 
-// الاتصال بقاعدة البيانات السحابية برابط الحساب Sada_Admin
-mongoose.connect('mongodb+srv://sada_admin:Sada%402026%23Secure_Pass99!@cluster0.hrvqt9v.mongodb.net/sada_agency?appName=Cluster0')
-  .then(async () => {
-      console.log("تم الاتصال بقاعدة البيانات السحابية بنجاح");
-      try {
-          // 1. تحديث أو إنشاء حساب المشرف الرئيسي لضمان مطابقة كلمة المرور
-          await User.findOneAndUpdate(
-              { username: "sada_admin" },
-              { username: "sada_admin", password: "Sada@2026#Secure_Pass99!", role: "ADMIN" },
-              { upsert: true, new: true }
-          );
+// ==========================================
+// 1. تعريف الجداول والموديلات أولاً (Schemas & Models)
+// ==========================================
 
-          // 2. تهيئة وتثبيت جدول الزيارات الأولي في قاعدة البيانات إذا لم يكن موجوداً
-          const existingStat = await Stat.findOne({ key: 'global_visits' });
-          if (!existingStat) {
-              await new Stat({ key: 'global_visits', visits: 0 }).save();
-              console.log("تم إنشاء سجل الزيارات الأولي بنجاح");
-          }
-
-          // 3. إضافة حقول (views: 0) والتثبيت لجميع الأخبار السابقة تلقائياً
-          await Post.updateMany(
-              { views: { $exists: false } },
-              { $set: { views: 0, status: 'published', isPinned: false } }
-          );
-          console.log("تم تحديث وتهيئة حقول المشاهدات لجميع الأخبار");
-
-      } catch (e) {
-          console.log("خطأ في التهيئة التلقائية:", e);
-      }
-  })
-  .catch(err => console.log("خطأ في الاتصال بقاعدة البيانات:", err));
-
-// 1. جدول المستخدمين (يشمل الآدمن والمعلنين واستعادة كلمة المرور)
+// جدول المستخدمين
 const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String },
     phone: { type: String },
     password: { type: String, required: true },
-    role: { type: String, default: 'ADVERTISER' }, // ADMIN or ADVERTISER
+    role: { type: String, default: 'ADVERTISER' },
     resetOtp: { type: String },
     resetExpires: { type: Date }
 });
 const User = mongoose.model('User', UserSchema);
 
-// 2. جدول الأخبار المحدّث
+// جدول الأخبار المحدّث بالمشاهدات والمشاركات
 const PostSchema = new mongoose.Schema({
     title: String,
     category: String,
@@ -63,18 +35,20 @@ const PostSchema = new mongoose.Schema({
     content: String,
     status: { type: String, default: 'published' },
     isPinned: { type: Boolean, default: false },
-    views: { type: Number, default: 0 },   // المشاهدات
+    views: { type: Number, default: 0 },   // المشاهدات الحقيقية
     shares: { type: Number, default: 0 },  // عدد المشاركات
     date: { type: String, default: () => new Date().toISOString().split('T')[0] }
 });
-// 3. جدول إحصائيات الزيارات الموحدة
+const Post = mongoose.model('Post', PostSchema);
+
+// جدول إحصائيات زيارات الموقع الموحدة
 const StatSchema = new mongoose.Schema({
     key: { type: String, default: 'global_visits' },
     visits: { type: Number, default: 0 }
 });
 const Stat = mongoose.model('Stat', StatSchema);
 
-// 4. جدول طلبات الإعلانات المرتبطة بحساب المعلن
+// جدول طلبات الإعلانات
 const AdBookingSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     orderId: String,
@@ -87,12 +61,47 @@ const AdBookingSchema = new mongoose.Schema({
     isTicker: Boolean,
     totalPrice: Number,
     imageUrl: String,
-    status: { type: String, default: 'pending' }, // pending, approved, rejected
+    status: { type: String, default: 'pending' },
+    rejectReason: { type: String, default: '' },
     date: { type: String, default: () => new Date().toISOString().split('T')[0] }
 });
 const AdBooking = mongoose.model('AdBooking', AdBookingSchema);
 
-// Middleware لحماية مسارات لوحة التحكم
+// ==========================================
+// 2. الاتصال بقاعدة البيانات والتهيئة التلقائية
+// ==========================================
+mongoose.connect('mongodb+srv://sada_admin:Sada%402026%23Secure_Pass99!@cluster0.hrvqt9v.mongodb.net/sada_agency?appName=Cluster0')
+  .then(async () => {
+      console.log("تم الاتصال بقاعدة البيانات السحابية بنجاح");
+      try {
+          // تثبيت حساب الآدمن الرئيسي
+          await User.findOneAndUpdate(
+              { username: "sada_admin" },
+              { username: "sada_admin", password: "Sada@2026#Secure_Pass99!", role: "ADMIN" },
+              { upsert: true, new: true }
+          );
+
+          // تهيئة سجل الزيارات الأولي
+          const existingStat = await Stat.findOne({ key: 'global_visits' });
+          if (!existingStat) {
+              await new Stat({ key: 'global_visits', visits: 0 }).save();
+              console.log("تم إنشاء سجل الزيارات الأولي بنجاح");
+          }
+
+          // تهيئة حقول المشاهدات والمشاركات للأخبار السابقة
+          await Post.updateMany(
+              { views: { $exists: false } },
+              { $set: { views: 0, shares: 0, status: 'published', isPinned: false } }
+          );
+          console.log("تم تحديث وتهيئة حقول المشاهدات لجميع الأخبار");
+
+      } catch (e) {
+          console.log("خطأ في التهيئة التلقائية:", e);
+      }
+  })
+  .catch(err => console.log("خطأ في الاتصال بقاعدة البيانات:", err));
+
+// دالة حماية مسارات الآدمن
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization'];
     if (!token) return res.status(403).json({ error: "غير مصرح لك بالوصول" });
@@ -104,7 +113,7 @@ const verifyToken = (req, res, next) => {
 };
 
 // ==========================================
-// مسارات حسابات المعلنين والتسجيل
+// 3. مسارات حسابات المعلنين
 // ==========================================
 
 // تسجيل معلن جديد
@@ -112,9 +121,9 @@ app.post('/api/register', async (req, res) => {
     try {
         const { username, email, phone, password } = req.body;
         const normalizedUsername = (username || '').trim().toLowerCase();
-        
+
         const existing = await User.findOne({ 
-            $or: [{ username: normalizedUsername }, { email: email.toLowerCase() }] 
+            $or: [{ username: normalizedUsername }, { email: (email || '').toLowerCase() }] 
         });
         if (existing) {
             return res.status(400).json({ error: "اسم المستخدم أو البريد الإلكتروني مسجل مسبقاً" });
@@ -168,7 +177,7 @@ app.post('/api/forgot-password', async (req, res) => {
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         user.resetOtp = otp;
-        user.resetExpires = Date.now() + 15 * 60 * 1000; // صلاحية 15 دقيقة
+        user.resetExpires = Date.now() + 15 * 60 * 1000;
         await user.save();
 
         console.log(`[OTP] رمز التحقق لرقم ${phone} هو: ${otp}`);
@@ -216,16 +225,14 @@ app.get('/api/my-ads', verifyToken, async (req, res) => {
 });
 
 // ==========================================
-// مسارات تسجيل الدخول للآدمن
+// 4. مسارات تسجيل الدخول للآدمن
 // ==========================================
 
-// مسار تسجيل الدخول المباشر
 app.post('/api/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         const normalizedUsername = (username || '').trim().toLowerCase();
 
-        // تحقق مباشر للمشرف الرئيسي
         if (normalizedUsername === 'sada_admin' && password === 'Sada@2026#Secure_Pass99!') {
             const token = jwt.sign({ id: 'sada_admin_master', username: 'sada_admin', role: 'ADMIN' }, SECRET_KEY, { expiresIn: '7d' });
             return res.json({ token, username: 'sada_admin' });
@@ -243,16 +250,15 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// مسار التحقق من صحة توكن الآدمن
 app.get('/api/verify-auth', verifyToken, (req, res) => {
     res.json({ valid: true, username: req.user.username });
 });
 
 // ==========================================
-// مسارات الزيارات والمشاهدات المركزية الموحدة
+// 5. مسارات الزيارات والمشاهدات المركزية الموحدة
 // ==========================================
 
-// مسار تسجيل زيادة زيارة حقيقية فورية (مع كل فتح أو إعادة تحميل)
+// مسار تسجيل زيادة زيارة الصفحة
 app.post('/api/visit', async (req, res) => {
     try {
         const stat = await Stat.findOneAndUpdate(
@@ -266,7 +272,7 @@ app.post('/api/visit', async (req, res) => {
     }
 });
 
-// مسار جلب إجمالي الزيارات الموحدة (محمي للآدمن فقط)
+// مسار جلب إجمالي زيارات الموقع (محمي للآدمن)
 app.get('/api/visits', verifyToken, async (req, res) => {
     try {
         const stat = await Stat.findOne({ key: 'global_visits' });
@@ -276,56 +282,57 @@ app.get('/api/visits', verifyToken, async (req, res) => {
     }
 });
 
-// مسار زيادة مشاهدات خبر محدد عند فتحه
-// مسار زيادة مشاهدات الخبر (مباشر وسريع)
-// مسار زيادة مشاهدات الخبر (مؤمن ضد خطأ 500)
+// مسار زيادة مشاهدات الخبر في MongoDB تلقائياً
 app.post('/api/posts/:id/view', async (req, res) => {
     try {
-        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        const postId = req.params.id;
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
             return res.json({ views: 0 });
         }
         const post = await Post.findByIdAndUpdate(
-            req.params.id,
+            postId,
             { $inc: { views: 1 } },
             { new: true }
         );
-        res.json({ views: post ? post.views : 0 });
+        res.json({ views: post ? post.views : 1 });
     } catch (err) {
-        res.json({ views: 0 });
+        res.json({ views: 1 });
     }
 });
 
-// مسار زيادة عدد المشاركات (مؤمن ضد خطأ 500)
+// مسار زيادة عدد المشاركات للخبر
 app.post('/api/posts/:id/share', async (req, res) => {
     try {
-        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        const postId = req.params.id;
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
             return res.json({ shares: 0 });
         }
         const post = await Post.findByIdAndUpdate(
-            req.params.id,
+            postId,
             { $inc: { shares: 1 } },
             { new: true }
         );
-        res.json({ shares: post ? post.shares : 0 });
+        res.json({ shares: post ? post.shares : 1 });
     } catch (err) {
-        res.json({ shares: 0 });
+        res.json({ shares: 1 });
     }
 });
+
 // ==========================================
-// مسارات الأخبار والإعلانات
+// 6. مسارات الأخبار والإعلانات
 // ==========================================
 
-// مسار جلب الأخبار للزوار
+// جلب الأخبار للزوار
 app.get('/api/posts', async (req, res) => {
     try {
         const posts = await Post.find().sort({ _id: -1 });
-        res.json(posts);
+        res.json(posts || []);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// مسار نشر خبر جديد
+// نشر خبر جديد
 app.post('/api/posts', verifyToken, async (req, res) => {
     try {
         const newPost = new Post(req.body);
@@ -336,7 +343,7 @@ app.post('/api/posts', verifyToken, async (req, res) => {
     }
 });
 
-// مسار تعديل خبر
+// تعديل خبر
 app.put('/api/posts/:id', verifyToken, async (req, res) => {
     try {
         await Post.findByIdAndUpdate(req.params.id, req.body);
@@ -346,7 +353,7 @@ app.put('/api/posts/:id', verifyToken, async (req, res) => {
     }
 });
 
-// مسار حذف خبر
+// حذف خبر
 app.delete('/api/posts/:id', verifyToken, async (req, res) => {
     try {
         await Post.findByIdAndDelete(req.params.id);
@@ -356,7 +363,7 @@ app.delete('/api/posts/:id', verifyToken, async (req, res) => {
     }
 });
 
-// مسار استقبال طلب حجز إعلان جديد
+// حجز إعلان جديد
 app.post('/api/ads', async (req, res) => {
     try {
         const ad = new AdBooking(req.body);
@@ -367,7 +374,7 @@ app.post('/api/ads', async (req, res) => {
     }
 });
 
-// مسار جلب طلبات الإعلانات للآدمن
+// جلب الإعلانات للآدمن
 app.get('/api/ads', verifyToken, async (req, res) => {
     try {
         const ads = await AdBooking.find().sort({ _id: -1 });
@@ -377,7 +384,7 @@ app.get('/api/ads', verifyToken, async (req, res) => {
     }
 });
 
-// مسار موافقة الآدمن على الإعلان ونشره كخبر تلقائياً
+// موافقة الآدمن ونشر الإعلان كخبر
 app.put('/api/ads/:id/approve', verifyToken, async (req, res) => {
     try {
         const ad = await AdBooking.findByIdAndUpdate(req.params.id, { status: 'approved' }, { new: true });
@@ -398,10 +405,18 @@ app.put('/api/ads/:id/approve', verifyToken, async (req, res) => {
     }
 });
 
-// مسار رفض طلب الإعلان
+// رفض الإعلان وحفظ سبب وملاحظات الرفض
 app.put('/api/ads/:id/reject', verifyToken, async (req, res) => {
     try {
-        const ad = await AdBooking.findByIdAndUpdate(req.params.id, { status: 'rejected' }, { new: true });
+        const { rejectReason } = req.body;
+        const ad = await AdBooking.findByIdAndUpdate(
+            req.params.id, 
+            { 
+                status: 'rejected', 
+                rejectReason: rejectReason || 'لم يتم استيفاء شروط وضوابط النشر' 
+            }, 
+            { new: true }
+        );
         res.json({ message: "تم الرفض", ad });
     } catch (err) {
         res.status(500).json({ error: err.message });

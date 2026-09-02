@@ -935,6 +935,119 @@ app.delete('/api/admin/users/:id', verifyAdmin, async (req, res) => {
         res.status(500).json({ error: "تعذر حذف المستخدم" });
     }
 });
+// 1. استقبال طلب المستخدم لتعديل (كلمة المرور / الاسم / المعرف)
+app.post('/api/user/request-account-update', rateLimitLogin(5, 15 * 60 * 1000), async (req, res) => {
+    try {
+        const identifier = sanitizeInput(req.body.identifier).toLowerCase();
+        const { newPassword, newName, newUsername } = req.body;
+
+        const user = await User.findOne({
+            $or: [{ username: identifier }, { email: identifier }, { phone: identifier }]
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: "لم يتم العثور على حساب مطابق لهذه البيانات" });
+        }
+
+        let hasChange = false;
+        if (newPassword && newPassword.length >= 6) {
+            user.requestedPassword = newPassword;
+            hasChange = true;
+        }
+        if (newName && newName.trim().length >= 2) {
+            user.requestedName = sanitizeInput(newName);
+            hasChange = true;
+        }
+        if (newUsername && newUsername.trim().length >= 3) {
+            const cleanUname = sanitizeInput(newUsername).toLowerCase();
+            const existingUname = await User.findOne({ username: cleanUname, _id: { $ne: user._id } });
+            if (existingUname) {
+                return res.status(400).json({ error: "اسم المعرف الجديد محجوز لمستخدم آخر" });
+            }
+            user.requestedUsername = cleanUname;
+            hasChange = true;
+        }
+
+        if (!hasChange) {
+            return res.status(400).json({ error: "يرجى إدخال بيان واحد على الأقل لتعديله" });
+        }
+
+        user.updateRequestStatus = 'pending';
+        user.updateRequestDate = new Date().toISOString();
+        await user.save();
+
+        res.json({ 
+            message: "تم إرسال طلب التعديل إلى إدارة الموقع بنجاح! سيتم تطبيق التغييرات فور مراجعة وموافقة الأدمن." 
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إرسال الطلب، يرجى المحاولة لاحقاً" });
+    }
+});
+
+// 2. موافقة الأدمن على تعديل بيانات المستخدم (كلمة المرور / الاسم / المعرف)
+app.put('/api/admin/users/:id/approve-update', verifyAdmin, async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "معرف المستخدم غير صالح" });
+        }
+
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ error: "المستخدم غير موجود" });
+
+        let updatedFields = [];
+
+        if (user.requestedPassword) {
+            user.password = await hashPassword(user.requestedPassword);
+            user.requestedPassword = '';
+            updatedFields.push("كلمة المرور");
+        }
+        if (user.requestedName) {
+            user.fullName = user.requestedName;
+            user.requestedName = '';
+            updatedFields.push("الاسم");
+        }
+        if (user.requestedUsername) {
+            user.username = user.requestedUsername;
+            user.requestedUsername = '';
+            updatedFields.push("اسم المعرف");
+        }
+
+        if (updatedFields.length === 0) {
+            return res.status(400).json({ error: "لا توجد طلبات تعديل معلقة لهذا الحساب" });
+        }
+
+        user.updateRequestStatus = 'approved';
+        await user.save();
+
+        res.json({ message: `تمت الموافقة وتحديث (${updatedFields.join(' و ')}) لحساب (${user.username}) بنجاح!` });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إتمام الموافقة على التعديل" });
+    }
+});
+
+// 3. رفض الأدمن لطلب تعديل بيانات المستخدم
+app.put('/api/admin/users/:id/reject-update', verifyAdmin, async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "معرف المستخدم غير صالح" });
+        }
+
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ error: "المستخدم غير موجود" });
+
+        user.requestedPassword = '';
+        user.requestedName = '';
+        user.requestedUsername = '';
+        user.updateRequestStatus = 'rejected';
+        await user.save();
+
+        res.json({ message: `تم رفض طلب التعديل لحساب (${user.username}).` });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إتمام عملية الرفض" });
+    }
+});
+
+// تشغيل السيرفر
 app.listen(PORT, () => {
     console.log(`السيرفر يعمل الآن بأمان كامل على المنفذ ${PORT}`);
 });

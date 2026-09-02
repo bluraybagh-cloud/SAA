@@ -580,120 +580,154 @@
 </div>
 
 <!-- NAVIGATION -->
-<header class="main-header">
-  <nav class="nav-wrap" role="navigation" aria-label="القائمة الرئيسية">
-
-    <!-- الشعار -->
-    <div class="brand"
-         onclick="navigateTo('main-page', '#home')"
-         ondblclick="handleSecretAdminEntry()"
-         title="وكالة صدى العطاء">
+<!-- NAVIGATION HEADER -->
+<header style="height: 85px; background: var(--surface-color); border-bottom: 1px solid var(--border-gold); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);">
+  <nav class="wrap" style="display: flex; align-items: center; justify-content: space-between; height: 85px; gap: 16px;">
+    
+    <!-- الشعار والاسم الرسمي -->
+    <div class="brand" onclick="navigateTo('main-page', '#home')" ondblclick="handleSecretAdminEntry()" title="وكالة صدى العطاء" style="display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none;">
       <div class="brand-logo-container">
-        <img
-          src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png"
-          alt="شعار وكالة صدى العطاء"
-          class="brand-logo-img"
-          onerror="this.style.display='none';document.getElementById('brandLogoFallback').style.display='flex';"
-        >
-        <div id="brandLogoFallback" class="brand-logo-fallback">
-          <i class="fas fa-newspaper"></i>
+        <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('brandLogoFallback').style.display='flex';">
+        <div id="brandLogoFallback" class="brand-logo-fallback" style="display: none;">
+          <i class="fas fa-newspaper" style="color: var(--gold-primary); font-size: 20px;"></i>
         </div>
       </div>
       <div class="brand-name-group">
-        <span class="brand-title">وكالة صدى العطاء</span>
+        <span class="brand-title" style="letter-spacing: 0.3px;">وكالة صدى العطاء</span>
       </div>
     </div>
 
-    <!-- روابط الموقع (سطح المكتب) -->
+    <!-- روابط أقسام الموقع -->
     <div class="navlinks" id="navLinks">
-      <button type="button" class="nav-item active" onclick="navigateTo('main-page', '#home')">الرئيسية</button>
-      <button type="button" class="nav-item" onclick="navigateTo('main-page', '#news-section')">الأخبار والتغطيات</button>
-      <button type="button" class="nav-item" onclick="navigateTo('campaigns-page')">معرض الحملات</button>
-      <button type="button" class="nav-item" onclick="navigateTo('main-page', '#about')">عن الوكالة</button>
-      <button type="button" class="nav-item" onclick="navigateTo('main-page', '#fields')">مجالات العمل</button>
-      <button type="button" class="nav-item" onclick="navigateTo('main-page', '#process')">آلية العمل</button>
-      <button type="button" class="nav-item" onclick="navigateTo('main-page', '#departments')">الأقسام</button>
-      <button type="button" class="nav-item" onclick="navigateTo('main-page', '#faq')">الأسئلة الشائعة</button>
+      <button type="button" onclick="navigateTo('main-page', '#home')">الرئيسية</button>
+      <button type="button" onclick="navigateTo('main-page', '#news-section')">الأخبار والتغطيات</button>
+      <button type="button" onclick="navigateTo('campaigns-page')">معرض الحملات</button>
+      <button type="button" onclick="navigateTo('main-page', '#about')">عن الوكالة</button>
+      <button type="button" onclick="navigateTo('main-page', '#fields')">مجالات العمل</button>
+      <button type="button" onclick="navigateTo('main-page', '#process')">آلية العمل</button>
+      <button type="button" onclick="navigateTo('main-page', '#departments')">الأقسام</button>
+      <button type="button" onclick="navigateTo('main-page', '#faq')">الأسئلة الشائعة</button>
     </div>
 
-    <!-- أزرار الإجراءات والتواصل -->
-    <div class="nav-actions">
+    <!-- جهة الأزرار وقائمة التواصل الموحدة -->
+    <div style="display: flex; align-items: center; gap: 10px;">
       
-      <!-- أزرار الخدمات -->
-      <a href="booking.html" class="btn-primary-gold">
+      <!-- زر احجز إعلانك -->
+      <a href="booking.html" class="btn-ad-booking">
         <i class="fas fa-bullhorn"></i>
         <span>احجز إعلانك</span>
       </a>
 
-      <a href="profile.html" class="btn-outline-gold">
-        <i class="fas fa-user-circle"></i>
+      <!-- زر حسابي -->
+      <a href="profile.html" class="btn-outline" style="padding: 7px 14px; font-size: 13px; font-weight: 700; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; border-color: var(--border-gold); color: var(--gold-light); background: rgba(212,175,55,0.05);">
+        <i class="fas fa-user-circle" style="color: var(--gold-primary);"></i>
         <span>حسابي</span>
       </a>
 
-      <div class="nav-divider"></div>
+      <!-- فاصل عمودي ناعم -->
+      <div style="width: 1px; height: 26px; background: var(--border-subtle); margin: 0 2px;"></div>
 
-      <!-- وسائل التواصل الاجتماعي -->
-      <div class="social-icons-group">
-        <!-- واتساب -->
-        <a href="https://wa.me/9647827992437"
-           target="_blank"
-           class="icon-circle btn-whatsapp"
-           title="راسلنا عبر الواتساب"
-           aria-label="واتساب">
-          <i class="fab fa-whatsapp"></i>
-        </a>
-
-        <!-- فيسبوك -->
-        <div class="dropdown-wrapper">
-          <button type="button"
-                  class="icon-circle"
-                  onclick="toggleCustomDropdown('fbDropdownMenu')"
-                  title="فيسبوك"
-                  aria-label="صفحات فيسبوك">
-            <i class="fab fa-facebook-f"></i>
-          </button>
-          <div id="fbDropdownMenu" class="dropdown-menu">
-            <a href="https://www.facebook.com/share/1GxLdw2heB/" target="_blank">الوكالة</a>
-            <a href="https://www.facebook.com/share/1EDiLqoa3E/" target="_blank">المؤسسة</a>
-          </div>
-        </div>
-
-        <!-- انستغرام -->
-        <div class="dropdown-wrapper">
-          <button type="button"
-                  class="icon-circle"
-                  onclick="toggleCustomDropdown('igDropdownMenu')"
-                  title="انستغرام"
-                  aria-label="حسابات انستغرام">
-            <i class="fab fa-instagram"></i>
-          </button>
-          <div id="igDropdownMenu" class="dropdown-menu">
-            <a href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4" target="_blank">الوكالة</a>
-            <a href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1" target="_blank">المؤسسة</a>
-          </div>
-        </div>
-
-        <!-- زر تغيير المظهر (الثيم) -->
-        <button type="button"
-                id="themeToggleBtn"
-                class="icon-circle"
-                onclick="cycleTheme()"
-                title="تغيير الثيم"
-                aria-label="تغيير الثيم">
-          <i class="fas fa-palette" id="themeIcon"></i>
+      <!-- قائمة التواصل الاجتماعي الموحدة الأنيقة -->
+      <div class="social-dropdown-wrapper" style="position: relative; display: inline-block;">
+        <button
+          type="button"
+          onclick="toggleCustomDropdown('socialMediaMenu')"
+          title="مواقع التواصل الاجتماعي"
+          style="padding: 7px 13px; font-size: 12.5px; font-weight: 700; font-family: 'Tajawal', sans-serif; border-radius: 20px; display: inline-flex; align-items: center; gap: 7px; background: var(--surface-light); border: 1px solid var(--border-gold); color: var(--gold-primary); cursor: pointer; transition: var(--transition);"
+        >
+          <i class="fas fa-share-nodes" style="font-size: 13px;"></i>
+          <span>تواصل معنا</span>
+          <i class="fas fa-chevron-down" style="font-size: 10px; opacity: 0.8;"></i>
         </button>
+
+        <!-- القائمة المنسدلة المجمعة لجميع وسائل التواصل -->
+        <div
+          id="socialMediaMenu"
+          class="custom-dropdown-content"
+          style="display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 205px; background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1000; overflow: hidden; padding: 6px 0; text-align: right;"
+        >
+          <!-- واتساب مباشر -->
+          <a
+            href="https://wa.me/9647827992437"
+            target="_blank"
+            style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--border-subtle); transition: var(--transition);"
+            onmouseover="this.style.background='rgba(37,211,102,0.12)'"
+            onmouseout="this.style.background='transparent'"
+          >
+            <i class="fab fa-whatsapp" style="color: #25D366; font-size: 16px; width: 18px; text-align: center;"></i>
+            <span>الواتساب المباشر</span>
+          </a>
+
+          <!-- فيسبوك الوكالة -->
+          <a
+            href="https://www.facebook.com/share/1GxLdw2heB/"
+            target="_blank"
+            style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; text-decoration: none; transition: var(--transition);"
+            onmouseover="this.style.background='rgba(24,119,242,0.12)'"
+            onmouseout="this.style.background='transparent'"
+          >
+            <i class="fab fa-facebook-f" style="color: #1877F2; font-size: 15px; width: 18px; text-align: center;"></i>
+            <span>فيسبوك - الوكالة</span>
+          </a>
+
+          <!-- فيسبوك المؤسسة -->
+          <a
+            href="https://www.facebook.com/share/1EDiLqoa3E/"
+            target="_blank"
+            style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--border-subtle); transition: var(--transition);"
+            onmouseover="this.style.background='rgba(24,119,242,0.12)'"
+            onmouseout="this.style.background='transparent'"
+          >
+            <i class="fab fa-facebook-f" style="color: #1877F2; font-size: 15px; width: 18px; text-align: center;"></i>
+            <span>فيسبوك - المؤسسة</span>
+          </a>
+
+          <!-- انستغرام الوكالة -->
+          <a
+            href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4"
+            target="_blank"
+            style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; text-decoration: none; transition: var(--transition);"
+            onmouseover="this.style.background='rgba(225,48,108,0.12)'"
+            onmouseout="this.style.background='transparent'"
+          >
+            <i class="fab fa-instagram" style="color: #E1306C; font-size: 15px; width: 18px; text-align: center;"></i>
+            <span>انستغرام - الوكالة</span>
+          </a>
+
+          <!-- انستغرام المؤسسة -->
+          <a
+            href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1"
+            target="_blank"
+            style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; text-decoration: none; transition: var(--transition);"
+            onmouseover="this.style.background='rgba(225,48,108,0.12)'"
+            onmouseout="this.style.background='transparent'"
+          >
+            <i class="fab fa-instagram" style="color: #E1306C; font-size: 15px; width: 18px; text-align: center;"></i>
+            <span>انستغرام - المؤسسة</span>
+          </a>
+        </div>
       </div>
 
-      <!-- زر قائمة الهواتف المحمولة -->
-      <button type="button" class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">
-        <i class="fas fa-bars"></i>
+      <!-- زر تبديل الثيمات الدائري الأنيق -->
+      <button
+        type="button"
+        onclick="cycleTheme()"
+        id="themeToggleBtn"
+        title="تغيير الثيم"
+        aria-label="تغيير الثيم"
+        style="width: 36px; height: 36px; border: 1px solid var(--border-gold); border-radius: 50%; background: var(--surface-light); color: var(--gold-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition);"
+      >
+        <i class="fas fa-palette" id="themeIcon" style="font-size: 13px;"></i>
       </button>
 
     </div>
 
+    <!-- زر قائمة الهواتف المحمولة -->
+    <div class="menu-toggle" id="menuToggle" style="color: var(--gold-primary); font-size: 24px; cursor: pointer;">
+      <i class="fas fa-bars"></i>
+    </div>
   </nav>
 </header>
-
 <!-- HERO SECTION -->
 <section class="hero" id="home">
   <div class="wrap hero-inner">

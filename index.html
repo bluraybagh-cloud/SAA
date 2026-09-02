@@ -33,7 +33,7 @@
     --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     --max-w: 1280px;
 
-    /* الثيم الداكن */
+    /* الثيم الداكن الافتراضي */
     --bg-color: #070B12;
     --main-bg: #0B1220;
     --text-color: #F4F6F8;
@@ -44,15 +44,45 @@
     --border-subtle: rgba(255, 255, 255, 0.06);
   }
 
+  /* الثيم المضيء مع درجات النيلي عالي التباين */
   [data-theme="light"] {
-    --bg-color: #F4F6F8;
+    --bg-color: #F8F9FA;
     --main-bg: #FFFFFF;
     --text-color: #0B1220;
-    --surface-color: #E9ECEF;
-    --surface-light: #DEE2E6;
-    --dim-color: #495057;
-    --border-gold: rgba(212, 175, 55, 0.4);
+    --surface-color: #FFFFFF;
+    --surface-light: #EDF2F7;
+    --dim-color: #4A5568;
+    
+    /* تحويل النصوص والحدود الذهبية إلى نيلي فخم وواضح */
+    --gold-primary: #0D2B52;      /* نيلي داكن وواضح جداً للنصوص والعناوين */
+    --gold-light: #081C36;        /* كحلي / نيلي غامق للعناوين البارزة والشعار */
+    --gold-deep: #1A3E72;         /* نيلي متوسط للظلال والأرقام */
+    --gold-gradient: linear-gradient(135deg, #0D2B52 0%, #1A3E72 100%);
+    --border-gold: rgba(13, 43, 82, 0.22);
     --border-subtle: rgba(0, 0, 0, 0.08);
+  }
+
+  /* إذا كانت الخلفية نيلية في الثيم المضيء تكون الكتابة ذهبية فخمة */
+  [data-theme="light"] .nav-cta,
+  [data-theme="light"] .form-btn {
+    background: linear-gradient(135deg, #0D2B52 0%, #1A3E72 100%) !important;
+    color: #D4AF37 !important;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+  }
+
+  [data-theme="light"] .nav-cta:hover,
+  [data-theme="light"] .form-btn:hover {
+    color: #FFF !important;
+  }
+
+  [data-theme="light"] .sub-social-box {
+    background: #0D2B52 !important;
+  }
+  [data-theme="light"] .sub-social-box a {
+    color: #D4AF37 !important;
+  }
+  [data-theme="light"] .sub-social-box a:hover {
+    color: #FFFFFF !important;
   }
 
   [data-theme="neon"] {
@@ -165,7 +195,7 @@
   .ticker-container {
     position: fixed; top: 85px; left: 0; right: 0; z-index: 990;
     background: var(--surface-color); border-bottom: 1px solid var(--border-gold);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25); backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15); backdrop-filter: blur(12px);
     height: 42px; display: flex; align-items: center;
   }
   .ticker-inner { display: flex; align-items: center; width: 100%; height: 100%; gap: 15px; }
@@ -196,6 +226,10 @@
     background: linear-gradient(180deg, rgba(7, 11, 18, 0.75) 0%, var(--bg-color) 100%),
                 url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
   }
+  [data-theme="light"] .hero {
+    background: linear-gradient(180deg, rgba(248, 249, 250, 0.88) 0%, var(--bg-color) 100%),
+                url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+  }
   .hero-inner { position: relative; z-index: 2; width: 100%; text-align: center; }
   .hero h1 { font-size: clamp(38px, 6vw, 76px); line-height: 1.3; margin-bottom: 20px; color: var(--text-color); }
   .hero h1 span { color: var(--gold-primary); }
@@ -207,7 +241,7 @@
     transition: var(--transition); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; background: transparent;
     font-family: 'Tajawal', sans-serif;
   }
-  .btn-outline:hover { background: rgba(212, 175, 55, 0.1); }
+  .btn-outline:hover { background: rgba(13, 43, 82, 0.08); }
 
   .hero-stats {
     margin-top: 70px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -233,7 +267,7 @@
     background: var(--surface-color); border: 1px solid var(--border-gold);
     padding: 40px 32px; border-radius: 6px; position: relative; transition: var(--transition);
   }
-  .vm-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+  .vm-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.15); }
   .vm-card::before { content: ''; position: absolute; top: 0; right: 0; width: 60px; height: 3px; background: var(--gold-gradient); }
   .vm-icon { font-size: 32px; color: var(--gold-primary); margin-bottom: 18px; }
   .vm-card h3 { font-size: 24px; color: var(--gold-light); margin-bottom: 14px; }
@@ -257,7 +291,7 @@
   }
   .process-step {
     font-family: 'Tajawal', sans-serif; font-weight: 900; font-size: 32px; color: var(--gold-primary);
-    position: absolute; top: 15px; left: 20px; opacity: 0.4;
+    position: absolute; top: 15px; left: 20px; opacity: 0.35;
   }
   .process-card h4 { font-size: 18px; color: var(--gold-light); margin-bottom: 12px; }
   .process-card p { font-size: 14px; color: var(--dim-color); line-height: 1.7; }
@@ -268,7 +302,7 @@
     padding: 24px 16px; border-bottom: 1px solid var(--border-subtle);
     transition: var(--transition); flex-wrap: wrap; gap: 12px;
   }
-  .dept-row:hover { padding-right: 28px; background: rgba(212, 175, 55, 0.03); }
+  .dept-row:hover { padding-right: 28px; background: rgba(13, 43, 82, 0.04); }
   .dept-num { font-family: 'Tajawal', sans-serif; font-weight: 700; color: var(--gold-deep); font-size: 22px; width: 50px; }
   .dept-info { flex: 1; }
   .dept-name { font-size: 19px; font-weight: 700; color: var(--text-color); transition: var(--transition); display: block; }
@@ -329,7 +363,7 @@
     width: 100%; height: auto; max-height: 450px;
     object-fit: contain; background-color: var(--bg-color);
     border: 2px solid var(--gold-primary); border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2); margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(13, 43, 82, 0.12); margin-bottom: 15px;
   }
   .campaign-body { padding: 0; }
   .campaign-title { font-size: 18.5px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; }
@@ -343,14 +377,14 @@
     cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.3s;
     align-self: flex-start;
   }
-  .read-more-btn:hover { background: var(--gold-primary); color: var(--bg-color); }
+  .read-more-btn:hover { background: var(--gold-primary); color: #fff; }
 
   .pagination-btn {
     background: var(--surface-color); border: 1px solid var(--border-gold);
     color: var(--gold-light); padding: 8px 20px; border-radius: 8px;
     cursor: pointer; font-weight: bold; transition: 0.3s;
   }
-  .pagination-btn:hover:not(:disabled) { background: var(--gold-primary); color: var(--bg-color); }
+  .pagination-btn:hover:not(:disabled) { background: var(--gold-primary); color: #fff; }
   .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   /* أنماط التفاعلات والتعليقات على الأخبار */
@@ -374,8 +408,8 @@
     display: inline-flex; align-items: center; gap: 8px; font-family: 'Tajawal', sans-serif;
   }
   .react-btn:hover { border-color: var(--gold-primary); color: var(--gold-light); }
-  .react-btn.active-like { background: rgba(212, 175, 55, 0.2); border-color: var(--gold-primary); color: var(--gold-light); }
-  .react-btn.active-dislike { background: rgba(231, 76, 60, 0.2); border-color: var(--danger); color: #ff9b9b; }
+  .react-btn.active-like { background: rgba(13, 43, 82, 0.15); border-color: var(--gold-primary); color: var(--gold-light); }
+  .react-btn.active-dislike { background: rgba(231, 76, 60, 0.15); border-color: var(--danger); color: #c0392b; }
 
   .comments-container { margin-top: 35px; border-top: 1px solid var(--border-subtle); padding-top: 25px; }
   .comment-item {
@@ -396,7 +430,7 @@
     border-radius: 8px; padding: 22px; margin-top: 25px;
   }
   .comment-login-prompt {
-    background: rgba(212, 175, 55, 0.08); border: 1px dashed var(--border-gold);
+    background: rgba(13, 43, 82, 0.05); border: 1px dashed var(--border-gold);
     border-radius: 8px; padding: 20px; text-align: center; margin-top: 25px;
   }
 
@@ -416,8 +450,8 @@
   .share-tg { background: #0088cc; }
   .share-fb { background: #1877F2; }
   .share-x { background: #111111; border: 1px solid rgba(255,255,255,0.2); }
-  .share-copy { background: rgba(212,175,55,0.18); color: var(--gold-light); border: 1px solid var(--border-gold); }
-  .share-copy:hover { background: var(--gold-primary); color: var(--bg-color); }
+  .share-copy { background: rgba(13, 43, 82, 0.12); color: var(--gold-light); border: 1px solid var(--border-gold); }
+  .share-copy:hover { background: var(--gold-primary); color: #fff; }
 
   /* بطاقات الانتظار المتوهجة Skeleton Loader */
   .skeleton-card {
@@ -426,10 +460,10 @@
     border-radius: 8px;
     padding: 22px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   }
   .skeleton-box {
-    background: linear-gradient(90deg, var(--surface-light) 25%, rgba(212,175,55,0.2) 50%, var(--surface-light) 75%);
+    background: linear-gradient(90deg, var(--surface-light) 25%, rgba(13, 43, 82, 0.1) 50%, var(--surface-light) 75%);
     background-size: 200% 100%;
     animation: skeletonGlow 1.4s infinite linear;
     border-radius: 6px;
@@ -462,11 +496,11 @@
     color: var(--bg-color); border: none; border-radius: 4px; font-weight: 700;
     cursor: pointer; margin-top: 12px; font-family: 'Tajawal', sans-serif; font-size: 15px; transition: var(--transition);
   }
-  .form-btn:hover { box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35); }
+  .form-btn:hover { box-shadow: 0 6px 20px rgba(13, 43, 82, 0.25); }
 
   .alert-box { padding: 12px; border-radius: 4px; font-size: 13.5px; margin-bottom: 16px; display: none; }
-  .alert-danger { background: rgba(231, 76, 60, 0.2); border: 1px solid var(--danger); color: #ff9b9b; }
-  .alert-success { background: rgba(46, 204, 113, 0.2); border: 1px solid var(--success); color: #8bedb1; }
+  .alert-danger { background: rgba(231, 76, 60, 0.2); border: 1px solid var(--danger); color: #c0392b; }
+  .alert-success { background: rgba(46, 204, 113, 0.2); border: 1px solid var(--success); color: #27ae60; }
 
   /* لوحة التحكم والإحصائيات الخاصة بالإدارة */
   .dash-container { padding-top: 130px; min-height: 85vh; padding-bottom: 80px; }
@@ -484,11 +518,11 @@
     border-radius: 8px; padding: 24px; display: flex; align-items: center;
     justify-content: space-between; transition: var(--transition);
   }
-  .dash-stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+  .dash-stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
   .stat-card-info h4 { font-size: 14px; color: var(--dim-color); margin-bottom: 8px; font-weight: 600; }
   .stat-card-info .stat-val { font-size: 32px; font-weight: 900; color: var(--gold-primary); line-height: 1; }
   .stat-card-icon {
-    width: 52px; height: 52px; border-radius: 50%; background: rgba(212, 175, 55, 0.1);
+    width: 52px; height: 52px; border-radius: 50%; background: rgba(13, 43, 82, 0.08);
     border: 1px solid var(--border-gold); display: flex; align-items: center;
     justify-content: center; font-size: 22px; color: var(--gold-primary);
   }
@@ -524,14 +558,14 @@
   }
   .toast-item {
     background: var(--surface-color); border: 1px solid var(--border-gold); color: var(--text-color);
-    padding: 14px 22px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    padding: 14px 22px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     display: flex; align-items: center; gap: 12px; font-family: 'Tajawal', sans-serif;
     font-size: 14.5px; font-weight: 600; pointer-events: auto; transform: translateY(30px);
     opacity: 0; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); max-width: 380px;
   }
   .toast-item.show { transform: translateY(0); opacity: 1; }
-  .toast-item.success { border-color: var(--success); color: #8bedb1; }
-  .toast-item.danger { border-color: var(--danger); color: #ff9b9b; }
+  .toast-item.success { border-color: var(--success); color: #27ae60; }
+  .toast-item.danger { border-color: var(--danger); color: #c0392b; }
   .toast-item.info { border-color: var(--gold-primary); color: var(--gold-light); }
 
   footer { background: var(--main-bg); border-top: 1px solid var(--border-gold); padding: 90px 0 35px; }
@@ -579,8 +613,6 @@
   </div>
 </div>
 
-<!-- NAVIGATION -->
-<!-- NAVIGATION HEADER -->
 <!-- NAVIGATION HEADER -->
 <header style="height: 85px; background: var(--surface-color); border-bottom: 1px solid var(--border-gold); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);">
   <nav class="wrap" style="display: flex; align-items: center; justify-content: space-between; height: 85px; gap: 16px;">
@@ -620,7 +652,7 @@
       </a>
 
       <!-- زر حسابي -->
-      <a href="profile.html" class="btn-outline" style="padding: 7px 14px; font-size: 13px; font-weight: 700; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; border-color: var(--border-gold); color: var(--gold-light); background: rgba(212,175,55,0.05);">
+      <a href="profile.html" class="btn-outline" style="padding: 7px 14px; font-size: 13px; font-weight: 700; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; border-color: var(--border-gold); color: var(--gold-primary); background: rgba(13, 43, 82, 0.05);">
         <i class="fas fa-user-circle" style="color: var(--gold-primary);"></i>
         <span>حسابي</span>
       </a>
@@ -645,7 +677,7 @@
         <div
           id="socialMediaMenu"
           class="custom-dropdown-content"
-          style="display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 210px; background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.55); z-index: 1000; overflow: hidden; padding: 6px 0; text-align: right;"
+          style="display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 210px; background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); z-index: 1000; overflow: hidden; padding: 6px 0; text-align: right;"
         >
           <!-- 1. الواتساب المباشر -->
           <a
@@ -675,13 +707,13 @@
             </div>
 
             <!-- القائمة الفرعية لفيسبوك -->
-            <div id="fbSubMenu" style="display: none; background: rgba(0,0,0,0.25); padding: 4px 0; margin: 0 8px 6px; border-radius: 6px;">
+            <div id="fbSubMenu" class="sub-social-box" style="display: none; background: rgba(0,0,0,0.25); padding: 4px 0; margin: 0 8px 6px; border-radius: 6px;">
               <a
                 href="https://www.facebook.com/share/1GxLdw2heB/"
                 target="_blank"
                 style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: var(--gold-light); font-size: 12.5px; text-decoration: none; transition: var(--transition);"
-                onmouseover="this.style.color='var(--gold-primary)'; this.style.paddingRight='18px';"
-                onmouseout="this.style.color='var(--gold-light)'; this.style.paddingRight='14px';"
+                onmouseover="this.style.paddingRight='18px';"
+                onmouseout="this.style.paddingRight='14px';"
               >
                 <i class="fas fa-arrow-left" style="font-size: 9px;"></i>
                 <span>الوكالة</span>
@@ -690,8 +722,8 @@
                 href="https://www.facebook.com/share/1EDiLqoa3E/"
                 target="_blank"
                 style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: var(--gold-light); font-size: 12.5px; text-decoration: none; transition: var(--transition);"
-                onmouseover="this.style.color='var(--gold-primary)'; this.style.paddingRight='18px';"
-                onmouseout="this.style.color='var(--gold-light)'; this.style.paddingRight='14px';"
+                onmouseover="this.style.paddingRight='18px';"
+                onmouseout="this.style.paddingRight='14px';"
               >
                 <i class="fas fa-arrow-left" style="font-size: 9px;"></i>
                 <span>المؤسسة</span>
@@ -715,13 +747,13 @@
             </div>
 
             <!-- القائمة الفرعية لانستغرام -->
-            <div id="igSubMenu" style="display: none; background: rgba(0,0,0,0.25); padding: 4px 0; margin: 0 8px 6px; border-radius: 6px;">
+            <div id="igSubMenu" class="sub-social-box" style="display: none; background: rgba(0,0,0,0.25); padding: 4px 0; margin: 0 8px 6px; border-radius: 6px;">
               <a
                 href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4"
                 target="_blank"
                 style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: var(--gold-light); font-size: 12.5px; text-decoration: none; transition: var(--transition);"
-                onmouseover="this.style.color='var(--gold-primary)'; this.style.paddingRight='18px';"
-                onmouseout="this.style.color='var(--gold-light)'; this.style.paddingRight='14px';"
+                onmouseover="this.style.paddingRight='18px';"
+                onmouseout="this.style.paddingRight='14px';"
               >
                 <i class="fas fa-arrow-left" style="font-size: 9px;"></i>
                 <span>الوكالة</span>
@@ -730,8 +762,8 @@
                 href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1"
                 target="_blank"
                 style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: var(--gold-light); font-size: 12.5px; text-decoration: none; transition: var(--transition);"
-                onmouseover="this.style.color='var(--gold-primary)'; this.style.paddingRight='18px';"
-                onmouseout="this.style.color='var(--gold-light)'; this.style.paddingRight='14px';"
+                onmouseover="this.style.paddingRight='18px';"
+                onmouseout="this.style.paddingRight='14px';"
               >
                 <i class="fas fa-arrow-left" style="font-size: 9px;"></i>
                 <span>المؤسسة</span>
@@ -762,6 +794,7 @@
     </div>
   </nav>
 </header>
+
 <!-- HERO SECTION -->
 <section class="hero" id="home">
   <div class="wrap hero-inner">
@@ -769,7 +802,7 @@
     <div class="hero-ctas">
       <button onclick="navigateTo('campaigns-page')" class="nav-cta"><i class="fas fa-bullhorn"></i> استعرض معرض الحملات</button>
       <button onclick="navigateTo('main-page', '#about')" class="btn-outline"><i class="fas fa-compass"></i> التعرف على الوكالة</button>
-      <a href="booking.html" class="nav-cta" style="background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);"><i class="fas fa-ad"></i> احجز إعلانك هنا</a>
+      <a href="booking.html" class="nav-cta" style="background: linear-gradient(135deg, #f39c12 0%, #d35400 100%) !important; color: #fff !important;"><i class="fas fa-ad"></i> احجز إعلانك هنا</a>
     </div>
   </div>
 </section>
@@ -778,7 +811,7 @@
 
   <!-- NEWS LIVE STREAM -->
   <section id="news-section" style="position: relative; padding: 140px 0 110px; overflow: hidden;">
-    <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.15), transparent 60%); pointer-events: none;"></div>
+    <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 30%, rgba(13, 43, 82, 0.08), transparent 60%); pointer-events: none;"></div>
     <div class="wrap" style="position: relative; z-index: 2;">
       
       <div id="mainNewsListView">
@@ -788,7 +821,7 @@
           <p class="section-desc" style="margin: 0 auto; font-size: 18px;">متابعة مستمرة وتغطيات حية توثق كافة الأنشطة والمبادرات الرسمية والمجتمعية أولاً بأول بجودة وإحترافية عالية.</p>
         </div>
         
-        <!-- شبكة الأخبار وبطاقات الانتظار مع شريط إحصائيات التفاعل -->
+        <!-- شبكة الأخبار وبطاقات الانتظار -->
         <div class="campaigns-grid" id="liveNewsGrid"></div>
 
         <div id="newsPagination" style="display: none; justify-content: center; align-items: center; gap: 15px; margin-top: 50px;">
@@ -1303,6 +1336,7 @@ function showToast(message, type = 'info') {
     }, 400);
   }, 4000);
 }
+
 function toggleSubSocialMenu(menuId, arrowId) {
   const menu = document.getElementById(menuId);
   const arrow = document.getElementById(arrowId);
@@ -1313,6 +1347,7 @@ function toggleSubSocialMenu(menuId, arrowId) {
     arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
   }
 }
+
 /* ========================================================
    ضغط وتصغير حجم الصور تلقائياً قبل الرفع
    ======================================================== */
@@ -1672,7 +1707,7 @@ function displayPostsGrid() {
     const shortText = fullContent.length > 130 ? fullContent.substring(0, 130) + '...' : fullContent;
     const postDate = p.date ? new Date(p.date).toLocaleDateString('ar-IQ') : 'اليوم';
 
-    const pinnedBadgeHtml = p.isPinned ? `<span style="display:inline-flex; align-items:center; gap:5px; font-size:11px; background:rgba(212,175,55,0.2); color:var(--gold-light); border:1px solid var(--gold-primary); padding:3px 8px; border-radius:4px; margin-left:6px;"><i class="fas fa-thumbtack" style="color:var(--gold-primary);"></i> خبر مثبت</span>` : '';
+    const pinnedBadgeHtml = p.isPinned ? `<span style="display:inline-flex; align-items:center; gap:5px; font-size:11px; background:rgba(13,43,82,0.12); color:var(--gold-light); border:1px solid var(--gold-primary); padding:3px 8px; border-radius:4px; margin-left:6px;"><i class="fas fa-thumbtack" style="color:var(--gold-primary);"></i> خبر مثبت</span>` : '';
 
     const card = document.createElement('div');
     card.className = 'campaign-card';
@@ -1693,7 +1728,7 @@ function displayPostsGrid() {
           <i class="fas fa-calendar-alt" style="color: var(--gold-primary);"></i> ${postDate}
         </div>
         
-        <!-- شريط إحصائيات التفاعل أسفل كل خبر في القائمة الرئيسية -->
+        <!-- شريط إحصائيات التفاعل أسفل كل خبر -->
         <div class="news-stats-bar">
           <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
             <span class="news-stats-item" title="عدد الإعجابات"><i class="fas fa-thumbs-up" style="color:var(--gold-primary);"></i> ${p.likesCount || 0}</span>
@@ -1750,7 +1785,7 @@ async function renderLiveNews() {
   if (mainListView) mainListView.style.display = 'block';
   if (detailView) detailView.style.display = 'none';
 
-  // إظهار بطاقات الانتظار المتوهجة فوراً
+  // بطاقات الانتظار المتوهجة
   grid.innerHTML = `
     <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
     <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
@@ -1811,12 +1846,12 @@ function openPublicSingleNews(postId, updateHash = true) {
   const encodedUrl = encodeURIComponent(directNewsUrl);
   const encodedTitle = encodeURIComponent(post.title || 'وكالة صدى العطاء');
 
-  const pinnedBadgeHtml = post.isPinned ? `<span style="font-size:12px; color:var(--gold-light); background:rgba(212,175,55,0.25); border:1px solid var(--gold-primary); padding:4px 10px; border-radius:4px; display:inline-flex; align-items:center; gap:5px; margin-left:8px;"><i class="fas fa-thumbtack" style="color:var(--gold-primary);"></i> خبر مثبت</span>` : '';
+  const pinnedBadgeHtml = post.isPinned ? `<span style="font-size:12px; color:var(--gold-light); background:rgba(13,43,82,0.12); border:1px solid var(--gold-primary); padding:4px 10px; border-radius:4px; display:inline-flex; align-items:center; gap:5px; margin-left:8px;"><i class="fas fa-thumbtack" style="color:var(--gold-primary);"></i> خبر مثبت</span>` : '';
 
   detailBox.innerHTML = `
     <div style="display: flex; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
       ${pinnedBadgeHtml}
-      <span style="font-size: 12px; color: var(--gold-light); background: rgba(212,175,55,0.15); padding: 4px 10px; border-radius: 4px;">${escapeText(post.category || 'عام')}</span>
+      <span style="font-size: 12px; color: var(--gold-light); background: rgba(13,43,82,0.08); padding: 4px 10px; border-radius: 4px;">${escapeText(post.category || 'عام')}</span>
     </div>
     
     <h2 style="color: var(--text-color); font-size: 28px; margin-bottom: 15px;">${escapeText(post.title || '')}</h2>
@@ -1830,7 +1865,7 @@ function openPublicSingleNews(postId, updateHash = true) {
       ${post.content || ''}
     </div>
     
-    <!-- شريط التفاعلات المباشرة (أعجبني / لم يعجبني) -->
+    <!-- شريط التفاعلات المباشرة -->
     <div class="reactions-interactive-box">
       <span style="font-size: 14px; font-weight: 700; color: var(--gold-light); margin-left: 10px;">التفاعل مع هذا الخبر:</span>
       <button id="likeBtn_${post._id}" onclick="submitReaction('${post._id}', 'like')" class="react-btn">
@@ -1865,7 +1900,7 @@ function openPublicSingleNews(postId, updateHash = true) {
       </button>
     </div>
 
-    <!-- قسم التعليقات المعتمدة وإضافة تعليق جديد -->
+    <!-- قسم التعليقات المعتمدة -->
     <div class="comments-container">
       <h3 style="color: var(--gold-light); font-size: 20px; margin-bottom: 18px; display:flex; align-items:center; gap:8px;">
         <i class="fas fa-comments" style="color: var(--gold-primary);"></i> التعليقات والآراء (<span id="commentsCountHeader_${post._id}">${post.commentsCount || 0}</span>)
@@ -1910,9 +1945,8 @@ function changeNewsPage(direction) {
 }
 
 /* ========================================================
-   دوال التفاعلات والتعليقات على الأخبار في الصفحة الرئيسية
+   دوال التفاعلات والتعليقات على الأخبار
    ======================================================== */
-
 async function submitReaction(postId, type) {
   const token = localStorage.getItem('sada_user_token');
   if (!token) {
@@ -1948,13 +1982,12 @@ async function submitReaction(postId, type) {
         likeBtn.classList.add('active-like');
         showToast('تم تسجيل إعجابك بالخبر!', 'success');
       } else if (data.userReaction === 'dislike' && dislikeBtn) {
-        dislikeBtn.classList.add('active-dislike');
+        likeBtn.classList.add('active-dislike');
         showToast('تم تسجيل عدم الإعجاب بالخبر', 'info');
       } else {
         showToast('تم إلغاء التفاعل مع الخبر', 'info');
       }
 
-      // تحديث الكاش المحلي
       const post = allPosts.find(p => String(p._id) === String(postId));
       if (post) {
         post.likesCount = data.likesCount;
@@ -2070,7 +2103,7 @@ async function submitCommentAction(postId) {
 }
 
 /* ========================================================
-   لوحة التحكم وتحديث الإحصائيات مع الحماية
+   لوحة التحكم وتحديث الإحصائيات
    ======================================================== */
 async function updateDashboardStats() {
   const visitsEl = document.getElementById('dashTotalVisitsCount');
@@ -2120,7 +2153,6 @@ async function renderDashboardUsers() {
       return;
     }
 
-    // فلترة مانعة للتكرار واستبعاد حساب المشرف
     const seenIds = new Set();
     const users = [];
     rawUsers.forEach(u => {
@@ -2166,7 +2198,7 @@ async function renderDashboardUsers() {
       let requestsList = [];
       if (u.updateRequestStatus === 'pending') {
         if (u.requestedPassword) {
-          requestsList.push(`<div style="margin-bottom:3px;"><i class="fas fa-key" style="color:#f39c12;"></i> ك.المرور: <span style="background:rgba(212,175,55,0.25); padding:1px 5px; border-radius:3px; color:#fff;">${escapeText(u.requestedPassword)}</span></div>`);
+          requestsList.push(`<div style="margin-bottom:3px;"><i class="fas fa-key" style="color:#f39c12;"></i> ك.المرور: <span style="background:rgba(13,43,82,0.15); padding:1px 5px; border-radius:3px; color:var(--text-color);">${escapeText(u.requestedPassword)}</span></div>`);
         }
         if (u.requestedName) {
           requestsList.push(`<div style="margin-bottom:3px;"><i class="fas fa-user-edit" style="color:#3498db;"></i> الاسم: <b>${escapeText(u.requestedName)}</b></div>`);
@@ -2209,7 +2241,6 @@ async function renderDashboardUsers() {
   }
 }
 
-// موافقة الأدمن على طلب تعديل بيانات المستخدم (كلمة المرور / الاسم / المعرف)
 async function approveUserUpdateRequest(userId) {
   if (!confirm('هل أنت متأكد من الموافقة على تعديل بيانات المستخدم وتطبيقها في حسابه؟')) return;
   const token = localStorage.getItem('sada_token');
@@ -2230,7 +2261,6 @@ async function approveUserUpdateRequest(userId) {
   }
 }
 
-// رفض الأدمن لطلب تعديل بيانات المستخدم
 async function rejectUserUpdateRequest(userId) {
   if (!confirm('هل أنت متأكد من رفض طلب تعديل بيانات المستخدم؟')) return;
   const token = localStorage.getItem('sada_token');
@@ -2251,7 +2281,6 @@ async function rejectUserUpdateRequest(userId) {
   }
 }
 
-// دالة حذف المستخدم
 async function deleteUserAction(userId, username) {
   if (!confirm(`هل أنت متأكد من حذف حساب (${username}) نهائياً من قاعدة البيانات؟`)) return;
   const token = localStorage.getItem('sada_token');
@@ -2435,7 +2464,6 @@ async function renderDashboardAds() {
   }
 }
 
-// موافقة الآدمن على الإعلان ونشره
 async function approveAdAction(id) {
   const token = localStorage.getItem('sada_token');
   try {
@@ -2506,8 +2534,8 @@ async function renderDashboard() {
     const postShares = item.shares || 0;
 
     const statusBadge = item.status === 'draft' 
-      ? `<span style="background:rgba(231,76,60,0.15); color:#ff9b9b; border:1px solid var(--danger); padding:2px 8px; border-radius:4px; font-size:11px;"><i class="fas fa-file-alt"></i> مسودة</span>`
-      : `<span style="background:rgba(46,204,113,0.15); color:#8bedb1; border:1px solid var(--success); padding:2px 8px; border-radius:4px; font-size:11px;"><i class="fas fa-check"></i> منشور</span>`;
+      ? `<span style="background:rgba(231,76,60,0.15); color:#c0392b; border:1px solid var(--danger); padding:2px 8px; border-radius:4px; font-size:11px;"><i class="fas fa-file-alt"></i> مسودة</span>`
+      : `<span style="background:rgba(46,204,113,0.15); color:#27ae60; border:1px solid var(--success); padding:2px 8px; border-radius:4px; font-size:11px;"><i class="fas fa-check"></i> منشور</span>`;
 
     const pinIcon = item.isPinned ? `<i class="fas fa-thumbtack" style="color:var(--gold-primary); margin-left:6px;" title="خبر مثبت"></i>` : '';
 

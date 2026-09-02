@@ -107,7 +107,7 @@
     height: 85px;
   }
 
-  /* تصميم الشعار المطور */
+  /* تصميم الشعار والاسم الرسمي */
   .brand { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
   .brand-logo-container {
     display: flex; align-items: center; justify-content: center;
@@ -153,9 +153,9 @@
   
   .btn-ad-booking {
     background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
-    color: #fff; padding: 8px 18px; font-size: 13px; font-weight: 800; border-radius: 4px;
+    color: #fff; padding: 7px 14px; font-size: 13px; font-weight: 800; border-radius: 6px;
     display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(230, 126, 34, 0.35);
-    transition: var(--transition);
+    transition: var(--transition); white-space: nowrap;
   }
   .btn-ad-booking:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(230, 126, 34, 0.5); }
 
@@ -580,16 +580,23 @@
 </div>
 
 <!-- NAVIGATION -->
-<!-- NAVIGATION -->
-<header>
-  <nav class="wrap" style="display: flex; align-items: center; justify-content: space-between; height: 85px;">
-    
-    <!-- الشعار والاسم الرسمي -->
-    <div class="brand" onclick="navigateTo('main-page', '#home')" ondblclick="handleSecretAdminEntry()" title="وكالة صدى العطاء">
+<header class="main-header">
+  <nav class="nav-wrap" role="navigation" aria-label="القائمة الرئيسية">
+
+    <!-- الشعار -->
+    <div class="brand"
+         onclick="navigateTo('main-page', '#home')"
+         ondblclick="handleSecretAdminEntry()"
+         title="وكالة صدى العطاء">
       <div class="brand-logo-container">
-        <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('brandLogoFallback').style.display='flex';">
-        <div id="brandLogoFallback" class="brand-logo-fallback" style="display: none;">
-          <i class="fas fa-newspaper" style="color: #D4AF37; font-size: 20px;"></i>
+        <img
+          src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png"
+          alt="شعار وكالة صدى العطاء"
+          class="brand-logo-img"
+          onerror="this.style.display='none';document.getElementById('brandLogoFallback').style.display='flex';"
+        >
+        <div id="brandLogoFallback" class="brand-logo-fallback">
+          <i class="fas fa-newspaper"></i>
         </div>
       </div>
       <div class="brand-name-group">
@@ -597,69 +604,93 @@
       </div>
     </div>
 
-    <!-- روابط أقسام الموقع بتسلسل منظم ونظيف -->
+    <!-- روابط الموقع (سطح المكتب) -->
     <div class="navlinks" id="navLinks">
-      <button onclick="navigateTo('main-page', '#home')">الرئيسية</button>
-      <button onclick="navigateTo('main-page', '#news-section')">الأخبار والتغطيات</button>
-      <button onclick="navigateTo('campaigns-page')">معرض الحملات</button>
-      <button onclick="navigateTo('main-page', '#about')">عن الوكالة</button>
-      <button onclick="navigateTo('main-page', '#fields')">مجالات العمل</button>
-      <button onclick="navigateTo('main-page', '#process')">آلية العمل</button>
-      <button onclick="navigateTo('main-page', '#departments')">الأقسام</button>
-      <button onclick="navigateTo('main-page', '#faq')">الأسئلة الشائعة</button>
+      <button type="button" class="nav-item active" onclick="navigateTo('main-page', '#home')">الرئيسية</button>
+      <button type="button" class="nav-item" onclick="navigateTo('main-page', '#news-section')">الأخبار والتغطيات</button>
+      <button type="button" class="nav-item" onclick="navigateTo('campaigns-page')">معرض الحملات</button>
+      <button type="button" class="nav-item" onclick="navigateTo('main-page', '#about')">عن الوكالة</button>
+      <button type="button" class="nav-item" onclick="navigateTo('main-page', '#fields')">مجالات العمل</button>
+      <button type="button" class="nav-item" onclick="navigateTo('main-page', '#process')">آلية العمل</button>
+      <button type="button" class="nav-item" onclick="navigateTo('main-page', '#departments')">الأقسام</button>
+      <button type="button" class="nav-item" onclick="navigateTo('main-page', '#faq')">الأسئلة الشائعة</button>
     </div>
 
-    <!-- جهة الأزرار والخدمات مجمعة بأناقة وترتيب كامل -->
-    <div style="display: flex; align-items: center; gap: 8px;">
+    <!-- أزرار الإجراءات والتواصل -->
+    <div class="nav-actions">
       
-      <!-- زر احجز إعلانك بتصميم متناسق -->
-      <a href="booking.html" class="btn-ad-booking" style="padding: 7px 14px; font-size: 13px; font-weight: 700; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;">
-        <i class="fas fa-bullhorn"></i> احجز إعلانك
+      <!-- أزرار الخدمات -->
+      <a href="booking.html" class="btn-primary-gold">
+        <i class="fas fa-bullhorn"></i>
+        <span>احجز إعلانك</span>
       </a>
 
-      <!-- زر حسابي / البروفايل منظم في جهة الخدمات -->
-      <a href="profile.html" class="btn-outline" style="padding: 7px 14px; font-size: 13px; font-weight: 700; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; border-color: var(--border-gold); color: var(--gold-light);">
-        <i class="fas fa-user-circle" style="color: var(--gold-primary);"></i> حسابي
+      <a href="profile.html" class="btn-outline-gold">
+        <i class="fas fa-user-circle"></i>
+        <span>حسابي</span>
       </a>
 
-      <!-- فاصل عمودي أنيق -->
-      <div style="width: 1px; height: 26px; background: var(--border-subtle); margin: 0 4px;"></div>
+      <div class="nav-divider"></div>
 
-      <!-- أيقونة الواتساب المباشرة -->
-      <a href="https://wa.me/9647827992437" target="_blank" title="راسلنا عبر الواتساب" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.08); text-decoration: none; transition: var(--transition);">
-        <i class="fab fa-whatsapp" style="color: #25D366; font-size: 15px;"></i>
-      </a>
+      <!-- وسائل التواصل الاجتماعي -->
+      <div class="social-icons-group">
+        <!-- واتساب -->
+        <a href="https://wa.me/9647827992437"
+           target="_blank"
+           class="icon-circle btn-whatsapp"
+           title="راسلنا عبر الواتساب"
+           aria-label="واتساب">
+          <i class="fab fa-whatsapp"></i>
+        </a>
 
-      <!-- القائمة المنسدلة لفيسبوك -->
-      <div class="social-dropdown-wrapper" style="position: relative; display: inline-block;">
-        <button onclick="toggleCustomDropdown('fbDropdownMenu')" title="فيسبوك" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-primary); background: var(--surface-color); cursor: pointer; transition: var(--transition);">
-          <i class="fab fa-facebook-f" style="font-size: 12px;"></i>
-        </button>
-        <div id="fbDropdownMenu" class="custom-dropdown-content" style="display: none; position: absolute; top: 125%; right: 0; background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 8px; min-width: 110px; box-shadow: 0px 5px 15px rgba(0,0,0,0.3); z-index: 100; overflow: hidden; text-align: right;">
-          <a href="https://www.facebook.com/share/1GxLdw2heB/" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--border-subtle); transition: 0.2s;">الوكالة</a>
-          <a href="https://www.facebook.com/share/1EDiLqoa3E/" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; transition: 0.2s;">المؤسسة</a>
+        <!-- فيسبوك -->
+        <div class="dropdown-wrapper">
+          <button type="button"
+                  class="icon-circle"
+                  onclick="toggleCustomDropdown('fbDropdownMenu')"
+                  title="فيسبوك"
+                  aria-label="صفحات فيسبوك">
+            <i class="fab fa-facebook-f"></i>
+          </button>
+          <div id="fbDropdownMenu" class="dropdown-menu">
+            <a href="https://www.facebook.com/share/1GxLdw2heB/" target="_blank">الوكالة</a>
+            <a href="https://www.facebook.com/share/1EDiLqoa3E/" target="_blank">المؤسسة</a>
+          </div>
         </div>
+
+        <!-- انستغرام -->
+        <div class="dropdown-wrapper">
+          <button type="button"
+                  class="icon-circle"
+                  onclick="toggleCustomDropdown('igDropdownMenu')"
+                  title="انستغرام"
+                  aria-label="حسابات انستغرام">
+            <i class="fab fa-instagram"></i>
+          </button>
+          <div id="igDropdownMenu" class="dropdown-menu">
+            <a href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4" target="_blank">الوكالة</a>
+            <a href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1" target="_blank">المؤسسة</a>
+          </div>
+        </div>
+
+        <!-- زر تغيير المظهر (الثيم) -->
+        <button type="button"
+                id="themeToggleBtn"
+                class="icon-circle"
+                onclick="cycleTheme()"
+                title="تغيير الثيم"
+                aria-label="تغيير الثيم">
+          <i class="fas fa-palette" id="themeIcon"></i>
+        </button>
       </div>
 
-      <!-- القائمة المنسدلة لانستغرام -->
-      <div class="social-dropdown-wrapper" style="position: relative; display: inline-block;">
-        <button onclick="toggleCustomDropdown('igDropdownMenu')" title="انستغرام" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-primary); background: var(--surface-color); cursor: pointer; transition: var(--transition);">
-          <i class="fab fa-instagram" style="font-size: 12px;"></i>
-        </button>
-        <div id="igDropdownMenu" class="custom-dropdown-content" style="display: none; position: absolute; top: 125%; right: 0; background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 8px; min-width: 110px; box-shadow: 0px 5px 15px rgba(0,0,0,0.3); z-index: 100; overflow: hidden; text-align: right;">
-          <a href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--border-subtle); transition: 0.2s;">الوكالة</a>
-          <a href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; transition: 0.2s;">المؤسسة</a>
-        </div>
-      </div>
-
-      <!-- زر تبديل الثيمات -->
-      <button onclick="cycleTheme()" id="themeToggleBtn" style="background: var(--surface-color); border: 1px solid var(--border-gold); color: var(--gold-primary); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s;" title="تغيير الثيم">
-        <i class="fas fa-palette" id="themeIcon" style="font-size: 12px;"></i>
+      <!-- زر قائمة الهواتف المحمولة -->
+      <button type="button" class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">
+        <i class="fas fa-bars"></i>
       </button>
 
     </div>
 
-    <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
   </nav>
 </header>
 
@@ -958,10 +989,10 @@
       </div>
     </div>
 
-    <!-- قسم إدارة وموافقة حسابات المستخدمين الجدد -->
+    <!-- قسم إدارة وموافقة حسابات المستخدمين الجدد وتعديلات الحساب -->
     <div class="dash-panel" style="border-color: #3498db;">
       <h3 style="color: #3498db; display:flex; align-items:center; gap:10px;"><i class="fas fa-users-cog"></i> إدارة وتفعيل حسابات المستخدمين</h3>
-      <p style="color: var(--dim-color); font-size: 13.5px; margin-bottom: 20px;">مراجعة طلبات التسجيل الجديدة والموافقة عليها ليتمكن المستخدم من التفاعل والتعليق في الموقع.</p>
+      <p style="color: var(--dim-color); font-size: 13.5px; margin-bottom: 20px;">مراجعة طلبات التسجيل الجديدة، وطلبات تعديل كلمة المرور أو الاسم أو المعرف، والموافقة عليها أو رفضها.</p>
       <div class="table-responsive">
         <table class="custom-table">
           <thead>
@@ -970,12 +1001,13 @@
               <th>اسم المستخدم</th>
               <th>البريد الإلكتروني</th>
               <th>رقم الهاتف</th>
-              <th>الحالة</th>
-              <th>الإجراء والموافقة</th>
+              <th>حالة الحساب</th>
+              <th>طلبات التعديل (كلمة المرور / الاسم / المعرف)</th>
+              <th>إدارة الحساب</th>
             </tr>
           </thead>
           <tbody id="dashUsersTable">
-            <tr><td colspan="6" style="text-align:center; color:var(--dim-color);">جاري جلب المستخدمين...</td></tr>
+            <tr><td colspan="7" style="text-align:center; color:var(--dim-color);">جاري جلب المستخدمين...</td></tr>
           </tbody>
         </table>
       </div>
@@ -1993,7 +2025,6 @@ async function updateDashboardStats() {
   }
 }
 
-// جلب وعرض المستخدمين في لوحة الأدمن مع منع التكرار وإمكانية الحذف
 async function renderDashboardUsers() {
   const token = localStorage.getItem('sada_token');
   const tableBody = document.getElementById('dashUsersTable');
@@ -2012,7 +2043,7 @@ async function renderDashboardUsers() {
       return;
     }
 
-    // 1. فلترة مانعة للتكرار نهائياً واستبعاد حساب المشرف الرئيسي
+    // فلترة مانعة للتكرار واستبعاد حساب المشرف
     const seenIds = new Set();
     const users = [];
     rawUsers.forEach(u => {
@@ -2050,26 +2081,38 @@ async function renderDashboardUsers() {
         `;
       }
 
-      // زر الحذف للتخلص من أي حساب مكرر فوراً
       actionsHtml += `
         <button class="action-btn btn-delete" style="padding:6px 10px; margin-right:4px;" onclick="deleteUserAction('${u._id}', '${escapeText(u.username)}')" title="حذف الحساب نهائياً"><i class="fas fa-trash"></i></button>
       `;
 
-      let pwdResetHtml = '<span style="color:var(--dim-color); font-size:12px;">لا يوجد طلب</span>';
-      if (u.resetStatus === 'pending' && u.requestedPassword) {
-        pwdResetHtml = `
-          <div style="font-size:12px; color:#f39c12; font-weight:700; margin-bottom:5px;">
-            <i class="fas fa-key"></i> طلب: <span style="background:rgba(212,175,55,0.2); padding:2px 6px; border-radius:4px; color:#fff;">${escapeText(u.requestedPassword)}</span>
-          </div>
-          <div style="display:flex; gap:5px;">
-            <button class="action-btn btn-approve" style="padding:3px 8px; font-size:11px;" onclick="approvePasswordResetAction('${u._id}')" title="موافقة وتعيين كلمة المرور"><i class="fas fa-check"></i> موافقة</button>
-            <button class="action-btn btn-reject" style="padding:3px 8px; font-size:11px;" onclick="rejectPasswordResetAction('${u._id}')" title="رفض الطلب"><i class="fas fa-times"></i> رفض</button>
-          </div>
-        `;
-      } else if (u.resetStatus === 'approved') {
-        pwdResetHtml = '<span style="color:#2ecc71; font-size:12px;"><i class="fas fa-check-circle"></i> تم تغييرها</span>';
-      } else if (u.resetStatus === 'rejected') {
-        pwdResetHtml = '<span style="color:#e74c3c; font-size:12px;"><i class="fas fa-times-circle"></i> تم الرفض</span>';
+      let updateReqHtml = '<span style="color:var(--dim-color); font-size:12px;">لا يوجد طلب</span>';
+      let requestsList = [];
+      if (u.updateRequestStatus === 'pending') {
+        if (u.requestedPassword) {
+          requestsList.push(`<div style="margin-bottom:3px;"><i class="fas fa-key" style="color:#f39c12;"></i> ك.المرور: <span style="background:rgba(212,175,55,0.25); padding:1px 5px; border-radius:3px; color:#fff;">${escapeText(u.requestedPassword)}</span></div>`);
+        }
+        if (u.requestedName) {
+          requestsList.push(`<div style="margin-bottom:3px;"><i class="fas fa-user-edit" style="color:#3498db;"></i> الاسم: <b>${escapeText(u.requestedName)}</b></div>`);
+        }
+        if (u.requestedUsername) {
+          requestsList.push(`<div style="margin-bottom:3px;"><i class="fas fa-at" style="color:#9b59b6;"></i> المعرف: <b>@${escapeText(u.requestedUsername)}</b></div>`);
+        }
+
+        if (requestsList.length > 0) {
+          updateReqHtml = `
+            <div style="font-size:12px; margin-bottom:6px; line-height:1.4;">
+              ${requestsList.join('')}
+            </div>
+            <div style="display:flex; gap:5px;">
+              <button class="action-btn btn-approve" style="padding:3px 8px; font-size:11px;" onclick="approveUserUpdateRequest('${u._id}')" title="موافقة على التعديلات"><i class="fas fa-check"></i> موافقة</button>
+              <button class="action-btn btn-reject" style="padding:3px 8px; font-size:11px;" onclick="rejectUserUpdateRequest('${u._id}')" title="رفض الطلب"><i class="fas fa-times"></i> رفض</button>
+            </div>
+          `;
+        }
+      } else if (u.updateRequestStatus === 'approved') {
+        updateReqHtml = '<span style="color:#2ecc71; font-size:12px;"><i class="fas fa-check-circle"></i> تم اعتماد التعديل</span>';
+      } else if (u.updateRequestStatus === 'rejected') {
+        updateReqHtml = '<span style="color:#e74c3c; font-size:12px;"><i class="fas fa-times-circle"></i> تم رفض الطلب</span>';
       }
 
       const tr = document.createElement('tr');
@@ -2079,7 +2122,7 @@ async function renderDashboardUsers() {
         <td>${escapeText(u.email)}</td>
         <td>${escapeText(u.phone)}</td>
         <td>${statusBadge}</td>
-        <td>${pwdResetHtml}</td>
+        <td>${updateReqHtml}</td>
         <td>${actionsHtml}</td>
       `;
       tableBody.appendChild(tr);
@@ -2089,7 +2132,49 @@ async function renderDashboardUsers() {
   }
 }
 
-// دالة حذف المستخدم المكرر نهائياً بنقرة واحدة
+// موافقة الأدمن على طلب تعديل بيانات المستخدم (كلمة المرور / الاسم / المعرف)
+async function approveUserUpdateRequest(userId) {
+  if (!confirm('هل أنت متأكد من الموافقة على تعديل بيانات المستخدم وتطبيقها في حسابه؟')) return;
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/users/${userId}/approve-update`, {
+      method: 'PUT',
+      headers: { 'Authorization': token }
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showToast(data.message || 'تمت الموافقة وتحديث بيانات المستخدم بنجاح!', 'success');
+      renderDashboardUsers();
+    } else {
+      showToast(data.error || 'تعذر إتمام العملية', 'danger');
+    }
+  } catch (err) {
+    showToast('تعذر الاتصال بالسيرفر', 'danger');
+  }
+}
+
+// رفض الأدمن لطلب تعديل بيانات المستخدم
+async function rejectUserUpdateRequest(userId) {
+  if (!confirm('هل أنت متأكد من رفض طلب تعديل بيانات المستخدم؟')) return;
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/users/${userId}/reject-update`, {
+      method: 'PUT',
+      headers: { 'Authorization': token }
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showToast(data.message || 'تم رفض طلب التعديل', 'info');
+      renderDashboardUsers();
+    } else {
+      showToast(data.error || 'تعذر إتمام العملية', 'danger');
+    }
+  } catch (err) {
+    showToast('تعذر الاتصال بالسيرفر', 'danger');
+  }
+}
+
+// دالة حذف المستخدم
 async function deleteUserAction(userId, username) {
   if (!confirm(`هل أنت متأكد من حذف حساب (${username}) نهائياً من قاعدة البيانات؟`)) return;
   const token = localStorage.getItem('sada_token');
@@ -2108,6 +2193,126 @@ async function deleteUserAction(userId, username) {
     showToast('تعذر الاتصال بالسيرفر', 'danger');
   }
 }
+
+async function setUserStatusAction(userId, status) {
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/users/${userId}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ status })
+    });
+    if (res.ok) {
+      showToast('تم تحديث حالة المستخدم بنجاح!', 'success');
+      renderDashboardUsers();
+    }
+  } catch (e) {
+    showToast('حدث خطأ أثناء تعديل حالة المستخدم', 'danger');
+  }
+}
+
+async function renderDashboardComments() {
+  const token = localStorage.getItem('sada_token');
+  const tableBody = document.getElementById('dashCommentsTable');
+  if (!tableBody || !token) return;
+
+  try {
+    const res = await fetch(`${API_URL}/admin/comments`, {
+      headers: { 'Authorization': token }
+    });
+    const comments = await res.json();
+
+    if (!Array.isArray(comments) || comments.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--dim-color);">لا توجد تعليقات واردة حالياً.</td></tr>';
+      return;
+    }
+
+    tableBody.innerHTML = '';
+    comments.forEach(c => {
+      let statusBadge = '<span style="color:#f1c40f;">⏳ قيد المراجعة</span>';
+      if (c.status === 'approved') statusBadge = '<span style="color:#2ecc71;">✅ منشور ومعتمد</span>';
+      if (c.status === 'rejected') statusBadge = '<span style="color:#e74c3c;">❌ مرفوض</span>';
+
+      const postTitle = (c.postId && c.postId.title) ? c.postId.title : 'خبر عام';
+      const dateStr = c.date ? new Date(c.date).toLocaleDateString('ar-IQ') : 'اليوم';
+
+      let actionsHtml = '';
+      if (c.status === 'pending') {
+        actionsHtml = `
+          <button class="action-btn btn-approve" onclick="setCommentStatusAction('${c._id}', 'approved')"><i class="fas fa-check"></i> موافقة ونشر</button>
+          <button class="action-btn btn-reject" onclick="setCommentStatusAction('${c._id}', 'rejected')"><i class="fas fa-times"></i> رفض</button>
+          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
+        `;
+      } else if (c.status === 'approved') {
+        actionsHtml = `
+          <button class="action-btn btn-reject" onclick="setCommentStatusAction('${c._id}', 'rejected')"><i class="fas fa-times"></i> إلغاء النشر</button>
+          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
+        `;
+      } else {
+        actionsHtml = `
+          <button class="action-btn btn-approve" onclick="setCommentStatusAction('${c._id}', 'approved')"><i class="fas fa-check"></i> موافقة ونشر</button>
+          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
+        `;
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><b>${escapeText(postTitle)}</b></td>
+        <td>${escapeText(c.userName || 'مستخدم')}</td>
+        <td style="max-width:280px; font-size:13px;">${escapeText(c.content || '')}</td>
+        <td>${dateStr}</td>
+        <td>${statusBadge}</td>
+        <td>${actionsHtml}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  } catch (e) {
+    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--danger);">تعذر جلب التعليقات.</td></tr>';
+  }
+}
+
+async function setCommentStatusAction(commentId, status) {
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/comments/${commentId}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ status })
+    });
+    if (res.ok) {
+      showToast('تم تحديث حالة التعليق بنجاح!', 'success');
+      renderDashboardComments();
+      fetchPostsFromServer().then(() => displayPostsGrid());
+    }
+  } catch (e) {
+    showToast('تعذر تعديل حالة التعليق', 'danger');
+  }
+}
+
+async function deleteCommentAction(commentId) {
+  if (!confirm('هل تريد حذف هذا التعليق نهائياً؟')) return;
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/comments/${commentId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': token }
+    });
+    if (res.ok) {
+      showToast('تم حذف التعليق بنجاح', 'info');
+      renderDashboardComments();
+      fetchPostsFromServer().then(() => displayPostsGrid());
+    }
+  } catch (e) {
+    showToast('تعذر حذف التعليق', 'danger');
+  }
+}
+
 async function renderDashboardAds() {
   const token = localStorage.getItem('sada_token');
   const tableBody = document.getElementById('dashAdsTable');
@@ -2153,6 +2358,7 @@ async function renderDashboardAds() {
   }
 }
 
+// موافقة الآدمن على الإعلان ونشره
 async function approveAdAction(id) {
   const token = localStorage.getItem('sada_token');
   try {

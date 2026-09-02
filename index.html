@@ -581,6 +581,7 @@
 
 <!-- NAVIGATION -->
 <!-- NAVIGATION HEADER -->
+<!-- NAVIGATION HEADER -->
 <header style="height: 85px; background: var(--surface-color); border-bottom: 1px solid var(--border-gold); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);">
   <nav class="wrap" style="display: flex; align-items: center; justify-content: space-between; height: 85px; gap: 16px;">
     
@@ -624,10 +625,10 @@
         <span>حسابي</span>
       </a>
 
-      <!-- فاصل عمودي ناعم -->
+      <!-- فاصل عمودي -->
       <div style="width: 1px; height: 26px; background: var(--border-subtle); margin: 0 2px;"></div>
 
-      <!-- قائمة التواصل الاجتماعي الموحدة الأنيقة -->
+      <!-- زر وقائمة تواصل معنا -->
       <div class="social-dropdown-wrapper" style="position: relative; display: inline-block;">
         <button
           type="button"
@@ -640,75 +641,108 @@
           <i class="fas fa-chevron-down" style="font-size: 10px; opacity: 0.8;"></i>
         </button>
 
-        <!-- القائمة المنسدلة المجمعة لجميع وسائل التواصل -->
+        <!-- محتوى القائمة المنسدلة -->
         <div
           id="socialMediaMenu"
           class="custom-dropdown-content"
-          style="display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 205px; background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1000; overflow: hidden; padding: 6px 0; text-align: right;"
+          style="display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 210px; background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.55); z-index: 1000; overflow: hidden; padding: 6px 0; text-align: right;"
         >
-          <!-- واتساب مباشر -->
+          <!-- 1. الواتساب المباشر -->
           <a
             href="https://wa.me/9647827992437"
             target="_blank"
             style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--border-subtle); transition: var(--transition);"
-            onmouseover="this.style.background='rgba(37,211,102,0.12)'"
+            onmouseover="this.style.background='rgba(37,211,102,0.1)'"
             onmouseout="this.style.background='transparent'"
           >
             <i class="fab fa-whatsapp" style="color: #25D366; font-size: 16px; width: 18px; text-align: center;"></i>
             <span>الواتساب المباشر</span>
           </a>
 
-          <!-- فيسبوك الوكالة -->
-          <a
-            href="https://www.facebook.com/share/1GxLdw2heB/"
-            target="_blank"
-            style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; text-decoration: none; transition: var(--transition);"
-            onmouseover="this.style.background='rgba(24,119,242,0.12)'"
-            onmouseout="this.style.background='transparent'"
-          >
-            <i class="fab fa-facebook-f" style="color: #1877F2; font-size: 15px; width: 18px; text-align: center;"></i>
-            <span>فيسبوك - الوكالة</span>
-          </a>
+          <!-- 2. فيسبوك (عنصر رئيسي يفتح قائمة فرعية) -->
+          <div style="border-bottom: 1px solid var(--border-subtle);">
+            <div
+              onclick="toggleSubSocialMenu('fbSubMenu', 'fbSubArrow')"
+              style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; cursor: pointer; user-select: none; transition: var(--transition);"
+              onmouseover="this.style.background='rgba(24,119,242,0.1)'"
+              onmouseout="this.style.background='transparent'"
+            >
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fab fa-facebook-f" style="color: #1877F2; font-size: 15px; width: 18px; text-align: center;"></i>
+                <span>فيسبوك</span>
+              </div>
+              <i id="fbSubArrow" class="fas fa-chevron-down" style="font-size: 10px; color: var(--dim-color); transition: transform 0.25s ease;"></i>
+            </div>
 
-          <!-- فيسبوك المؤسسة -->
-          <a
-            href="https://www.facebook.com/share/1EDiLqoa3E/"
-            target="_blank"
-            style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--border-subtle); transition: var(--transition);"
-            onmouseover="this.style.background='rgba(24,119,242,0.12)'"
-            onmouseout="this.style.background='transparent'"
-          >
-            <i class="fab fa-facebook-f" style="color: #1877F2; font-size: 15px; width: 18px; text-align: center;"></i>
-            <span>فيسبوك - المؤسسة</span>
-          </a>
+            <!-- القائمة الفرعية لفيسبوك -->
+            <div id="fbSubMenu" style="display: none; background: rgba(0,0,0,0.25); padding: 4px 0; margin: 0 8px 6px; border-radius: 6px;">
+              <a
+                href="https://www.facebook.com/share/1GxLdw2heB/"
+                target="_blank"
+                style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: var(--gold-light); font-size: 12.5px; text-decoration: none; transition: var(--transition);"
+                onmouseover="this.style.color='var(--gold-primary)'; this.style.paddingRight='18px';"
+                onmouseout="this.style.color='var(--gold-light)'; this.style.paddingRight='14px';"
+              >
+                <i class="fas fa-arrow-left" style="font-size: 9px;"></i>
+                <span>الوكالة</span>
+              </a>
+              <a
+                href="https://www.facebook.com/share/1EDiLqoa3E/"
+                target="_blank"
+                style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: var(--gold-light); font-size: 12.5px; text-decoration: none; transition: var(--transition);"
+                onmouseover="this.style.color='var(--gold-primary)'; this.style.paddingRight='18px';"
+                onmouseout="this.style.color='var(--gold-light)'; this.style.paddingRight='14px';"
+              >
+                <i class="fas fa-arrow-left" style="font-size: 9px;"></i>
+                <span>المؤسسة</span>
+              </a>
+            </div>
+          </div>
 
-          <!-- انستغرام الوكالة -->
-          <a
-            href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4"
-            target="_blank"
-            style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; text-decoration: none; transition: var(--transition);"
-            onmouseover="this.style.background='rgba(225,48,108,0.12)'"
-            onmouseout="this.style.background='transparent'"
-          >
-            <i class="fab fa-instagram" style="color: #E1306C; font-size: 15px; width: 18px; text-align: center;"></i>
-            <span>انستغرام - الوكالة</span>
-          </a>
+          <!-- 3. انستغرام (عنصر رئيسي يفتح قائمة فرعية) -->
+          <div>
+            <div
+              onclick="toggleSubSocialMenu('igSubMenu', 'igSubArrow')"
+              style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; cursor: pointer; user-select: none; transition: var(--transition);"
+              onmouseover="this.style.background='rgba(225,48,108,0.1)'"
+              onmouseout="this.style.background='transparent'"
+            >
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fab fa-instagram" style="color: #E1306C; font-size: 15px; width: 18px; text-align: center;"></i>
+                <span>انستغرام</span>
+              </div>
+              <i id="igSubArrow" class="fas fa-chevron-down" style="font-size: 10px; color: var(--dim-color); transition: transform 0.25s ease;"></i>
+            </div>
 
-          <!-- انستغرام المؤسسة -->
-          <a
-            href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1"
-            target="_blank"
-            style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; text-decoration: none; transition: var(--transition);"
-            onmouseover="this.style.background='rgba(225,48,108,0.12)'"
-            onmouseout="this.style.background='transparent'"
-          >
-            <i class="fab fa-instagram" style="color: #E1306C; font-size: 15px; width: 18px; text-align: center;"></i>
-            <span>انستغرام - المؤسسة</span>
-          </a>
+            <!-- القائمة الفرعية لانستغرام -->
+            <div id="igSubMenu" style="display: none; background: rgba(0,0,0,0.25); padding: 4px 0; margin: 0 8px 6px; border-radius: 6px;">
+              <a
+                href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4"
+                target="_blank"
+                style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: var(--gold-light); font-size: 12.5px; text-decoration: none; transition: var(--transition);"
+                onmouseover="this.style.color='var(--gold-primary)'; this.style.paddingRight='18px';"
+                onmouseout="this.style.color='var(--gold-light)'; this.style.paddingRight='14px';"
+              >
+                <i class="fas fa-arrow-left" style="font-size: 9px;"></i>
+                <span>الوكالة</span>
+              </a>
+              <a
+                href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1"
+                target="_blank"
+                style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: var(--gold-light); font-size: 12.5px; text-decoration: none; transition: var(--transition);"
+                onmouseover="this.style.color='var(--gold-primary)'; this.style.paddingRight='18px';"
+                onmouseout="this.style.color='var(--gold-light)'; this.style.paddingRight='14px';"
+              >
+                <i class="fas fa-arrow-left" style="font-size: 9px;"></i>
+                <span>المؤسسة</span>
+              </a>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <!-- زر تبديل الثيمات الدائري الأنيق -->
+      <!-- زر تغيير الثيم -->
       <button
         type="button"
         onclick="cycleTheme()"
@@ -722,7 +756,7 @@
 
     </div>
 
-    <!-- زر قائمة الهواتف المحمولة -->
+    <!-- زر قائمة الموبايل -->
     <div class="menu-toggle" id="menuToggle" style="color: var(--gold-primary); font-size: 24px; cursor: pointer;">
       <i class="fas fa-bars"></i>
     </div>
@@ -1269,7 +1303,16 @@ function showToast(message, type = 'info') {
     }, 400);
   }, 4000);
 }
-
+function toggleSubSocialMenu(menuId, arrowId) {
+  const menu = document.getElementById(menuId);
+  const arrow = document.getElementById(arrowId);
+  if (!menu) return;
+  const isOpen = menu.style.display === 'block';
+  menu.style.display = isOpen ? 'none' : 'block';
+  if (arrow) {
+    arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+  }
+}
 /* ========================================================
    ضغط وتصغير حجم الصور تلقائياً قبل الرفع
    ======================================================== */
@@ -2636,6 +2679,15 @@ window.addEventListener('click', function(e) {
     document.querySelectorAll('.custom-dropdown-content').forEach(menu => {
       menu.style.display = 'none';
     });
+    // إعادة إغلاق القوائم الفرعية وتدوير الأسهم للوضع الطبيعي
+    const fbSub = document.getElementById('fbSubMenu');
+    const igSub = document.getElementById('igSubMenu');
+    const fbArrow = document.getElementById('fbSubArrow');
+    const igArrow = document.getElementById('igSubArrow');
+    if (fbSub) fbSub.style.display = 'none';
+    if (igSub) igSub.style.display = 'none';
+    if (fbArrow) fbArrow.style.transform = 'rotate(0deg)';
+    if (igArrow) igArrow.style.transform = 'rotate(0deg)';
   }
 });
 

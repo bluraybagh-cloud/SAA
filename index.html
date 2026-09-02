@@ -1993,19 +1993,37 @@ async function updateDashboardStats() {
   }
 }
 
+// جلب وعرض المستخدمين في لوحة الأدمن مع منع التكرار وإمكانية الحذف
 async function renderDashboardUsers() {
   const token = localStorage.getItem('sada_token');
   const tableBody = document.getElementById('dashUsersTable');
   if (!tableBody || !token) return;
 
+  tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);"><i class="fas fa-spinner fa-spin"></i> جاري جلب المستخدمين...</td></tr>';
+
   try {
     const res = await fetch(`${API_URL}/admin/users`, {
       headers: { 'Authorization': token }
     });
-    const users = await res.json();
+    const rawUsers = await res.json();
 
-    if (!Array.isArray(users) || users.length === 0) {
-      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--dim-color);">لا يوجد مستخدمون مسجلون حالياً.</td></tr>';
+    if (!Array.isArray(rawUsers) || rawUsers.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);">لا يوجد مستخدمون مسجلون حالياً.</td></tr>';
+      return;
+    }
+
+    // 1. فلترة مانعة للتكرار نهائياً واستبعاد حساب المشرف الرئيسي
+    const seenIds = new Set();
+    const users = [];
+    rawUsers.forEach(u => {
+      if (u && u._id && !seenIds.has(String(u._id)) && u.username !== 'sada_admin') {
+        seenIds.add(String(u._id));
+        users.push(u);
+      }
+    });
+
+    if (users.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);">لا يوجد مستخدمون مسجلون حالياً.</td></tr>';
       return;
     }
 
@@ -2019,17 +2037,39 @@ async function renderDashboardUsers() {
       let actionsHtml = '';
       if (u.status === 'pending') {
         actionsHtml = `
-          <button class="action-btn btn-approve" onclick="setUserStatusAction('${u._id}', 'approved')"><i class="fas fa-check"></i> موافقة وتفعيل</button>
+          <button class="action-btn btn-approve" onclick="setUserStatusAction('${u._id}', 'approved')"><i class="fas fa-check"></i> موافقة</button>
           <button class="action-btn btn-reject" onclick="setUserStatusAction('${u._id}', 'rejected')"><i class="fas fa-times"></i> رفض</button>
         `;
       } else if (u.status === 'approved') {
         actionsHtml = `
-          <button class="action-btn" style="background:#e67e22; color:#fff;" onclick="setUserStatusAction('${u._id}', 'suspended')"><i class="fas fa-ban"></i> إيقاف مؤقت</button>
+          <button class="action-btn" style="background:#e67e22; color:#fff;" onclick="setUserStatusAction('${u._id}', 'suspended')"><i class="fas fa-ban"></i> إيقاف</button>
         `;
-      } else if (u.status === 'suspended' || u.status === 'rejected') {
+      } else {
         actionsHtml = `
-          <button class="action-btn btn-approve" onclick="setUserStatusAction('${u._id}', 'approved')"><i class="fas fa-check"></i> إعادة تفعيل</button>
+          <button class="action-btn btn-approve" onclick="setUserStatusAction('${u._id}', 'approved')"><i class="fas fa-check"></i> تفعيل</button>
         `;
+      }
+
+      // زر الحذف للتخلص من أي حساب مكرر فوراً
+      actionsHtml += `
+        <button class="action-btn btn-delete" style="padding:6px 10px; margin-right:4px;" onclick="deleteUserAction('${u._id}', '${escapeText(u.username)}')" title="حذف الحساب نهائياً"><i class="fas fa-trash"></i></button>
+      `;
+
+      let pwdResetHtml = '<span style="color:var(--dim-color); font-size:12px;">لا يوجد طلب</span>';
+      if (u.resetStatus === 'pending' && u.requestedPassword) {
+        pwdResetHtml = `
+          <div style="font-size:12px; color:#f39c12; font-weight:700; margin-bottom:5px;">
+            <i class="fas fa-key"></i> طلب: <span style="background:rgba(212,175,55,0.2); padding:2px 6px; border-radius:4px; color:#fff;">${escapeText(u.requestedPassword)}</span>
+          </div>
+          <div style="display:flex; gap:5px;">
+            <button class="action-btn btn-approve" style="padding:3px 8px; font-size:11px;" onclick="approvePasswordResetAction('${u._id}')" title="موافقة وتعيين كلمة المرور"><i class="fas fa-check"></i> موافقة</button>
+            <button class="action-btn btn-reject" style="padding:3px 8px; font-size:11px;" onclick="rejectPasswordResetAction('${u._id}')" title="رفض الطلب"><i class="fas fa-times"></i> رفض</button>
+          </div>
+        `;
+      } else if (u.resetStatus === 'approved') {
+        pwdResetHtml = '<span style="color:#2ecc71; font-size:12px;"><i class="fas fa-check-circle"></i> تم تغييرها</span>';
+      } else if (u.resetStatus === 'rejected') {
+        pwdResetHtml = '<span style="color:#e74c3c; font-size:12px;"><i class="fas fa-times-circle"></i> تم الرفض</span>';
       }
 
       const tr = document.createElement('tr');
@@ -2039,134 +2079,35 @@ async function renderDashboardUsers() {
         <td>${escapeText(u.email)}</td>
         <td>${escapeText(u.phone)}</td>
         <td>${statusBadge}</td>
+        <td>${pwdResetHtml}</td>
         <td>${actionsHtml}</td>
       `;
       tableBody.appendChild(tr);
     });
   } catch (e) {
-    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--danger);">تعذر جلب بيانات المستخدمين.</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--danger);">تعذر جلب بيانات المستخدمين.</td></tr>';
   }
 }
 
-async function setUserStatusAction(userId, status) {
+// دالة حذف المستخدم المكرر نهائياً بنقرة واحدة
+async function deleteUserAction(userId, username) {
+  if (!confirm(`هل أنت متأكد من حذف حساب (${username}) نهائياً من قاعدة البيانات؟`)) return;
   const token = localStorage.getItem('sada_token');
   try {
-    const res = await fetch(`${API_URL}/admin/users/${userId}/status`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify({ status })
-    });
-    if (res.ok) {
-      showToast('تم تحديث حالة المستخدم بنجاح!', 'success');
-      renderDashboardUsers();
-    }
-  } catch (e) {
-    showToast('حدث خطأ أثناء تعديل حالة المستخدم', 'danger');
-  }
-}
-
-async function renderDashboardComments() {
-  const token = localStorage.getItem('sada_token');
-  const tableBody = document.getElementById('dashCommentsTable');
-  if (!tableBody || !token) return;
-
-  try {
-    const res = await fetch(`${API_URL}/admin/comments`, {
-      headers: { 'Authorization': token }
-    });
-    const comments = await res.json();
-
-    if (!Array.isArray(comments) || comments.length === 0) {
-      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--dim-color);">لا توجد تعليقات واردة حالياً.</td></tr>';
-      return;
-    }
-
-    tableBody.innerHTML = '';
-    comments.forEach(c => {
-      let statusBadge = '<span style="color:#f1c40f;">⏳ قيد المراجعة</span>';
-      if (c.status === 'approved') statusBadge = '<span style="color:#2ecc71;">✅ منشور ومعتمد</span>';
-      if (c.status === 'rejected') statusBadge = '<span style="color:#e74c3c;">❌ مرفوض</span>';
-
-      const postTitle = (c.postId && c.postId.title) ? c.postId.title : 'خبر عام';
-      const dateStr = c.date ? new Date(c.date).toLocaleDateString('ar-IQ') : 'اليوم';
-
-      let actionsHtml = '';
-      if (c.status === 'pending') {
-        actionsHtml = `
-          <button class="action-btn btn-approve" onclick="setCommentStatusAction('${c._id}', 'approved')"><i class="fas fa-check"></i> موافقة ونشر</button>
-          <button class="action-btn btn-reject" onclick="setCommentStatusAction('${c._id}', 'rejected')"><i class="fas fa-times"></i> رفض</button>
-          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
-        `;
-      } else if (c.status === 'approved') {
-        actionsHtml = `
-          <button class="action-btn btn-reject" onclick="setCommentStatusAction('${c._id}', 'rejected')"><i class="fas fa-times"></i> إلغاء النشر</button>
-          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
-        `;
-      } else {
-        actionsHtml = `
-          <button class="action-btn btn-approve" onclick="setCommentStatusAction('${c._id}', 'approved')"><i class="fas fa-check"></i> موافقة ونشر</button>
-          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
-        `;
-      }
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><b>${escapeText(postTitle)}</b></td>
-        <td>${escapeText(c.userName || 'مستخدم')}</td>
-        <td style="max-width:280px; font-size:13px;">${escapeText(c.content || '')}</td>
-        <td>${dateStr}</td>
-        <td>${statusBadge}</td>
-        <td>${actionsHtml}</td>
-      `;
-      tableBody.appendChild(tr);
-    });
-  } catch (e) {
-    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--danger);">تعذر جلب التعليقات.</td></tr>';
-  }
-}
-
-async function setCommentStatusAction(commentId, status) {
-  const token = localStorage.getItem('sada_token');
-  try {
-    const res = await fetch(`${API_URL}/admin/comments/${commentId}/status`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify({ status })
-    });
-    if (res.ok) {
-      showToast('تم تحديث حالة التعليق بنجاح!', 'success');
-      renderDashboardComments();
-      fetchPostsFromServer().then(() => displayPostsGrid());
-    }
-  } catch (e) {
-    showToast('تعذر تعديل حالة التعليق', 'danger');
-  }
-}
-
-async function deleteCommentAction(commentId) {
-  if (!confirm('هل تريد حذف هذا التعليق نهائياً؟')) return;
-  const token = localStorage.getItem('sada_token');
-  try {
-    const res = await fetch(`${API_URL}/admin/comments/${commentId}`, {
+    const res = await fetch(`${API_URL}/admin/users/${userId}`, {
       method: 'DELETE',
       headers: { 'Authorization': token }
     });
     if (res.ok) {
-      showToast('تم حذف التعليق بنجاح', 'info');
-      renderDashboardComments();
-      fetchPostsFromServer().then(() => displayPostsGrid());
+      showToast('تم حذف الحساب بنجاح!', 'info');
+      renderDashboardUsers();
+    } else {
+      showToast('تعذر حذف الحساب', 'danger');
     }
-  } catch (e) {
-    showToast('تعذر حذف التعليق', 'danger');
+  } catch (err) {
+    showToast('تعذر الاتصال بالسيرفر', 'danger');
   }
 }
-
 async function renderDashboardAds() {
   const token = localStorage.getItem('sada_token');
   const tableBody = document.getElementById('dashAdsTable');

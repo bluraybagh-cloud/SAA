@@ -412,6 +412,7 @@ function switchAuthTab(tab) {
 }
 
 // 1. تقديم طلب إنشاء حساب مستخدم جديد
+// 1. تقديم طلب إنشاء حساب مستخدم جديد
 async function processRegister() {
   const fullName = document.getElementById('regFullName').value.trim();
   const username = document.getElementById('regUsername').value.trim();
@@ -420,9 +421,16 @@ async function processRegister() {
   const password = document.getElementById('regPassword').value;
   const confirmPassword = document.getElementById('regConfirmPassword').value;
 
-  if(password !== confirmPassword) {
+  if (password !== confirmPassword) {
     showToast('كلمتا المرور غير متطابقتين!', 'danger');
     return;
+  }
+
+  // قفل الزر وتغيير نصه لمنع تكرار النقر وإرسال أكثر من طلب
+  const submitBtn = document.querySelector('#registerForm button[type="submit"]');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إرسال الطلب...';
   }
 
   try {
@@ -433,15 +441,25 @@ async function processRegister() {
     });
     const data = await res.json();
 
-    if(res.ok) {
+    if (res.ok) {
       showToast('تم تقديم طلب إنشاء الحساب بنجاح!', 'success');
       localStorage.setItem('sada_pending_username', username);
       showPendingReviewScreen();
     } else {
       showToast(data.error || 'تعذر إكمال التسجيل', 'danger');
+      // إعادة تفعيل الزر في حال وجود خطأ في البيانات
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> تقديم طلب إنشاء الحساب';
+      }
     }
-  } catch(e) {
+  } catch (e) {
     showToast('تعذر الاتصال بالسيرفر السحابي', 'danger');
+    // إعادة تفعيل الزر في حال انقطاع الاتصال
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> تقديم طلب إنشاء الحساب';
+    }
   }
 }
 

@@ -919,7 +919,22 @@ app.delete('/api/admin/comments/:id', verifyAdmin, async (req, res) => {
         res.status(500).json({ error: "تعذر حذف التعليق" });
     }
 });
-
+// حذف مستخدم نهائياً من قبل الأدمن
+app.delete('/api/admin/users/:id', verifyAdmin, async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "معرف المستخدم غير صالح" });
+        }
+        const user = await User.findById(req.params.id);
+        if (user && user.role === 'ADMIN') {
+            return res.status(400).json({ error: "لا يمكن حذف حساب المشرف الرئيسي" });
+        }
+        await User.findByIdAndDelete(req.params.id);
+        res.json({ message: "تم حذف المستخدم بنجاح" });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر حذف المستخدم" });
+    }
+});
 app.listen(PORT, () => {
     console.log(`السيرفر يعمل الآن بأمان كامل على المنفذ ${PORT}`);
 });

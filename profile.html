@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الملف الشخصي والحساب | وكالة صدى العطاء</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --gold-primary: #D4AF37;
+    --gold-light: #F3E5AB;
+    --gold-deep: #9A7B1C;
+    --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #AA7C11 100%);
+    --danger: #e74c3c;
+    --success: #2ecc71;
+    --warning: #f1c40f;
+    --bg-color: #070B12;
+    --main-bg: #0B1220;
+    --text-color: #F4F6F8;
+    --surface-color: #111A2E;
+    --surface-light: #18243D;
+    --dim-color: #A3B1C2;
+    --border-gold: rgba(212, 175, 55, 0.25);
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Tajawal', sans-serif;
+    line-height: 1.8;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  .wrap { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+  a { text-decoration: none; color: inherit; }
+
+  header {
+    background: var(--surface-color);
+    border-bottom: 1px solid var(--border-gold);
+    padding: 16px 0;
+    margin-bottom: 35px;
+    backdrop-filter: blur(10px);
+  }
+  .header-inner {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  }
+  .brand-logo-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .brand-logo-img { height: 46px; border-radius: 6px; border: 1px solid var(--gold-primary); }
+  .brand-logo-fallback {
+    width: 46px; height: 46px; border-radius: 6px; border: 1px solid var(--gold-primary);
+    background: rgba(212, 175, 55, 0.1); display: flex; align-items: center; justify-content: center;
+  }
+  .brand-name { font-size: 18px; font-weight: 900; color: var(--gold-light); }
+
+  .btn-outline {
+    border: 1px solid var(--border-gold); color: var(--gold-light);
+    padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 700;
+    cursor: pointer; background: transparent; transition: var(--transition);
+    display: inline-flex; align-items: center; gap: 6px; font-family: 'Tajawal', sans-serif;
+  }
+  .btn-outline:hover { background: var(--gold-primary); color: var(--bg-color); }
+
+  .btn-logout-prominent {
+    background: rgba(231, 76, 60, 0.15);
+    border: 1px solid var(--danger);
+    color: #ff9b9b;
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .btn-logout-prominent:hover {
+    background: var(--danger);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+  }
+
+  .card-box {
+    background: var(--surface-color);
+    border: 1px solid var(--border-gold);
+    border-radius: 12px;
+    padding: 35px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  /* تبويبات التسجيل والدخول */
+  .auth-tabs {
+    display: flex; border-bottom: 1px solid var(--border-subtle); margin-bottom: 25px; gap: 10px;
+  }
+  .auth-tab-btn {
+    flex: 1; padding: 12px; background: none; border: none; border-bottom: 3px solid transparent;
+    color: var(--dim-color); font-size: 16px; font-weight: 700; cursor: pointer;
+    font-family: 'Tajawal', sans-serif; transition: var(--transition); text-align: center;
+  }
+  .auth-tab-btn.active { color: var(--gold-primary); border-bottom-color: var(--gold-primary); }
+
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 13.5px; color: var(--dim-color); margin-bottom: 6px; font-weight: 600; }
+  .form-control {
+    width: 100%; padding: 12px 15px; background: var(--bg-color);
+    border: 1px solid var(--border-subtle); color: var(--text-color); border-radius: 6px;
+    font-family: 'Tajawal', sans-serif; font-size: 14.5px; outline: none; transition: var(--transition);
+  }
+  .form-control:focus { border-color: var(--gold-primary); }
+  .form-control:disabled { opacity: 0.7; cursor: not-allowed; }
+
+  .submit-btn {
+    width: 100%; padding: 13px; background: var(--gold-gradient);
+    color: var(--bg-color); border: none; border-radius: 6px; font-weight: 900;
+    cursor: pointer; font-family: 'Tajawal', sans-serif; font-size: 15.5px; transition: var(--transition);
+    display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px;
+  }
+  .submit-btn:hover { box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4); transform: translateY(-2px); }
+
+  /* بطاقة الانتظار والمراجعة */
+  .status-review-box {
+    background: rgba(241, 196, 15, 0.1);
+    border: 1px solid var(--warning);
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    margin: 20px 0;
+  }
+  .status-review-box i { font-size: 40px; color: var(--warning); margin-bottom: 12px; }
+  .status-review-box h3 { color: var(--gold-light); font-size: 20px; margin-bottom: 8px; }
+  .status-review-box p { color: var(--text-color); font-size: 14px; line-height: 1.7; }
+
+  /* قسم البروفايل الشخصي */
+  .profile-header-card {
+    display: flex; align-items: center; gap: 25px; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border-subtle); padding-bottom: 25px; margin-bottom: 25px;
+  }
+  .avatar-container {
+    position: relative; width: 110px; height: 110px; border-radius: 50%;
+    border: 3px solid var(--gold-primary); overflow: hidden; background: var(--surface-light);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25); flex-shrink: 0;
+  }
+  .avatar-img { width: 100%; height: 100%; object-fit: cover; }
+  .avatar-actions {
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px;
+  }
+  .badge-status {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 700;
+  }
+  .badge-approved { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid #2ecc71; }
+  .badge-pending { background: rgba(241, 196, 15, 0.15); color: #f1c40f; border: 1px solid #f1c40f; }
+
+  /* نظام الإشعارات Toast */
+  #toastContainer {
+    position: fixed; bottom: 30px; left: 30px; z-index: 999999; display: flex; flex-direction: column; gap: 10px;
+  }
+  .toast-item {
+    background: var(--surface-color); border: 1px solid var(--border-gold); color: var(--text-color);
+    padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    opacity: 0; transform: translateY(20px); transition: 0.3s;
+  }
+  .toast-item.show { opacity: 1; transform: translateY(0); }
+  .toast-item.success { border-color: var(--success); color: #8bedb1; }
+  .toast-item.danger { border-color: var(--danger); color: #ff9b9b; }
+  .toast-item.info { border-color: var(--gold-primary); color: var(--gold-light); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand-logo-container" title="العودة للصفحة الرئيسية">
+      <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('headerLogoFallback').style.display='flex';">
+      <div id="headerLogoFallback" class="brand-logo-fallback" style="display: none;">
+        <i class="fas fa-newspaper" style="color: #D4AF37; font-size: 20px;"></i>
+      </div>
+      <span class="brand-name">وكالة صدى العطاء</span>
+    </a>
+
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <a href="index.html" class="btn-outline"><i class="fas fa-home"></i> الرئيسية</a>
+      <a href="booking.html" class="btn-outline" style="border-color: #f39c12; color: #f39c12;"><i class="fas fa-bullhorn"></i> إعلاناتي</a>
+      <button type="button" id="headerLogoutBtn" onclick="handleLogout()" class="btn-logout-prominent" style="display: none;">
+        <i class="fas fa-sign-out-alt"></i> خروج
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ========================================================
+       1. شاشة التسجيل وإنشاء حساب جديد / تسجيل الدخول
+       ======================================================== -->
+  <div id="authBox" class="card-box" style="max-width: 550px; margin: 20px auto;">
+    <div style="text-align: center; margin-bottom: 24px;">
+      <i class="fas fa-user-circle" style="font-size: 50px; color: var(--gold-primary);"></i>
+      <h2 style="font-size: 24px; color: var(--gold-light); margin-top: 8px;">بوابة حسابات المستخدمين</h2>
+      <p style="font-size: 13.5px; color: var(--dim-color);">أنشئ حسابك للمشاركة والتفاعل والتعليق على الأخبار</p>
+    </div>
+
+    <div class="auth-tabs">
+      <button type="button" id="tabRegisterBtn" class="auth-tab-btn active" onclick="switchAuthTab('register')">إنشاء حساب جديد</button>
+      <button type="button" id="tabLoginBtn" class="auth-tab-btn" onclick="switchAuthTab('login')">تسجيل الدخول</button>
+    </div>
+
+    <!-- نموذج إنشاء الحساب الجديد -->
+    <form id="registerForm" onsubmit="event.preventDefault(); processRegister();">
+      <div class="form-group">
+        <label>الاسم الكامل *</label>
+        <input type="text" id="regFullName" class="form-control" placeholder="أدخل اسمك الثلاثي أو الكامل" required>
+      </div>
+
+      <div class="form-group">
+        <label>اسم المستخدم (Username) *</label>
+        <input type="text" id="regUsername" class="form-control" placeholder="اختر اسماً فريداً بدون مسافات (مثال: Ali_Hillah)" required>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <div class="form-group">
+          <label>البريد الإلكتروني *</label>
+          <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>رقم الهاتف *</label>
+          <input type="tel" id="regPhone" class="form-control" placeholder="078XXXXXXXX" required>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <div class="form-group">
+          <label>كلمة المرور *</label>
+          <input type="password" id="regPassword" class="form-control" placeholder="لا تقل عن 6 أحرف" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label>تأكيد كلمة المرور *</label>
+          <input type="password" id="regConfirmPassword" class="form-control" placeholder="أعد كتابة كلمة المرور" required minlength="6">
+        </div>
+      </div>
+
+      <div style="font-size: 12px; color: var(--dim-color); margin-bottom: 12px;">
+        <i class="fas fa-info-circle" style="color: var(--gold-primary);"></i> ملاحظة: الصورة الشخصية يتم رفعها وإدارتها لاحقاً بعد تفعيل الحساب من صفحة البروفايل.
+      </div>
+
+      <button type="submit" class="submit-btn"><i class="fas fa-user-plus"></i> تقديم طلب إنشاء الحساب</button>
+    </form>
+
+    <!-- نموذج تسجيل الدخول -->
+    <form id="loginForm" style="display: none;" onsubmit="event.preventDefault(); processLogin();">
+      <div class="form-group">
+        <label>اسم المستخدم أو البريد الإلكتروني</label>
+        <input type="text" id="loginUserOrEmail" class="form-control" placeholder="اسم المستخدم أو الإيميل" required>
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" id="loginPassword" class="form-control" placeholder="كلمة المرور" required>
+      </div>
+      <button type="submit" class="submit-btn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
+    </form>
+  </div>
+
+  <!-- ========================================================
+       2. شاشة إشعار "قيد المراجعة والموافقة" للمستخدم
+       ======================================================== -->
+  <div id="pendingReviewSection" class="card-box" style="display: none; max-width: 600px; margin: 20px auto; text-align: center;">
+    <div class="status-review-box">
+      <i class="fas fa-hourglass-half"></i>
+      <h3>الحساب قيد المراجعة والتدقيق</h3>
+      <p>
+        تم استلام طلب تسجيل حسابك بنجاح! وفقاً لسياسة <b>وكالة صدى العطاء</b>، تخضع جميع الحسابات الجديدة لتدقيق وموافقة الإدارة قبل تفعيلها.
+      </p>
+      <p style="margin-top: 10px; font-size: 13px; color: var(--dim-color);">
+        ستتمكن من تسجيل الدخول والتفاعل والتعليق ورفع صورتك الشخصية فور اعتماد حسابك من قبل الإدارة.
+      </p>
+    </div>
+    <div style="display: flex; justify-content: center; gap: 12px; margin-top: 20px;">
+      <a href="index.html" class="btn-outline"><i class="fas fa-newspaper"></i> العودة لتصفح الأخبار</a>
+      <button onclick="checkAccountStatus()" class="btn-outline" style="border-color: var(--gold-primary);"><i class="fas fa-sync-alt"></i> فحص حالة الحساب</button>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       3. صفحة البروفايل الشخصي الكاملة (بعد قبول وتفعيل الحساب)
+       ======================================================== -->
+  <div id="profileSection" class="card-box" style="display: none;">
+    
+    <div class="profile-header-card">
+      <div class="avatar-container">
+        <img id="userAvatarImg" src="https://via.placeholder.com/150/111A2E/D4AF37?text=USER" alt="الصورة الشخصية" class="avatar-img" onerror="this.src='https://via.placeholder.com/150/111A2E/D4AF37?text=USER'">
+      </div>
+      <div style="flex: 1;">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px;">
+          <h2 id="profFullNameDisplay" style="color: var(--gold-light); font-size: 24px; margin: 0;"></h2>
+          <span class="badge-status badge-approved" id="profStatusBadge"><i class="fas fa-check-circle"></i> حساب مفعّل ومقبول</span>
+        </div>
+        <p style="color: var(--dim-color); font-size: 14px; margin-bottom: 12px;">@<span id="profUsernameDisplay"></span></p>
+        
+        <!-- إدارة الصورة الشخصية بأمان -->
+        <div class="avatar-actions">
+          <label class="btn-outline" style="cursor: pointer;">
+            <i class="fas fa-camera"></i> تغيير / رفع صورة شخصية
+            <input type="file" id="avatarFileInput" accept="image/jpeg,image/png,image/webp" style="display: none;" onchange="handleAvatarUpload(event)">
+          </label>
+          <button type="button" onclick="handleRemoveAvatar()" class="btn-outline" style="border-color: var(--danger); color: #ff9b9b;" title="حذف الصورة والعودة للافتراضية">
+            <i class="fas fa-trash"></i> حذف الصورة
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- نموذج تعديل البيانات الشخصية للمستخدم -->
+    <div>
+      <h3 style="color: var(--gold-light); font-size: 18px; margin-bottom: 18px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+        <i class="fas fa-user-edit"></i> تعديل بيانات الحساب
+      </h3>
+
+      <form onsubmit="event.preventDefault(); updateProfileData();">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label>الاسم الكامل</label>
+            <input type="text" id="editFullName" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>رقم الهاتف للتواصل</label>
+            <input type="tel" id="editPhone" class="form-control" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label>اسم المستخدم (ثابت للأمان)</label>
+            <input type="text" id="editUsername" class="form-control" disabled>
+          </div>
+          <div class="form-group">
+            <label>البريد الإلكتروني (ثابت)</label>
+            <input type="email" id="editEmail" class="form-control" disabled>
+          </div>
+        </div>
+
+        <div style="margin-top: 15px; border-top: 1px dashed var(--border-subtle); padding-top: 15px;">
+          <h4 style="font-size: 15px; color: var(--gold-primary); margin-bottom: 12px;"><i class="fas fa-lock"></i> تغيير كلمة المرور (اختياري)</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label>كلمة المرور الحالية</label>
+              <input type="password" id="editCurrentPassword" class="form-control" placeholder="أدخل الحالية إذا رغبت بالتغيير">
+            </div>
+            <div class="form-group">
+              <label>كلمة المرور الجديدة</label>
+              <input type="password" id="editNewPassword" class="form-control" placeholder="كلمة المرور الجديدة">
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 12px;">
+          <button type="submit" class="submit-btn" style="width: auto; padding: 10px 30px; margin: 0;">
+            <i class="fas fa-save"></i> حفظ التغييرات
+          </button>
+          <button type="button" onclick="handleLogout()" class="btn-logout-prominent">
+            <i class="fas fa-sign-out-alt"></i> تسجيل الخروج من الحساب
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+const API_URL = 'https://sada-backend-mm3p.onrender.com/api';
+let currentUser = null;
+
+function showToast(msg, type = 'info') {
+  const c = document.getElementById('toastContainer');
+  if(!c) return;
+  const t = document.createElement('div');
+  t.className = `toast-item ${type}`;
+  t.innerText = msg;
+  c.appendChild(t);
+  setTimeout(() => t.classList.add('show'), 20);
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 4000);
+}
+
+function switchAuthTab(tab) {
+  const tabReg = document.getElementById('tabRegisterBtn');
+  const tabLog = document.getElementById('tabLoginBtn');
+  const regForm = document.getElementById('registerForm');
+  const logForm = document.getElementById('loginForm');
+
+  if(tab === 'register') {
+    tabReg.classList.add('active');
+    tabLog.classList.remove('active');
+    regForm.style.display = 'block';
+    logForm.style.display = 'none';
+  } else {
+    tabLog.classList.add('active');
+    tabReg.classList.remove('active');
+    logForm.style.display = 'block';
+    regForm.style.display = 'none';
+  }
+}
+
+// 1. تقديم طلب إنشاء حساب مستخدم جديد
+async function processRegister() {
+  const fullName = document.getElementById('regFullName').value.trim();
+  const username = document.getElementById('regUsername').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+  if(password !== confirmPassword) {
+    showToast('كلمتا المرور غير متطابقتين!', 'danger');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/user/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fullName, username, email, phone, password, confirmPassword })
+    });
+    const data = await res.json();
+
+    if(res.ok) {
+      showToast('تم تقديم طلب إنشاء الحساب بنجاح!', 'success');
+      localStorage.setItem('sada_pending_username', username);
+      showPendingReviewScreen();
+    } else {
+      showToast(data.error || 'تعذر إكمال التسجيل', 'danger');
+    }
+  } catch(e) {
+    showToast('تعذر الاتصال بالسيرفر السحابي', 'danger');
+  }
+}
+
+// 2. تسجيل دخول المستخدم
+async function processLogin() {
+  const usernameOrEmail = document.getElementById('loginUserOrEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  try {
+    const res = await fetch(`${API_URL}/user/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ usernameOrEmail, password })
+    });
+    const data = await res.json();
+
+    if(res.ok) {
+      localStorage.setItem('sada_user_token', data.token);
+      localStorage.setItem('sada_user_data', JSON.stringify(data.user));
+      localStorage.removeItem('sada_pending_username');
+      showToast('مرحباً بك! تم تسجيل الدخول بنجاح', 'success');
+      loadUserProfile();
+    } else {
+      if(data.status === 'pending') {
+        showToast(data.error, 'info');
+        localStorage.setItem('sada_pending_username', usernameOrEmail);
+        showPendingReviewScreen();
+      } else {
+        showToast(data.error || 'بيانات الدخول غير صحيحة', 'danger');
+      }
+    }
+  } catch(e) {
+    showToast('تعذر الاتصال بالسيرفر', 'danger');
+  }
+}
+
+function showPendingReviewScreen() {
+  document.getElementById('authBox').style.display = 'none';
+  document.getElementById('profileSection').style.display = 'none';
+  document.getElementById('pendingReviewSection').style.display = 'block';
+  document.getElementById('headerLogoutBtn').style.display = 'none';
+}
+
+async function checkAccountStatus() {
+  const pendingUser = localStorage.getItem('sada_pending_username');
+  if(!pendingUser) {
+    document.getElementById('pendingReviewSection').style.display = 'none';
+    document.getElementById('authBox').style.display = 'block';
+    return;
+  }
+
+  showToast('جاري فحص حالة الحساب مع الإدارة...', 'info');
+  document.getElementById('loginUserOrEmail').value = pendingUser;
+  document.getElementById('pendingReviewSection').style.display = 'none';
+  document.getElementById('authBox').style.display = 'block';
+  switchAuthTab('login');
+}
+
+// 3. جلب وعرض بيانات البروفايل للمستخدم الفعال
+async function loadUserProfile() {
+  const token = localStorage.getItem('sada_user_token');
+  if(!token) {
+    document.getElementById('authBox').style.display = 'block';
+    document.getElementById('profileSection').style.display = 'none';
+    document.getElementById('pendingReviewSection').style.display = 'none';
+    document.getElementById('headerLogoutBtn').style.display = 'none';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/user/profile`, {
+      headers: { 'Authorization': token }
+    });
+    const user = await res.json();
+
+    if(res.ok && user) {
+      currentUser = user;
+      document.getElementById('authBox').style.display = 'none';
+      document.getElementById('pendingReviewSection').style.display = 'none';
+      document.getElementById('profileSection').style.display = 'block';
+      document.getElementById('headerLogoutBtn').style.display = 'inline-flex';
+
+      document.getElementById('profFullNameDisplay').innerText = user.fullName || user.username;
+      document.getElementById('profUsernameDisplay').innerText = user.username;
+      
+      const defaultAvatar = `https://via.placeholder.com/150/111A2E/D4AF37?text=${encodeURIComponent(user.username.slice(0, 2).toUpperCase())}`;
+      document.getElementById('userAvatarImg').src = user.avatar || defaultAvatar;
+
+      document.getElementById('editFullName').value = user.fullName || '';
+      document.getElementById('editPhone').value = user.phone || '';
+      document.getElementById('editUsername').value = user.username;
+      document.getElementById('editEmail').value = user.email;
+    } else {
+      handleLogout();
+    }
+  } catch(e) {
+    showToast('تعذر جلب بيانات البروفايل', 'danger');
+  }
+}
+
+// 4. رفع وتحديث الصورة الشخصية بأمان
+async function handleAvatarUpload(event) {
+  const file = event.target.files[0];
+  if(!file) return;
+
+  const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+  if(!validTypes.includes(file.type)) {
+    showToast('يسمح فقط برفع صور من نوع (JPG, PNG, WEBP)', 'danger');
+    return;
+  }
+  if(file.size > 3 * 1024 * 1024) {
+    showToast('حجم الصورة كبير، الحد الأقصى المسموح هو 3 ميجابايت', 'danger');
+    return;
+  }
+
+  showToast('جاري ضغط ومعالجة الصورة...', 'info');
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64Img = e.target.result;
+    const token = localStorage.getItem('sada_user_token');
+
+    try {
+      const res = await fetch(`${API_URL}/user/avatar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({ avatar: base64Img })
+      });
+      const data = await res.json();
+
+      if(res.ok) {
+        document.getElementById('userAvatarImg').src = base64Img;
+        showToast('تم تحديث الصورة الشخصية بنجاح!', 'success');
+      } else {
+        showToast(data.error || 'فشل تحديث الصورة', 'danger');
+      }
+    } catch(err) {
+      showToast('تعذر الاتصال بالسيرفر لحفظ الصورة', 'danger');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+// 5. حذف الصورة الشخصية والعودة للافتراضية
+async function handleRemoveAvatar() {
+  if(!confirm('هل تريد حذف صورتك الشخصية والعودة للصورة الافتراضية؟')) return;
+
+  const token = localStorage.getItem('sada_user_token');
+  try {
+    const res = await fetch(`${API_URL}/user/avatar`, {
+      method: 'DELETE',
+      headers: { 'Authorization': token }
+    });
+    if(res.ok) {
+      const defaultAvatar = `https://via.placeholder.com/150/111A2E/D4AF37?text=USER`;
+      document.getElementById('userAvatarImg').src = defaultAvatar;
+      showToast('تم حذف الصورة والعودة للافتراضية', 'info');
+    }
+  } catch(e) {
+    showToast('تعذر حذف الصورة', 'danger');
+  }
+}
+
+// 6. تعديل البيانات الشخصية
+async function updateProfileData() {
+  const fullName = document.getElementById('editFullName').value.trim();
+  const phone = document.getElementById('editPhone').value.trim();
+  const currentPassword = document.getElementById('editCurrentPassword').value;
+  const newPassword = document.getElementById('editNewPassword').value;
+  const token = localStorage.getItem('sada_user_token');
+
+  try {
+    const res = await fetch(`${API_URL}/user/profile`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ fullName, phone, currentPassword, newPassword })
+    });
+    const data = await res.json();
+
+    if(res.ok) {
+      showToast('تم تحديث بياناتك بنجاح!', 'success');
+      document.getElementById('editCurrentPassword').value = '';
+      document.getElementById('editNewPassword').value = '';
+      loadUserProfile();
+    } else {
+      showToast(data.error || 'تعذر تعديل البيانات', 'danger');
+    }
+  } catch(e) {
+    showToast('تعذر الاتصال بالسيرفر', 'danger');
+  }
+}
+
+// 7. تسجيل الخروج
+function handleLogout() {
+  localStorage.removeItem('sada_user_token');
+  localStorage.removeItem('sada_user_data');
+  showToast('تم تسجيل الخروج بنجاح', 'info');
+  document.getElementById('profileSection').style.display = 'none';
+  document.getElementById('pendingReviewSection').style.display = 'none';
+  document.getElementById('authBox').style.display = 'block';
+  document.getElementById('headerLogoutBtn').style.display = 'none';
+  switchAuthTab('login');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadUserProfile();
+});
+</script>
+</body>
+</html>

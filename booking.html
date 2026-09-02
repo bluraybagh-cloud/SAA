@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>بوابة المعلنين - وكالة صدى العطاء </title>
+<title>بوابة المعلنين - احجز إعلانك | وكالة صدى العطاء</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- مكتبة توليد الفاتورة PDF -->
+<!-- مكتبة توليد الفاتورة الرسمية PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
@@ -25,7 +25,7 @@
     --surface-color: #111A2E;
     --surface-light: #18243D;
     --dim-color: #A3B1C2;
-    --border-gold: rgba(212, 175, 55, 0.22);
+    --border-gold: rgba(212, 175, 55, 0.25);
     --border-subtle: rgba(255, 255, 255, 0.06);
     --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -53,7 +53,14 @@
   .header-inner {
     display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
   }
-  .brand-logo { height: 46px; border-radius: 4px; border: 1px solid var(--gold-primary); }
+  .brand-logo-container { display: flex; align-items: center; gap: 10px; }
+  .brand-logo-img { height: 46px; border-radius: 6px; border: 1px solid var(--gold-primary); }
+  .brand-logo-fallback {
+    width: 46px; height: 46px; border-radius: 6px; border: 1px solid var(--gold-primary);
+    background: rgba(212, 175, 55, 0.1); display: flex; align-items: center; justify-content: center;
+  }
+  .brand-name { font-size: 18px; font-weight: 900; color: var(--gold-light); }
+
   .user-bar { display: flex; align-items: center; gap: 12px; font-size: 13.5px; }
 
   .btn-outline {
@@ -63,6 +70,28 @@
     display: inline-flex; align-items: center; gap: 6px; font-family: 'Tajawal', sans-serif;
   }
   .btn-outline:hover { background: var(--gold-primary); color: var(--bg-color); }
+
+  /* زر تسجيل الخروج البارز */
+  .btn-logout-prominent {
+    background: rgba(231, 76, 60, 0.15);
+    border: 1px solid var(--danger);
+    color: #ff9b9b;
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .btn-logout-prominent:hover {
+    background: var(--danger);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+  }
 
   .booking-card {
     background: var(--surface-color);
@@ -165,36 +194,63 @@
   .toast-item.success { border-color: var(--success); color: #8bedb1; }
   .toast-item.danger { border-color: var(--danger); color: #ff9b9b; }
 
-  .status-tag { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 700; }
+  /* شارات وحالات الطلب */
+  .status-tag { display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 12.5px; font-weight: 700; }
   .status-pending { background: rgba(241,196,15,0.15); color: #f1c40f; border: 1px solid #f1c40f; }
   .status-approved { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid #2ecc71; }
   .status-rejected { background: rgba(231,76,60,0.15); color: #e74c3c; border: 1px solid #e74c3c; }
+
+  /* بطاقة تفاصيل سبب الرفض البارزة للمعلن */
+  .rejection-reason-box {
+    margin-top: 12px;
+    background: rgba(231, 76, 60, 0.08);
+    border: 1px solid var(--danger);
+    border-radius: 6px;
+    padding: 14px 18px;
+    text-align: right;
+  }
+  .rejection-header {
+    display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 700; color: #ff9b9b; margin-bottom: 6px;
+  }
+  .rejection-body {
+    font-size: 13px; color: #f4f6f8; line-height: 1.6;
+  }
+  .rejection-hint {
+    font-size: 11.5px; color: var(--dim-color); margin-top: 8px; border-top: 1px dashed rgba(231, 76, 60, 0.3); padding-top: 6px;
+  }
 </style>
 </head>
 <body>
 
 <header>
   <div class="wrap header-inner">
-    <a href="index.html">
-      <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo">
+    <a href="index.html" class="brand-logo-container" title="العودة للصفحة الرئيسية">
+      <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('headerLogoFallback').style.display='flex';">
+      <div id="headerLogoFallback" class="brand-logo-fallback" style="display: none;">
+        <i class="fas fa-newspaper" style="color: #D4AF37; font-size: 20px;"></i>
+      </div>
+      <span class="brand-name">وكالة صدى العطاء</span>
     </a>
     
     <div id="userHeaderNav" class="user-bar" style="display: none;">
       <span>مرحباً، <b id="loggedInUserDisplay" style="color: var(--gold-primary);"></b></span>
       <button type="button" onclick="showMyAdsModal()" class="btn-outline"><i class="fas fa-list"></i> إعلاناتي</button>
-      <button type="button" onclick="logoutAdvertiser()" class="btn-outline" style="border-color: var(--danger); color: #ff9b9b;"><i class="fas fa-sign-out-alt"></i> خروج</button>
+      <button type="button" onclick="logoutAdvertiser()" class="btn-logout-prominent"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
     </div>
 
-    <a href="index.html" class="btn-outline" id="homeBackBtn"><i class="fas fa-arrow-right"></i> العودة للموقع الرئيسي</a>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <a href="profile.html" class="btn-outline"><i class="fas fa-user-circle"></i> حسابي</a>
+      <a href="index.html" class="btn-outline" id="homeBackBtn"><i class="fas fa-home"></i> الرئيسية</a>
+    </div>
   </div>
 </header>
 
 <div class="wrap">
 
-  <!-- 1. شاشة تسجيل الدخول / إنشاء حساب / استعادة كلمة المرور -->
+  <!-- 1. شاشة تسجيل الدخول وإنشاء الحساب للمعلن -->
   <div id="authSection" class="booking-card" style="max-width: 520px; margin: 20px auto;">
     <div style="text-align: center; margin-bottom: 20px;">
-      <i class="fas fa-user-circle" style="font-size: 48px; color: var(--gold-primary);"></i>
+      <i class="fas fa-bullhorn" style="font-size: 46px; color: var(--gold-primary);"></i>
       <h2 style="font-size: 24px; color: var(--gold-light); margin-top: 8px;">بوابة حسابات المعلنين</h2>
       <p style="font-size: 13.5px; color: var(--dim-color);">سجل الدخول أو أنشئ حساباً جديداً لمتابعة حجز ونشر إعلاناتك</p>
     </div>
@@ -215,9 +271,6 @@
         <label>كلمة المرور</label>
         <input type="password" id="loginPassword" class="form-control" placeholder="كلمة المرور" required>
       </div>
-      <div style="text-align: left; margin-bottom: 15px;">
-        <a href="javascript:void(0)" onclick="openForgotPasswordView()" style="color: var(--gold-primary); font-size: 12.5px;">نسيت كلمة المرور؟</a>
-      </div>
       <button type="submit" class="submit-btn"><i class="fas fa-sign-in-alt"></i> دخول ومتابعة الحجز</button>
     </form>
 
@@ -225,59 +278,29 @@
     <form id="registerForm" style="display: none;" onsubmit="event.preventDefault(); handleAdvertiserRegister();">
       <div class="form-group">
         <label>اسم المستخدم (Username) *</label>
-        <input type="text" id="regUsername" class="form-control" placeholder="اختر اسماً بالإنجليزية بدون مسافات" required>
+        <input type="text" id="regUsername" class="form-control" placeholder="اختر اسماً بدون مسافات (مثال: Company_Sada)" required>
       </div>
       <div class="form-group">
         <label>البريد الإلكتروني (Email) *</label>
         <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
       </div>
       <div class="form-group">
-        <label>رقم الهاتف / الواتساب للتفعيل *</label>
+        <label>رقم الهاتف / الواتساب للتواصل *</label>
         <input type="tel" id="regPhone" class="form-control" placeholder="078XXXXXXXX" required>
       </div>
       <div class="form-group">
         <label>كلمة المرور *</label>
-        <input type="password" id="regPassword" class="form-control" placeholder="اختر كلمة مرور قوية" required>
+        <input type="password" id="regPassword" class="form-control" placeholder="اختر كلمة مرور قوية" required minlength="6">
       </div>
       <button type="submit" class="submit-btn"><i class="fas fa-user-plus"></i> إنشاء الحساب ومتابعة الحجز</button>
     </form>
-
-    <!-- نموذج استعادة كلمة المرور عبر الهاتف -->
-    <div id="forgotPasswordView" style="display: none;">
-      <h3 style="font-size: 18px; color: var(--gold-light); margin-bottom: 12px;"><i class="fas fa-key"></i> استعادة كلمة المرور</h3>
-      <p style="font-size: 13px; color: var(--dim-color); margin-bottom: 16px;">أدخل رقم الهاتف المسجل وسنرسل لك رمز التحقق السري فوراً:</p>
-      
-      <div id="fpStep1">
-        <div class="form-group">
-          <label>رقم الهاتف المسجل</label>
-          <input type="tel" id="fpPhone" class="form-control" placeholder="078XXXXXXXX" required>
-        </div>
-        <button type="button" onclick="sendResetOtpCode()" class="submit-btn"><i class="fas fa-paper-plane"></i> إرسال رمز التحقق</button>
-      </div>
-
-      <div id="fpStep2" style="display: none; margin-top: 15px;">
-        <div class="form-group">
-          <label>أدخل رمز التحقق (6 أرقام)</label>
-          <input type="text" id="fpOtp" class="form-control" placeholder="123456" required>
-        </div>
-        <div class="form-group">
-          <label>كلمة المرور الجديدة</label>
-          <input type="password" id="fpNewPassword" class="form-control" placeholder="كلمة المرور الجديدة" required>
-        </div>
-        <button type="button" onclick="submitPasswordReset()" class="submit-btn"><i class="fas fa-check-circle"></i> تعيين كلمة المرور الجديدة</button>
-      </div>
-
-      <div style="text-align: center; margin-top: 15px;">
-        <a href="javascript:void(0)" onclick="closeForgotPasswordView()" style="color: var(--dim-color); font-size: 13px;"><i class="fas fa-arrow-right"></i> العودة لتسجيل الدخول</a>
-      </div>
-    </div>
   </div>
 
-  <!-- 2. نموذج حجز الإعلان (للمسجلين فقط) -->
+  <!-- 2. نموذج حجز الإعلان (يظهر بعد تسجيل الدخول) -->
   <div id="bookingSection" style="display: none;">
     <div style="text-align: center; margin-bottom: 30px;">
       <h1 style="font-size: 30px; font-weight: 900;">احجز <span style="color: var(--gold-primary);">إعلانك الترويجي</span></h1>
-      <p style="color: var(--dim-color); font-size: 14.5px;">اختر الباقة المناسبة واملأ تفاصيل إعلانك ليصل إلى آلاف المتابعين.</p>
+      <p style="color: var(--dim-color); font-size: 14.5px;">اختر الباقة المناسبة واملأ تفاصيل إعلانك ليصل إلى آلاف المتابعين عبر منصات صدى العطاء.</p>
     </div>
 
     <div class="booking-card">
@@ -325,19 +348,19 @@
             <input type="text" id="advFullName" class="form-control" required>
           </div>
           <div class="form-group">
-            <label>رقم هاتف المعلن (واتساب)</label>
+            <label>رقم هاتف المعلن (واتساب للتواصل)</label>
             <input type="tel" id="advContactPhone" class="form-control" required>
           </div>
         </div>
 
         <div class="form-group">
           <label>عنوان الإعلان الرئيسي *</label>
-          <input type="text" id="adTitle" class="form-control" placeholder="اكتب عنواناً جذاباً للإعلان" required>
+          <input type="text" id="adTitle" class="form-control" placeholder="اكتب عنواناً جذاباً ومختصراً للإعلان" required>
         </div>
 
         <div class="form-group">
           <label>تفاصيل ونص الإعلان *</label>
-          <textarea id="adContent" rows="4" class="form-control" placeholder="اكتب نص الإعلان والعروض وأرقام التواصل..." required></textarea>
+          <textarea id="adContent" rows="4" class="form-control" placeholder="اكتب نص الإعلان، العروض، العناوين، وأرقام التواصل المباشرة..." required></textarea>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
@@ -372,14 +395,14 @@
       <i class="fas fa-hourglass-half"></i> حالة الطلب: قيد مراجعة وتدقيق الإدارة
     </div>
     <p style="color: var(--dim-color); font-size: 14px; max-width: 600px; margin: 0 auto 20px;">
-      تم إصدار الفاتورة الرسمية. حمّل الفاتورة بصيغة PDF وأرسلها إلى إدارة الوكالة عبر الواتساب لتفعيل ونشر إعلانك فوراً.
+      تم إصدار الفاتورة الرسمية بنجاح. يمكنك تحميل الفاتورة (PDF) وإرسالها لإدارة الوكالة عبر الواتساب للموافقة والتفعيل الفوري.
     </p>
 
-    <!-- الفاتورة الرسمية PDF -->
+    <!-- الفاتورة الرسمية للطباعة والـ PDF -->
     <div id="invoiceTemplate">
       <div class="inv-header">
         <div>
-          <h2 style="color: #D4AF37; margin-bottom: 4px;">وكالة صدى العطاء </h2>
+          <h2 style="color: #D4AF37; margin-bottom: 4px;">وكالة صدى العطاء</h2>
           <p style="font-size: 12px; color: #666;">العراق - بابل - الحلة</p>
         </div>
         <div style="text-align: left;">
@@ -405,7 +428,7 @@
         </thead>
         <tbody>
           <tr>
-            <td>باقة إعلانية ترويجية</td>
+            <td>باقة ترويجية</td>
             <td id="invPackageDuration">يوم واحد</td>
             <td id="invBasePrice">10$</td>
           </tr>
@@ -427,17 +450,20 @@
       <button type="button" onclick="sendOrderToWhatsApp()" class="btn-wa"><i class="fab fa-whatsapp"></i> إرسال الطلب للواتساب</button>
     </div>
 
-    <div style="margin-top: 25px; display: flex; justify-content: center; gap: 15px;">
-      <button type="button" onclick="showMyAdsModal()" class="btn-outline"><i class="fas fa-list"></i> عرض كل إعلاناتي</button>
+    <div style="margin-top: 25px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+      <button type="button" onclick="showMyAdsModal()" class="btn-outline"><i class="fas fa-list"></i> متابعة إعلاناتي</button>
       <button type="button" onclick="showNewBookingForm()" class="btn-outline"><i class="fas fa-plus"></i> حجز إعلان آخر</button>
     </div>
   </div>
 
-  <!-- 4. شاشة عرض إعلانات المعلن السابقة وحالتها -->
+  <!-- 4. شاشة عرض إعلانات المعلن ومتابعة حالة الرفض والقبول -->
   <div id="myAdsModalSection" class="booking-card" style="display: none;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-gold); padding-bottom: 12px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-gold); padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
       <h3 style="color: var(--gold-light); font-size: 20px;"><i class="fas fa-bullhorn"></i> إعلاناتي وسجل الحجوزات</h3>
-      <button type="button" onclick="closeMyAdsModal()" class="btn-outline"><i class="fas fa-arrow-right"></i> العودة لطلب إعلان</button>
+      <div style="display: flex; gap: 8px;">
+        <button type="button" onclick="closeMyAdsModal()" class="btn-outline"><i class="fas fa-arrow-right"></i> طلب إعلان جديد</button>
+        <button type="button" onclick="logoutAdvertiser()" class="btn-logout-prominent"><i class="fas fa-sign-out-alt"></i> خروج</button>
+      </div>
     </div>
     
     <div id="myAdsListContainer"></div>
@@ -466,7 +492,6 @@ function showToast(msg, type = 'info') {
   setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 4000);
 }
 
-// دالة التبديل الدقيقة بين التبويبات
 function switchAuthTab(tab) {
   const loginTabBtn = document.getElementById('loginTabBtn');
   const registerTabBtn = document.getElementById('registerTabBtn');
@@ -486,20 +511,7 @@ function switchAuthTab(tab) {
   }
 }
 
-function openForgotPasswordView() {
-  document.getElementById('authTabsBar').style.display = 'none';
-  document.getElementById('loginForm').style.display = 'none';
-  document.getElementById('registerForm').style.display = 'none';
-  document.getElementById('forgotPasswordView').style.display = 'block';
-}
-
-function closeForgotPasswordView() {
-  document.getElementById('authTabsBar').style.display = 'flex';
-  document.getElementById('forgotPasswordView').style.display = 'none';
-  switchAuthTab('login');
-}
-
-// 1. تسجيل مستخدم معلن جديد
+// 1. تسجيل معلن جديد
 async function handleAdvertiserRegister() {
   const username = document.getElementById('regUsername').value.trim();
   const email = document.getElementById('regEmail').value.trim();
@@ -553,66 +565,23 @@ async function handleAdvertiserLogin() {
   }
 }
 
-// 3. استعادة كلمة المرور عبر الهاتف
-async function sendResetOtpCode() {
-  const phone = document.getElementById('fpPhone').value.trim();
-  if(!phone) { showToast('يرجى كتابة رقم الهاتف المسجل', 'danger'); return; }
-
-  try {
-    const res = await fetch(`${API_URL}/forgot-password`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone })
-    });
-    const data = await res.json();
-    if(res.ok) {
-      showToast('تم توليد رمز التحقق بنجاح!', 'success');
-      document.getElementById('fpStep1').style.display = 'none';
-      document.getElementById('fpStep2').style.display = 'block';
-    } else {
-      showToast(data.error || 'الرقم غير مسجل', 'danger');
-    }
-  } catch(e) {
-    showToast('تعذر الاتصال بالسيرفر', 'danger');
-  }
-}
-
-async function submitPasswordReset() {
-  const phone = document.getElementById('fpPhone').value.trim();
-  const otp = document.getElementById('fpOtp').value.trim();
-  const newPassword = document.getElementById('fpNewPassword').value;
-
-  try {
-    const res = await fetch(`${API_URL}/reset-password`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, otp, newPassword })
-    });
-    const data = await res.json();
-    if(res.ok) {
-      showToast('تم تغيير كلمة المرور بنجاح! يمكنك الدخول الآن', 'success');
-      closeForgotPasswordView();
-    } else {
-      showToast(data.error || 'رمز التحقق غير صحيح', 'danger');
-    }
-  } catch(e) {
-    showToast('تعذر الاتصال بالسيرفر', 'danger');
-  }
-}
-
 function initAdvertiserSession() {
   const token = localStorage.getItem('sada_adv_token');
   const userJson = localStorage.getItem('sada_adv_user');
 
   if (token && userJson) {
-    currentAdvertiser = JSON.parse(userJson);
-    document.getElementById('authSection').style.display = 'none';
-    document.getElementById('bookingSection').style.display = 'block';
-    document.getElementById('userHeaderNav').style.display = 'flex';
-    document.getElementById('loggedInUserDisplay').innerText = currentAdvertiser.username;
+    try {
+      currentAdvertiser = JSON.parse(userJson);
+      document.getElementById('authSection').style.display = 'none';
+      document.getElementById('bookingSection').style.display = 'block';
+      document.getElementById('userHeaderNav').style.display = 'flex';
+      document.getElementById('loggedInUserDisplay').innerText = currentAdvertiser.username;
 
-    document.getElementById('advFullName').value = currentAdvertiser.username;
-    document.getElementById('advContactPhone').value = currentAdvertiser.phone || '';
+      document.getElementById('advFullName').value = currentAdvertiser.username || '';
+      document.getElementById('advContactPhone').value = currentAdvertiser.phone || '';
+    } catch(e) {
+      logoutAdvertiser();
+    }
   } else {
     document.getElementById('authSection').style.display = 'block';
     document.getElementById('bookingSection').style.display = 'none';
@@ -625,6 +594,8 @@ function logoutAdvertiser() {
   localStorage.removeItem('sada_adv_user');
   currentAdvertiser = null;
   showToast('تم تسجيل الخروج بنجاح', 'info');
+  document.getElementById('myAdsModalSection').style.display = 'none';
+  document.getElementById('invoiceResultSection').style.display = 'none';
   initAdvertiserSession();
 }
 
@@ -681,6 +652,7 @@ async function submitAdBooking() {
     orderId,
     name,
     phone,
+    email: (currentAdvertiser && currentAdvertiser.email) ? currentAdvertiser.email : '',
     title,
     content,
     link,
@@ -697,7 +669,7 @@ async function submitAdBooking() {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'Authorization': token 
+        'Authorization': token || ''
       },
       body: JSON.stringify(currentBookingData)
     });
@@ -754,16 +726,20 @@ function sendOrderToWhatsApp() {
   window.open(`https://wa.me/${targetPhone}?text=${message}`, '_blank');
 }
 
+// جلب وعرض إعلانات المعلن وملاحظات وسبب الرفض بالتفصيل
 async function showMyAdsModal() {
   const token = localStorage.getItem('sada_adv_token');
-  if(!token) return;
+  if(!token) {
+    showToast('يرجى تسجيل الدخول أولاً', 'danger');
+    return;
+  }
 
   document.getElementById('bookingSection').style.display = 'none';
   document.getElementById('invoiceResultSection').style.display = 'none';
   document.getElementById('myAdsModalSection').style.display = 'block';
 
   const container = document.getElementById('myAdsListContainer');
-  container.innerHTML = '<p style="color:var(--dim-color); text-align:center;">جاري جلب إعلاناتك...</p>';
+  container.innerHTML = '<p style="color:var(--dim-color); text-align:center; padding:30px;"><i class="fas fa-spinner fa-spin"></i> جاري جلب سجل طلباتك...</p>';
 
   try {
     const res = await fetch(`${API_URL}/my-ads`, {
@@ -771,31 +747,57 @@ async function showMyAdsModal() {
     });
     const ads = await res.json();
 
-    if(ads.length === 0) {
-      container.innerHTML = '<p style="color:var(--dim-color); text-align:center; padding:20px;">لا توجد لديك طلبات إعلانات سابقة.</p>';
+    if(!Array.isArray(ads) || ads.length === 0) {
+      container.innerHTML = '<p style="color:var(--dim-color); text-align:center; padding:30px;">لا توجد لديك طلبات إعلانات سابقة حتى الآن.</p>';
       return;
     }
 
-    let html = '<div style="display:flex; flex-direction:column; gap:12px;">';
+    let html = '<div style="display:flex; flex-direction:column; gap:16px;">';
     ads.forEach(ad => {
-      let statusHtml = '<span class="status-tag status-pending"><i class="fas fa-hourglass-half"></i> قيد المراجعة</span>';
-      if(ad.status === 'approved') statusHtml = '<span class="status-tag status-approved"><i class="fas fa-check-circle"></i> تم النشر والموافقة</span>';
-      if(ad.status === 'rejected') statusHtml = '<span class="status-tag status-rejected"><i class="fas fa-times-circle"></i> تم الرفض</span>';
+      let statusBadge = '<span class="status-tag status-pending"><i class="fas fa-hourglass-half"></i> قيد المراجعة والتدقيق</span>';
+      let rejectionDetailHtml = '';
+
+      if (ad.status === 'approved') {
+        statusBadge = '<span class="status-tag status-approved"><i class="fas fa-check-circle"></i> تم القبول والنشر بنجاح</span>';
+      } else if (ad.status === 'rejected') {
+        statusBadge = '<span class="status-tag status-rejected"><i class="fas fa-times-circle"></i> تم الرفض</span>';
+        
+        const reasonText = ad.rejectReason || 'لم يستوفِ الإعلان الشروط الفنية أو ضوابط النشر المعتمدة لدى الوكالة.';
+        rejectionDetailHtml = `
+          <div class="rejection-reason-box">
+            <div class="rejection-header">
+              <i class="fas fa-exclamation-triangle"></i> سبب وملاحظات الإدارة للرفض:
+            </div>
+            <div class="rejection-body">
+              ${reasonText}
+            </div>
+            <div class="rejection-hint">
+              <i class="fas fa-info-circle"></i> يمكنك تعديل النقاط المذكورة وتقديم طلب إعلان جديد أو مراسلتنا عبر الواتساب للاستفسار.
+            </div>
+          </div>
+        `;
+      }
 
       html += `
-        <div style="background:var(--bg-color); border:1px solid var(--border-subtle); border-radius:8px; padding:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-          <div>
-            <h4 style="color:var(--gold-light); font-size:16px; margin-bottom:4px;">${ad.title}</h4>
-            <div style="font-size:12px; color:var(--dim-color);">رقم الفاتورة: #${ad.orderId} | الباقة: ${ad.package} | المبلغ: ${ad.totalPrice}$</div>
+        <div style="background:var(--bg-color); border:1px solid var(--border-subtle); border-radius:8px; padding:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+            <h4 style="color:var(--gold-light); font-size:17px; margin:0;">${ad.title}</h4>
+            <div>${statusBadge}</div>
           </div>
-          <div>${statusHtml}</div>
+          <div style="font-size:12.5px; color:var(--dim-color); line-height:1.7;">
+            <span><i class="fas fa-barcode"></i> رقم الطلب: <b>#${ad.orderId || 'SADA'}</b></span> | 
+            <span><i class="fas fa-calendar-alt"></i> التاريخ: ${ad.date || 'اليوم'}</span> | 
+            <span><i class="fas fa-box"></i> الباقة: ${ad.package}</span> | 
+            <span><i class="fas fa-dollar-sign"></i> المبلغ: <b style="color:var(--gold-primary);">${ad.totalPrice}$</b></span>
+          </div>
+          ${rejectionDetailHtml}
         </div>
       `;
     });
     html += '</div>';
     container.innerHTML = html;
   } catch(e) {
-    container.innerHTML = '<p style="color:var(--danger); text-align:center;">تعذر جلب الإعلانات</p>';
+    container.innerHTML = '<p style="color:var(--danger); text-align:center; padding:20px;">تعذر الاتصال بالسيرفر لجلب الإعلانات.</p>';
   }
 }
 

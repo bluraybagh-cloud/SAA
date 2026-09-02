@@ -1,264 +1,666 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+
+let bcrypt = null;
+try {
+    bcrypt = require('bcrypt');
+} catch (e) {
+    try {
+        bcrypt = require('bcryptjs');
+    } catch (e2) {
+        bcrypt = null;
+    }
+}
 
 const app = express();
-app.use(cors());
-app.use(express.json({ limit: '50mb' }));
 
-const SECRET_KEY = "Sada@Agency_Secret_Key_2026";
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.use(express.json({ limit: '30mb' }));
+
+const PORT = process.env.PORT || 5000;
+const SECRET_KEY = process.env.JWT_SECRET || "Sada@Agency_Secret_Key_2026_Secure_Token";
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sada_admin:Sada%402026%23Secure_Pass99!@cluster0.hrvqt9v.mongodb.net/sada_agency?appName=Cluster0';
 
 // ==========================================
-// 1. تعريف الجداول والموديلات أولاً (Schemas & Models)
+// 1. تشفير كلمات المرور
+// ==========================================
+async function hashPassword(plainPassword) {
+    if (bcrypt) {
+        return await bcrypt.hash(plainPassword, 10);
+    }
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = crypto.pbkdf2Sync(plainPassword, salt, 1000, 64, 'sha512').toString('hex');
+    return `pbkdf2:${salt}:${hash}`;
+}
+
+async function verifyPassword(plainPassword, storedPassword) {
+    if (!storedPassword || !plainPassword) return false;
+    if (storedPassword.startsWith('$2b$') || storedPassword.startsWith('$2a$')) {
+        if (bcrypt) return await bcrypt.compare(plainPassword, storedPassword);
+    }
+    if (storedPassword.startsWith('pbkdf2:')) {
+        const parts = storedPassword.split(':');
+        const salt = parts[1];
+        const originalHash = parts[2];
+        const hash = crypto.pbkdf2Sync(plainPassword, salt, 1000, 64, 'sha512').toString('hex');
+        return hash === originalHash;
+    }
+    return plainPassword === storedPassword;
+}
+
+// ==========================================
+// 2. الحماية من التخمين والتكرار (Rate Limiter)
+// ==========================================
+const loginAttemptsMap = new Map();
+const rateLimitLogin = (maxAttempts = 6, windowMs = 15 * 60 * 1000) => {
+    return (req, res, next) => {
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown-ip';
+        const now = Date.now();
+        const record = loginAttemptsMap.get(ip) || { count: 0, resetTime: now + windowMs };
+
+        if (now > record.resetTime) {
+            record.count = 0;
+            record.resetTime = now + windowMs;
+        }
+
+        if (record.count >= maxAttempts) {
+            const waitMinutes = Math.ceil((record.resetTime - now) / 60000);
+            return res.status(429).json({ 
+                error: `تم تجاوز عدد المحاولات المسموح به. يرجى الانتظار ${waitMinutes} دقيقة قبل المحاولة مجدداً.` 
+            });
+        }
+
+        record.count += 1;
+        loginAttemptsMap.set(ip, record);
+        next();
+    };
+};
+
+function clearLoginAttempts(req) {
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown-ip';
+    loginAttemptsMap.delete(ip);
+}
+
+function sanitizeInput(val) {
+    if (typeof val !== 'string') return '';
+    return val.trim().replace(/[$]/g, '');
+}
+
+function isValidImageString(str) {
+    if (!str || typeof str !== 'string') return false;
+    const isUrl = str.startsWith('http://') || str.startsWith('https://');
+    const isBase64Image = str.startsWith('data:image/jpeg;base64,') || 
+                          str.startsWith('data:image/jpg;base64,') || 
+                          str.startsWith('data:image/png;base64,') || 
+                          str.startsWith('data:image/webp;base64,') ||
+                          str.startsWith('data:image/gif;base64,');
+    return isUrl || isBase64Image;
+}
+
+// ==========================================
+// 3. جداول قاعدة البيانات (Schemas & Models)
 // ==========================================
 
-// جدول المستخدمين
 const UserSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    email: { type: String },
-    phone: { type: String },
+    fullName: { type: String, default: '' },
+    username: { type: String, required: true, unique: true, index: true },
+    email: { type: String, required: true, unique: true, index: true },
+    phone: { type: String, required: true },
     password: { type: String, required: true },
-    role: { type: String, default: 'ADVERTISER' },
-    resetOtp: { type: String },
-    resetExpires: { type: Date }
+    avatar: { type: String, default: '' },
+    status: { type: String, enum: ['pending', 'approved', 'rejected', 'suspended'], default: 'pending', index: true },
+    role: { type: String, enum: ['ADMIN', 'ADVERTISER', 'USER'], default: 'USER' }
+}, { timestamps: true });
+
+UserSchema.set('toJSON', {
+    transform: (doc, ret) => {
+        delete ret.password;
+        return ret;
+    }
 });
 const User = mongoose.model('User', UserSchema);
 
-// جدول الأخبار المحدّث بالمشاهدات والمشاركات
 const PostSchema = new mongoose.Schema({
-    title: String,
-    category: String,
-    mediaType: String,
+    title: { type: String, required: true },
+    category: { type: String, default: 'عام' },
+    mediaType: { type: String, default: 'image' },
     mediaUrls: [String], 
-    content: String,
-    status: { type: String, default: 'published' },
+    content: { type: String, required: true },
+    status: { type: String, enum: ['published', 'draft'], default: 'published' },
     isPinned: { type: Boolean, default: false },
-    views: { type: Number, default: 0 },   // المشاهدات الحقيقية
-    shares: { type: Number, default: 0 },  // عدد المشاركات
+    views: { type: Number, default: 0 },
+    shares: { type: Number, default: 0 },
+    likesCount: { type: Number, default: 0 },
+    dislikesCount: { type: Number, default: 0 },
+    commentsCount: { type: Number, default: 0 },
     date: { type: String, default: () => new Date().toISOString().split('T')[0] }
-});
+}, { timestamps: true });
 const Post = mongoose.model('Post', PostSchema);
 
-// جدول إحصائيات زيارات الموقع الموحدة
+const ReactionSchema = new mongoose.Schema({
+    postId: { type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true, index: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    type: { type: String, enum: ['like', 'dislike'], required: true }
+}, { timestamps: true });
+ReactionSchema.index({ postId: 1, userId: 1 }, { unique: true });
+const Reaction = mongoose.model('Reaction', ReactionSchema);
+
+const CommentSchema = new mongoose.Schema({
+    postId: { type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true, index: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userName: { type: String, required: true },
+    userAvatar: { type: String, default: '' },
+    content: { type: String, required: true },
+    status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending', index: true },
+    date: { type: String, default: () => new Date().toISOString() }
+}, { timestamps: true });
+const Comment = mongoose.model('Comment', CommentSchema);
+
 const StatSchema = new mongoose.Schema({
-    key: { type: String, default: 'global_visits' },
+    key: { type: String, default: 'global_visits', unique: true },
     visits: { type: Number, default: 0 }
 });
 const Stat = mongoose.model('Stat', StatSchema);
 
-// جدول طلبات الإعلانات
 const AdBookingSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    orderId: String,
+    orderId: { type: String, index: true },
     name: String,
     phone: String,
+    email: String,
     title: String,
     content: String,
     link: String,
     package: String,
-    isTicker: Boolean,
-    totalPrice: Number,
+    isTicker: { type: Boolean, default: false },
+    totalPrice: { type: Number, default: 0 },
     imageUrl: String,
-    status: { type: String, default: 'pending' },
+    status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
     rejectReason: { type: String, default: '' },
     date: { type: String, default: () => new Date().toISOString().split('T')[0] }
-});
+}, { timestamps: true });
 const AdBooking = mongoose.model('AdBooking', AdBookingSchema);
 
 // ==========================================
-// 2. الاتصال بقاعدة البيانات والتهيئة التلقائية
+// 4. الاتصال والتهيئة
 // ==========================================
-mongoose.connect('mongodb+srv://sada_admin:Sada%402026%23Secure_Pass99!@cluster0.hrvqt9v.mongodb.net/sada_agency?appName=Cluster0')
+mongoose.connect(MONGODB_URI)
   .then(async () => {
-      console.log("تم الاتصال بقاعدة البيانات السحابية بنجاح");
+      console.log("تم الاتصال بقاعدة البيانات السحابية بنجاح وبأمان.");
       try {
-          // تثبيت حساب الآدمن الرئيسي
-          await User.findOneAndUpdate(
-              { username: "sada_admin" },
-              { username: "sada_admin", password: "Sada@2026#Secure_Pass99!", role: "ADMIN" },
-              { upsert: true, new: true }
-          );
+          const adminUsername = "sada_admin";
+          const adminPasswordRaw = "Sada@2026#Secure_Pass99!";
+          const existingAdmin = await User.findOne({ username: adminUsername });
 
-          // تهيئة سجل الزيارات الأولي
+          if (!existingAdmin) {
+              const secureHashedPassword = await hashPassword(adminPasswordRaw);
+              await new User({
+                  fullName: "مشرف الوكالة الرئيسي",
+                  username: adminUsername,
+                  email: "admin@sadaalataa.com",
+                  phone: "07827992437",
+                  password: secureHashedPassword,
+                  status: "approved",
+                  role: "ADMIN"
+              }).save();
+          }
+
           const existingStat = await Stat.findOne({ key: 'global_visits' });
           if (!existingStat) {
               await new Stat({ key: 'global_visits', visits: 0 }).save();
-              console.log("تم إنشاء سجل الزيارات الأولي بنجاح");
           }
 
-          // تهيئة حقول المشاهدات والمشاركات للأخبار السابقة
           await Post.updateMany(
               { views: { $exists: false } },
-              { $set: { views: 0, shares: 0, status: 'published', isPinned: false } }
+              { $set: { views: 0, shares: 0, likesCount: 0, dislikesCount: 0, commentsCount: 0, status: 'published', isPinned: false } }
           );
-          console.log("تم تحديث وتهيئة حقول المشاهدات لجميع الأخبار");
-
       } catch (e) {
-          console.log("خطأ في التهيئة التلقائية:", e);
+          console.error("تنبيه تهيئة:", e.message);
       }
   })
-  .catch(err => console.log("خطأ في الاتصال بقاعدة البيانات:", err));
+  .catch(err => console.error("خطأ اتصال مونغو:", err.message));
 
-// دالة حماية مسارات الآدمن
+// ==========================================
+// 5. الصلاحيات والـ Middlewares
+// ==========================================
+
 const verifyToken = (req, res, next) => {
-    const token = req.headers['authorization'];
-    if (!token) return res.status(403).json({ error: "غير مصرح لك بالوصول" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) return res.status(401).json({ error: "جلسة غير مصرح بها. يرجى تسجيل الدخول" });
+
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
+
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
-        if (err) return res.status(401).json({ error: "الجلسة منتهية" });
+        if (err) return res.status(401).json({ error: "انتهت صلاحية الجلسة، يرجى تسجيل الدخول مجدداً" });
         req.user = decoded;
         next();
     });
 };
 
+const verifyActiveUser = (req, res, next) => {
+    verifyToken(req, res, () => {
+        if (req.user && req.user.status === 'approved') {
+            next();
+        } else {
+            return res.status(403).json({ 
+                error: "يتطلب التفاعل أو التعليق حساباً نشطاً ومقبولاً من قبل إدارة الموقع." 
+            });
+        }
+    });
+};
+
+const verifyAdmin = (req, res, next) => {
+    verifyToken(req, res, () => {
+        if (req.user && req.user.role === 'ADMIN') {
+            next();
+        } else {
+            return res.status(403).json({ error: "وصول محظور: يتطلب صلاحيات إدارة النظام" });
+        }
+    });
+};
+
 // ==========================================
-// 3. مسارات حسابات المعلنين
+// 6. مسارات حسابات المستخدمين والبروفايل
 // ==========================================
 
-// تسجيل معلن جديد
-app.post('/api/register', async (req, res) => {
+app.post('/api/user/register', rateLimitLogin(5, 10 * 60 * 1000), async (req, res) => {
     try {
-        const { username, email, phone, password } = req.body;
-        const normalizedUsername = (username || '').trim().toLowerCase();
+        const fullName = sanitizeInput(req.body.fullName);
+        const username = sanitizeInput(req.body.username).toLowerCase();
+        const email = sanitizeInput(req.body.email).toLowerCase();
+        const phone = sanitizeInput(req.body.phone);
+        const password = typeof req.body.password === 'string' ? req.body.password : '';
+        const confirmPassword = typeof req.body.confirmPassword === 'string' ? req.body.confirmPassword : '';
+
+        if (!fullName || !username || !email || !password) {
+            return res.status(400).json({ error: "يرجى تعبئة جميع الحقول المطلوبة" });
+        }
+        if (password.length < 6) {
+            return res.status(400).json({ error: "يجب ألا تقل كلمة المرور عن 6 أحرف" });
+        }
+        if (password !== confirmPassword) {
+            return res.status(400).json({ error: "كلمتا المرور غير متطابقتين" });
+        }
 
         const existing = await User.findOne({ 
-            $or: [{ username: normalizedUsername }, { email: (email || '').toLowerCase() }] 
+            $or: [{ username }, { email }] 
         });
         if (existing) {
             return res.status(400).json({ error: "اسم المستخدم أو البريد الإلكتروني مسجل مسبقاً" });
         }
 
+        const securePassword = await hashPassword(password);
         const newUser = new User({
-            username: normalizedUsername,
-            email: (email || '').toLowerCase(),
+            fullName,
+            username,
+            email,
             phone,
-            password,
-            role: 'ADVERTISER'
+            password: securePassword,
+            status: 'pending',
+            role: 'USER'
         });
         await newUser.save();
 
-        const token = jwt.sign({ id: newUser._id, username: newUser.username, role: newUser.role }, SECRET_KEY, { expiresIn: '15d' });
-        res.json({ token, user: { username: newUser.username, email: newUser.email, phone: newUser.phone } });
-    } catch(err) {
-        res.status(500).json({ error: err.message });
+        clearLoginAttempts(req);
+        res.json({ 
+            message: "تم تسجيل الحساب بنجاح! حسابك الآن قيد مراجعة وتدقيق الإدارة وسيتم تفعيله قريباً.",
+            status: 'pending'
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إكمال طلب التسجيل، يرجى المحاولة لاحقاً" });
     }
 });
 
-// تسجيل دخول المعلن
-app.post('/api/advertiser/login', async (req, res) => {
+app.post('/api/user/login', rateLimitLogin(6, 15 * 60 * 1000), async (req, res) => {
     try {
-        const { usernameOrEmail, password } = req.body;
-        const searchKey = (usernameOrEmail || '').trim().toLowerCase();
+        const searchKey = sanitizeInput(req.body.usernameOrEmail).toLowerCase();
+        const password = typeof req.body.password === 'string' ? req.body.password : '';
+
+        if (!searchKey || !password) {
+            return res.status(400).json({ error: "يرجى إدخال اسم المستخدم وكلمة المرور" });
+        }
 
         const user = await User.findOne({
             $or: [{ username: searchKey }, { email: searchKey }]
         });
 
-        if (!user || password !== user.password) {
-            return res.status(400).json({ error: "اسم المستخدم أو كلمة المرور غير صحيحة" });
-        }
-
-        const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, SECRET_KEY, { expiresIn: '15d' });
-        res.json({ token, user: { username: user.username, email: user.email, phone: user.phone } });
-    } catch(err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// إرسال رمز استعادة كلمة المرور عبر الهاتف
-app.post('/api/forgot-password', async (req, res) => {
-    try {
-        const { phone } = req.body;
-        const user = await User.findOne({ phone: (phone || '').trim() });
         if (!user) {
-            return res.status(404).json({ error: "رقم الهاتف غير مسجل لدينا" });
+            return res.status(400).json({ error: "بيانات الدخول غير صحيحة" });
         }
 
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        user.resetOtp = otp;
-        user.resetExpires = Date.now() + 15 * 60 * 1000;
-        await user.save();
+        const isPasswordCorrect = await verifyPassword(password, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(400).json({ error: "بيانات الدخول غير صحيحة" });
+        }
 
-        console.log(`[OTP] رمز التحقق لرقم ${phone} هو: ${otp}`);
-        res.json({ message: "تم توليد رمز التحقق", otp });
-    } catch(err) {
-        res.status(500).json({ error: err.message });
+        if (user.status === 'pending') {
+            return res.status(403).json({ 
+                error: "حسابك قيد المراجعة والتدقيق من قبل الإدارة، يرجى الانتظار حتى يتم اعتماده وتفعيله",
+                status: 'pending'
+            });
+        }
+        if (user.status === 'rejected') {
+            return res.status(403).json({ 
+                error: "تم رفض طلب إنشاء هذا الحساب من قبل إدارة الموقع",
+                status: 'rejected'
+            });
+        }
+        if (user.status === 'suspended') {
+            return res.status(403).json({ 
+                error: "تم إيقاف هذا الحساب مؤقتاً من قبل الإدارة",
+                status: 'suspended'
+            });
+        }
+
+        clearLoginAttempts(req);
+        const token = jwt.sign(
+            { id: user._id, username: user.username, email: user.email, role: user.role, status: user.status }, 
+            SECRET_KEY, 
+            { expiresIn: '15d' }
+        );
+
+        res.json({ 
+            token, 
+            user: { 
+                id: user._id, 
+                fullName: user.fullName, 
+                username: user.username, 
+                email: user.email, 
+                phone: user.phone,
+                avatar: user.avatar,
+                status: user.status,
+                role: user.role
+            } 
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر تسجيل الدخول حالياً" });
     }
 });
 
-// تعيين كلمة المرور الجديدة بعد التحقق من الرمز
-app.post('/api/reset-password', async (req, res) => {
+app.get('/api/user/profile', verifyToken, async (req, res) => {
     try {
-        const { phone, otp, newPassword } = req.body;
-        const user = await User.findOne({ 
-            phone: (phone || '').trim(),
-            resetOtp: (otp || '').trim(),
-            resetExpires: { $gt: Date.now() }
+        const user = await User.findById(req.user.id).select('-password -__v');
+        if (!user) return res.status(404).json({ error: "المستخدم غير موجود" });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ error: "تعذر جلب بيانات البروفايل" });
+    }
+});
+
+app.put('/api/user/profile', verifyToken, async (req, res) => {
+    try {
+        const { fullName, phone, currentPassword, newPassword } = req.body;
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: "المستخدم غير موجود" });
+
+        if (fullName) user.fullName = sanitizeInput(fullName);
+        if (phone) user.phone = sanitizeInput(phone);
+
+        if (newPassword && newPassword.length >= 6) {
+            if (!currentPassword) {
+                return res.status(400).json({ error: "يرجى إدخال كلمة المرور الحالية لتغيير كلمة المرور" });
+            }
+            const isMatch = await verifyPassword(currentPassword, user.password);
+            if (!isMatch) {
+                return res.status(400).json({ error: "كلمة المرور الحالية غير صحيحة" });
+            }
+            user.password = await hashPassword(newPassword);
+        }
+
+        await user.save();
+        res.json({ message: "تم تحديث البيانات بنجاح", user });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر تعديل البيانات" });
+    }
+});
+
+app.post('/api/user/avatar', verifyToken, async (req, res) => {
+    try {
+        const { avatar } = req.body;
+        if (!avatar || !isValidImageString(avatar)) {
+            return res.status(400).json({ error: "صيغة الصورة غير صالحة" });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.user.id, 
+            { avatar }, 
+            { new: true }
+        ).select('-password');
+
+        res.json({ message: "تم تحديث الصورة الشخصية بنجاح", avatar: user.avatar });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر حفظ الصورة الشخصية" });
+    }
+});
+
+app.delete('/api/user/avatar', verifyToken, async (req, res) => {
+    try {
+        await User.findByIdAndUpdate(req.user.id, { avatar: '' });
+        res.json({ message: "تم حذف الصورة الشخصية بنجاح" });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر حذف الصورة" });
+    }
+});
+
+// ==========================================
+// 7. مسارات المعلنين وحجز الإعلانات
+// ==========================================
+
+app.post('/api/register', rateLimitLogin(5, 10 * 60 * 1000), async (req, res) => {
+    try {
+        const username = sanitizeInput(req.body.username).toLowerCase();
+        const email = sanitizeInput(req.body.email).toLowerCase();
+        const phone = sanitizeInput(req.body.phone);
+        const password = typeof req.body.password === 'string' ? req.body.password : '';
+
+        if (!username || !email || !password || password.length < 6) {
+            return res.status(400).json({ error: "يرجى ملء جميع الحقول المطلوبة" });
+        }
+
+        const existing = await User.findOne({ 
+            $or: [{ username }, { email }] 
+        });
+        if (existing) {
+            return res.status(400).json({ error: "اسم المستخدم أو البريد مسجل مسبقاً" });
+        }
+
+        const securePassword = await hashPassword(password);
+        const newUser = new User({
+            username,
+            email,
+            phone,
+            password: securePassword,
+            status: 'approved',
+            role: 'ADVERTISER'
+        });
+        await newUser.save();
+
+        clearLoginAttempts(req);
+        const token = jwt.sign(
+            { id: newUser._id, username: newUser.username, email: newUser.email, role: newUser.role, status: newUser.status }, 
+            SECRET_KEY, 
+            { expiresIn: '15d' }
+        );
+
+        res.json({ 
+            token, 
+            user: { id: newUser._id, username: newUser.username, email: newUser.email, phone: newUser.phone } 
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إكمال التسجيل" });
+    }
+});
+
+app.post('/api/advertiser/login', rateLimitLogin(6, 15 * 60 * 1000), async (req, res) => {
+    try {
+        const searchKey = sanitizeInput(req.body.usernameOrEmail).toLowerCase();
+        const password = typeof req.body.password === 'string' ? req.body.password : '';
+
+        const user = await User.findOne({
+            $or: [{ username: searchKey }, { email: searchKey }]
         });
 
-        if (!user) {
-            return res.status(400).json({ error: "رمز التحقق غير صحيح أو انتهت صلاحيته" });
-        }
+        if (!user) return res.status(400).json({ error: "بيانات الدخول غير صحيحة" });
 
-        user.password = newPassword;
-        user.resetOtp = undefined;
-        user.resetExpires = undefined;
-        await user.save();
+        const isPasswordCorrect = await verifyPassword(password, user.password);
+        if (!isPasswordCorrect) return res.status(400).json({ error: "بيانات الدخول غير صحيحة" });
 
-        res.json({ message: "تم تغيير كلمة المرور بنجاح" });
-    } catch(err) {
-        res.status(500).json({ error: err.message });
+        clearLoginAttempts(req);
+        const token = jwt.sign(
+            { id: user._id, username: user.username, email: user.email, role: user.role, status: user.status }, 
+            SECRET_KEY, 
+            { expiresIn: '15d' }
+        );
+
+        res.json({ 
+            token, 
+            user: { id: user._id, username: user.username, email: user.email, phone: user.phone } 
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر تسجيل الدخول" });
     }
 });
 
-// جلب إعلانات المعلن الحالي
 app.get('/api/my-ads', verifyToken, async (req, res) => {
     try {
         const ads = await AdBooking.find({ 
-            $or: [{ userId: req.user.id }, { name: req.user.username }]
-        }).sort({ _id: -1 });
+            $or: [
+                { userId: req.user.id },
+                { name: req.user.username },
+                { email: req.user.email }
+            ]
+        }).sort({ _id: -1 }).select('-__v');
         res.json(ads);
-    } catch(err) {
-        res.status(500).json({ error: err.message });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر جلب الإعلانات" });
+    }
+});
+
+app.post('/api/ads', async (req, res) => {
+    try {
+        const adData = req.body;
+        if (!adData.title || !adData.content || !adData.name) {
+            return res.status(400).json({ error: "يرجى إكمال بيانات الإعلان الأساسية" });
+        }
+        if (adData.imageUrl && !isValidImageString(adData.imageUrl)) {
+            adData.imageUrl = '';
+        }
+
+        const token = req.headers['authorization'];
+        if (token) {
+            try {
+                const cleanToken = token.startsWith('Bearer ') ? token.slice(7) : token;
+                const decoded = jwt.verify(cleanToken, SECRET_KEY);
+                adData.userId = decoded.id;
+            } catch (e) {}
+        }
+
+        adData.title = sanitizeInput(adData.title);
+        adData.content = sanitizeInput(adData.content);
+        adData.name = sanitizeInput(adData.name);
+        adData.status = 'pending';
+        adData.rejectReason = '';
+
+        const ad = new AdBooking(adData);
+        await ad.save();
+        res.json({ message: "تم تسجيل طلب الإعلان بنجاح", ad });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إرسال طلب الإعلان" });
+    }
+});
+
+app.get('/api/ads', verifyAdmin, async (req, res) => {
+    try {
+        const ads = await AdBooking.find().sort({ _id: -1 }).select('-__v');
+        res.json(ads);
+    } catch (err) {
+        res.status(500).json({ error: "تعذر جلب طلبات الإعلانات" });
+    }
+});
+
+app.put('/api/ads/:id/approve', verifyAdmin, async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "معرف غير صالح" });
+        }
+        const ad = await AdBooking.findByIdAndUpdate(req.params.id, { status: 'approved' }, { new: true });
+        if (ad) {
+            const newPost = new Post({
+                title: `[إعلان] ${ad.title}`,
+                category: 'إعلانات وترويج',
+                mediaUrls: (ad.imageUrl && isValidImageString(ad.imageUrl)) ? [ad.imageUrl] : ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"],
+                content: `${ad.content}\n\nللتواصل والاستفسار: ${ad.phone} ${ad.link ? `\nرابط المعلن: ${ad.link}` : ''}`,
+                isPinned: Boolean(ad.isTicker),
+                status: 'published'
+            });
+            await newPost.save();
+        }
+        res.json({ message: "تمت الموافقة ونشر الإعلان", ad });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إتمام الموافقة" });
+    }
+});
+
+app.put('/api/ads/:id/reject', verifyAdmin, async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "معرف غير صالح" });
+        }
+        const rejectReason = sanitizeInput(req.body.rejectReason) || 'لم يتم استيفاء شروط وضوابط النشر المعتمدة';
+        const ad = await AdBooking.findByIdAndUpdate(
+            req.params.id, 
+            { status: 'rejected', rejectReason }, 
+            { new: true }
+        );
+        res.json({ message: "تم رفض الطلب وتسجيل السبب للمعلن", ad });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إتمام الرفض" });
     }
 });
 
 // ==========================================
-// 4. مسارات تسجيل الدخول للآدمن
+// 8. مسارات دخول المشرف والتحقق
 // ==========================================
 
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', rateLimitLogin(5, 15 * 60 * 1000), async (req, res) => {
     try {
-        const { username, password } = req.body;
-        const normalizedUsername = (username || '').trim().toLowerCase();
+        const username = sanitizeInput(req.body.username).toLowerCase();
+        const password = typeof req.body.password === 'string' ? req.body.password : '';
 
-        if (normalizedUsername === 'sada_admin' && password === 'Sada@2026#Secure_Pass99!') {
-            const token = jwt.sign({ id: 'sada_admin_master', username: 'sada_admin', role: 'ADMIN' }, SECRET_KEY, { expiresIn: '7d' });
-            return res.json({ token, username: 'sada_admin' });
-        }
+        const user = await User.findOne({ username, role: 'ADMIN' });
+        if (!user) return res.status(400).json({ error: "الاسم أو كلمة المرور غير صحيحة" });
 
-        const user = await User.findOne({ username: normalizedUsername });
-        if (!user || password !== user.password) {
-            return res.status(400).json({ error: "الاسم أو كلمة المرور غير صحيحة" });
-        }
+        const isMatch = await verifyPassword(password, user.password);
+        if (!isMatch) return res.status(400).json({ error: "الاسم أو كلمة المرور غير صحيحة" });
 
-        const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, SECRET_KEY, { expiresIn: '7d' });
+        clearLoginAttempts(req);
+        const token = jwt.sign(
+            { id: user._id, username: user.username, role: 'ADMIN', status: user.status }, 
+            SECRET_KEY, 
+            { expiresIn: '7d' }
+        );
+
         res.json({ token, username: user.username });
     } catch (err) {
-        res.status(500).json({ error: "حدث خطأ في السيرفر" });
+        res.status(500).json({ error: "حدث خطأ غير متوقع في الخادم" });
     }
 });
 
-app.get('/api/verify-auth', verifyToken, (req, res) => {
-    res.json({ valid: true, username: req.user.username });
+app.get('/api/verify-auth', verifyAdmin, (req, res) => {
+    res.json({ valid: true, username: req.user.username, role: req.user.role });
 });
 
 // ==========================================
-// 5. مسارات الزيارات والمشاهدات المركزية الموحدة
+// 9. مسارات الزيارات والمشاهدات والمشاركات
 // ==========================================
 
-// مسار تسجيل زيادة زيارة الصفحة
 app.post('/api/visit', async (req, res) => {
     try {
         const stat = await Stat.findOneAndUpdate(
@@ -268,162 +670,256 @@ app.post('/api/visit', async (req, res) => {
         );
         res.json({ count: stat.visits });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "تعذر تسجيل الزيارة" });
     }
 });
 
-// مسار جلب إجمالي زيارات الموقع (محمي للآدمن)
-app.get('/api/visits', verifyToken, async (req, res) => {
+app.get('/api/visits', verifyAdmin, async (req, res) => {
     try {
         const stat = await Stat.findOne({ key: 'global_visits' });
         res.json({ count: stat ? stat.visits : 0 });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "تعذر جلب الزيارات" });
     }
 });
 
-// مسار زيادة مشاهدات الخبر في MongoDB تلقائياً
 app.post('/api/posts/:id/view', async (req, res) => {
     try {
         const postId = req.params.id;
-        if (!mongoose.Types.ObjectId.isValid(postId)) {
-            return res.json({ views: 0 });
-        }
+        if (!mongoose.Types.ObjectId.isValid(postId)) return res.json({ views: 0 });
         const post = await Post.findByIdAndUpdate(
             postId,
             { $inc: { views: 1 } },
             { new: true }
         );
-        res.json({ views: post ? post.views : 1 });
+        res.json({ views: post ? (post.views || 1) : 1 });
     } catch (err) {
         res.json({ views: 1 });
     }
 });
 
-// مسار زيادة عدد المشاركات للخبر
 app.post('/api/posts/:id/share', async (req, res) => {
     try {
         const postId = req.params.id;
-        if (!mongoose.Types.ObjectId.isValid(postId)) {
-            return res.json({ shares: 0 });
-        }
+        if (!mongoose.Types.ObjectId.isValid(postId)) return res.json({ shares: 0 });
         const post = await Post.findByIdAndUpdate(
             postId,
             { $inc: { shares: 1 } },
             { new: true }
         );
-        res.json({ shares: post ? post.shares : 1 });
+        res.json({ shares: post ? (post.shares || 1) : 1 });
     } catch (err) {
         res.json({ shares: 1 });
     }
 });
 
 // ==========================================
-// 6. مسارات الأخبار والإعلانات
+// 10. مسارات التفاعل والتعليقات على الأخبار
 // ==========================================
 
-// جلب الأخبار للزوار
+app.post('/api/posts/:id/react', verifyActiveUser, async (req, res) => {
+    try {
+        const postId = req.params.id;
+        const userId = req.user.id;
+        const { type } = req.body;
+
+        if (!['like', 'dislike'].includes(type)) {
+            return res.status(400).json({ error: "نوع التفاعل غير صالح" });
+        }
+
+        const existing = await Reaction.findOne({ postId, userId });
+        let userReaction = null;
+
+        if (existing) {
+            if (existing.type === type) {
+                await Reaction.findByIdAndDelete(existing._id);
+                userReaction = null;
+            } else {
+                existing.type = type;
+                await existing.save();
+                userReaction = type;
+            }
+        } else {
+            await new Reaction({ postId, userId, type }).save();
+            userReaction = type;
+        }
+
+        const likesCount = await Reaction.countDocuments({ postId, type: 'like' });
+        const dislikesCount = await Reaction.countDocuments({ postId, type: 'dislike' });
+
+        await Post.findByIdAndUpdate(postId, { likesCount, dislikesCount });
+
+        res.json({ userReaction, likesCount, dislikesCount });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر تسجيل التفاعل" });
+    }
+});
+
+app.get('/api/posts/:id/comments', async (req, res) => {
+    try {
+        const postId = req.params.id;
+        const comments = await Comment.find({ postId, status: 'approved' })
+            .sort({ _id: -1 })
+            .select('userName userAvatar content date createdAt');
+        res.json(comments);
+    } catch (err) {
+        res.status(500).json({ error: "تعذر جلب التعليقات" });
+    }
+});
+
+app.post('/api/posts/:id/comments', verifyActiveUser, async (req, res) => {
+    try {
+        const postId = req.params.id;
+        const content = sanitizeInput(req.body.content);
+
+        if (!content || content.length < 2) {
+            return res.status(400).json({ error: "يرجى كتابة نص التعليق" });
+        }
+
+        const user = await User.findById(req.user.id);
+        const newComment = new Comment({
+            postId,
+            userId: req.user.id,
+            userName: user.fullName || user.username,
+            userAvatar: user.avatar || '',
+            content,
+            status: 'pending'
+        });
+        await newComment.save();
+
+        res.json({ 
+            message: "تم إرسال تعليقك بنجاح وهو الآن قيد مراجعة الإدارة قبل النشر.",
+            comment: newComment 
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إرسال التعليق" });
+    }
+});
+
+// ==========================================
+// 11. مسارات لوحة تحكم الأدمن للمستخدمين والتعليقات والأخبار
+// ==========================================
+
 app.get('/api/posts', async (req, res) => {
     try {
-        const posts = await Post.find().sort({ _id: -1 });
+        const posts = await Post.find().sort({ _id: -1 }).select('-__v');
         res.json(posts || []);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "تعذر جلب الأخبار" });
     }
 });
 
-// نشر خبر جديد
-app.post('/api/posts', verifyToken, async (req, res) => {
+app.post('/api/posts', verifyAdmin, async (req, res) => {
     try {
-        const newPost = new Post(req.body);
+        const { title, category, mediaUrls, content, isPinned, status, date } = req.body;
+        if (!title || !content) return res.status(400).json({ error: "العنوان والمحتوى حقول إجبارية" });
+
+        const safeUrls = Array.isArray(mediaUrls) 
+            ? mediaUrls.filter(u => isValidImageString(u))
+            : ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"];
+
+        const newPost = new Post({
+            title: sanitizeInput(title),
+            category: sanitizeInput(category) || 'عام',
+            mediaUrls: safeUrls.length > 0 ? safeUrls : ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"],
+            content: sanitizeInput(content),
+            isPinned: Boolean(isPinned),
+            status: status === 'draft' ? 'draft' : 'published',
+            date: date || new Date().toISOString().split('T')[0]
+        });
+
         await newPost.save();
-        res.json({ message: "تم النشر", post: newPost });
+        res.json({ message: "تم نشر الخبر بنجاح", post: newPost });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "تعذر نشر الخبر" });
     }
 });
 
-// تعديل خبر
-app.put('/api/posts/:id', verifyToken, async (req, res) => {
+app.put('/api/posts/:id', verifyAdmin, async (req, res) => {
     try {
-        await Post.findByIdAndUpdate(req.params.id, req.body);
-        res.json({ message: "تم التعديل" });
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ error: "معرف غير صالح" });
+        const updateData = { ...req.body };
+        if (updateData.title) updateData.title = sanitizeInput(updateData.title);
+        if (updateData.content) updateData.content = sanitizeInput(updateData.content);
+
+        await Post.findByIdAndUpdate(req.params.id, updateData);
+        res.json({ message: "تم التعديل بنجاح" });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "تعذر تعديل الخبر" });
     }
 });
 
-// حذف خبر
-app.delete('/api/posts/:id', verifyToken, async (req, res) => {
+app.delete('/api/posts/:id', verifyAdmin, async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ error: "معرف غير صالح" });
         await Post.findByIdAndDelete(req.params.id);
-        res.json({ message: "تم الحذف" });
+        res.json({ message: "تم الحذف بنجاح" });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "تعذر حذف الخبر" });
     }
 });
 
-// حجز إعلان جديد
-app.post('/api/ads', async (req, res) => {
+app.get('/api/admin/users', verifyAdmin, async (req, res) => {
     try {
-        const ad = new AdBooking(req.body);
-        await ad.save();
-        res.json({ message: "تم تسجيل الطلب", ad });
+        const users = await User.find().sort({ _id: -1 }).select('-password -__v');
+        res.json(users);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "تعذر جلب قائمة المستخدمين" });
     }
 });
 
-// جلب الإعلانات للآدمن
-app.get('/api/ads', verifyToken, async (req, res) => {
+app.put('/api/admin/users/:id/status', verifyAdmin, async (req, res) => {
     try {
-        const ads = await AdBooking.find().sort({ _id: -1 });
-        res.json(ads);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// موافقة الآدمن ونشر الإعلان كخبر
-app.put('/api/ads/:id/approve', verifyToken, async (req, res) => {
-    try {
-        const ad = await AdBooking.findByIdAndUpdate(req.params.id, { status: 'approved' }, { new: true });
-        if (ad) {
-            const newPost = new Post({
-                title: `[إعلان] ${ad.title}`,
-                category: 'إعلانات وترويج',
-                mediaUrls: ad.imageUrl ? [ad.imageUrl] : ["https://i.postimg.cc/vBQyqJ4V/IMG-7018.png"],
-                content: `${ad.content}\n\nللتواصل والاستفسار: ${ad.phone} ${ad.link ? `\nرابط المعلن: ${ad.link}` : ''}`,
-                isPinned: ad.isTicker,
-                status: 'published'
-            });
-            await newPost.save();
+        const { status } = req.body;
+        if (!['pending', 'approved', 'rejected', 'suspended'].includes(status)) {
+            return res.status(400).json({ error: "حالة غير صالحة" });
         }
-        res.json({ message: "تمت الموافقة والنشر كخبر", ad });
+        const user = await User.findByIdAndUpdate(req.params.id, { status }, { new: true }).select('-password');
+        res.json({ message: "تم تحديث حالة المستخدم بنجاح", user });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "تعذر تحديث حالة المستخدم" });
     }
 });
 
-// رفض الإعلان وحفظ سبب وملاحظات الرفض
-app.put('/api/ads/:id/reject', verifyToken, async (req, res) => {
+app.get('/api/admin/comments', verifyAdmin, async (req, res) => {
     try {
-        const { rejectReason } = req.body;
-        const ad = await AdBooking.findByIdAndUpdate(
-            req.params.id, 
-            { 
-                status: 'rejected', 
-                rejectReason: rejectReason || 'لم يتم استيفاء شروط وضوابط النشر' 
-            }, 
-            { new: true }
-        );
-        res.json({ message: "تم الرفض", ad });
+        const comments = await Comment.find().sort({ _id: -1 }).populate('postId', 'title');
+        res.json(comments);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "تعذر جلب التعليقات للإدارة" });
     }
 });
 
-const PORT = process.env.PORT || 5000;
+app.put('/api/admin/comments/:id/status', verifyAdmin, async (req, res) => {
+    try {
+        const { status } = req.body;
+        if (!['pending', 'approved', 'rejected'].includes(status)) {
+            return res.status(400).json({ error: "حالة غير صالحة" });
+        }
+        const comment = await Comment.findByIdAndUpdate(req.params.id, { status }, { new: true });
+        if (comment) {
+            const approvedCount = await Comment.countDocuments({ postId: comment.postId, status: 'approved' });
+            await Post.findByIdAndUpdate(comment.postId, { commentsCount: approvedCount });
+        }
+        res.json({ message: "تم تحديث حالة التعليق بنجاح", comment });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر تحديث حالة التعليق" });
+    }
+});
+
+app.delete('/api/admin/comments/:id', verifyAdmin, async (req, res) => {
+    try {
+        const comment = await Comment.findByIdAndDelete(req.params.id);
+        if (comment) {
+            const approvedCount = await Comment.countDocuments({ postId: comment.postId, status: 'approved' });
+            await Post.findByIdAndUpdate(comment.postId, { commentsCount: approvedCount });
+        }
+        res.json({ message: "تم حذف التعليق بنجاح" });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر حذف التعليق" });
+    }
+});
+
 app.listen(PORT, () => {
-    console.log(`السيرفر يعمل الآن بنجاح على البورت ${PORT}`);
+    console.log(`السيرفر يعمل الآن بأمان كامل على المنفذ ${PORT}`);
 });

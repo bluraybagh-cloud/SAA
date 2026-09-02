@@ -14,7 +14,7 @@
 <meta property="og:url" content="https://sadaalataa.com" id="ogUrl">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="وكالة صدى العطاء" id="twTitle">
-<meta name="twitter:description" content="وكالة صدى العطاء " id="twDesc">
+<meta name="twitter:description" content="وكالة صدى العطاء" id="twDesc">
 <meta name="twitter:image" content="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" id="twImage">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -107,13 +107,31 @@
     height: 85px;
   }
 
-  .brand { display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; }
+  /* تصميم الشعار المطور */
+  .brand { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+  .brand-logo-container {
+    display: flex; align-items: center; justify-content: center;
+  }
   .brand-logo-img {
-    height: 48px; width: auto; border-radius: 4px;
+    height: 48px; width: auto; border-radius: 6px;
     border: 1px solid var(--gold-primary);
+    background: var(--surface-color);
+    display: block;
+  }
+  .brand-logo-fallback {
+    width: 48px; height: 48px; border-radius: 6px;
+    border: 1px solid var(--gold-primary);
+    background: rgba(212, 175, 55, 0.1);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brand-name-group {
+    display: flex; flex-direction: column; line-height: 1.2; text-align: right;
+  }
+  .brand-title {
+    font-size: 19px; font-weight: 900; color: var(--gold-light);
   }
 
-  .navlinks { display: flex; gap: 20px; font-size: 14px; font-weight: 600; }
+  .navlinks { display: flex; gap: 18px; font-size: 14px; font-weight: 600; align-items: center; }
   .navlinks a, .navlinks button {
     background: none; border: none; font-family: 'Tajawal', sans-serif; cursor: pointer;
     color: var(--dim-color); position: relative; padding: 6px 0; transition: var(--transition);
@@ -335,7 +353,54 @@
   .pagination-btn:hover:not(:disabled) { background: var(--gold-primary); color: var(--bg-color); }
   .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* أزرار المشاركة الاجتماعية داخل تفاصيل الخبر */
+  /* أنماط التفاعلات والتعليقات على الأخبار */
+  .news-stats-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-subtle);
+    font-size: 13px; color: var(--dim-color);
+  }
+  .news-stats-item { display: inline-flex; align-items: center; gap: 6px; }
+  .news-stats-item i { font-size: 14px; }
+
+  .reactions-interactive-box {
+    display: flex; align-items: center; gap: 14px; margin: 25px 0; padding: 18px 22px;
+    background: var(--surface-light); border: 1px solid var(--border-gold);
+    border-radius: 8px; flex-wrap: wrap;
+  }
+  .react-btn {
+    background: var(--surface-color); border: 1px solid var(--border-subtle);
+    color: var(--text-color); padding: 8px 18px; border-radius: 6px; font-weight: 700;
+    font-size: 13.5px; cursor: pointer; transition: var(--transition);
+    display: inline-flex; align-items: center; gap: 8px; font-family: 'Tajawal', sans-serif;
+  }
+  .react-btn:hover { border-color: var(--gold-primary); color: var(--gold-light); }
+  .react-btn.active-like { background: rgba(212, 175, 55, 0.2); border-color: var(--gold-primary); color: var(--gold-light); }
+  .react-btn.active-dislike { background: rgba(231, 76, 60, 0.2); border-color: var(--danger); color: #ff9b9b; }
+
+  .comments-container { margin-top: 35px; border-top: 1px solid var(--border-subtle); padding-top: 25px; }
+  .comment-item {
+    display: flex; gap: 14px; padding: 16px; background: var(--surface-light);
+    border: 1px solid var(--border-subtle); border-radius: 8px; margin-bottom: 14px;
+  }
+  .comment-avatar {
+    width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--gold-primary);
+    object-fit: cover; flex-shrink: 0; background: var(--surface-color);
+  }
+  .comment-body { flex: 1; }
+  .comment-author { font-size: 14.5px; font-weight: 700; color: var(--gold-light); margin-bottom: 2px; }
+  .comment-date { font-size: 11.5px; color: var(--dim-color); margin-bottom: 8px; }
+  .comment-text { font-size: 14px; color: var(--text-color); line-height: 1.7; white-space: pre-line; }
+
+  .comment-form-box {
+    background: var(--surface-light); border: 1px solid var(--border-gold);
+    border-radius: 8px; padding: 22px; margin-top: 25px;
+  }
+  .comment-login-prompt {
+    background: rgba(212, 175, 55, 0.08); border: 1px dashed var(--border-gold);
+    border-radius: 8px; padding: 20px; text-align: center; margin-top: 25px;
+  }
+
+  /* أزرار المشاركة الاجتماعية */
   .social-share-container {
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-subtle);
@@ -354,21 +419,30 @@
   .share-copy { background: rgba(212,175,55,0.18); color: var(--gold-light); border: 1px solid var(--border-gold); }
   .share-copy:hover { background: var(--gold-primary); color: var(--bg-color); }
 
-  /* بطاقات التحميل التفاعلية Skeleton Loader */
-.skeleton-card {
-  background: var(--surface-color); border: 1px solid var(--border-subtle);
-  border-radius: 8px; padding: 22px; overflow: hidden;
-}
-.skeleton-box {
-  background: linear-gradient(90deg, var(--surface-light) 25%, rgba(212,175,55,0.08) 50%, var(--surface-light) 75%);
-  background-size: 200% 100%; animation: skeletonGlow 1.5s infinite; border-radius: 6px;
-}
-@keyframes skeletonGlow { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-.skeleton-img { width: 100%; height: 220px; margin-bottom: 15px; }
-.skeleton-title { width: 80%; height: 22px; margin-bottom: 12px; }
-.skeleton-desc { width: 100%; height: 14px; margin-bottom: 8px; }
-.skeleton-desc-short { width: 60%; height: 14px; margin-bottom: 20px; }
-.skeleton-btn { width: 100px; height: 32px; border-radius: 4px; }
+  /* بطاقات الانتظار المتوهجة Skeleton Loader */
+  .skeleton-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 22px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  }
+  .skeleton-box {
+    background: linear-gradient(90deg, var(--surface-light) 25%, rgba(212,175,55,0.2) 50%, var(--surface-light) 75%);
+    background-size: 200% 100%;
+    animation: skeletonGlow 1.4s infinite linear;
+    border-radius: 6px;
+  }
+  @keyframes skeletonGlow {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .skeleton-img { width: 100%; height: 200px; margin-bottom: 15px; }
+  .skeleton-title { width: 75%; height: 22px; margin-bottom: 12px; }
+  .skeleton-desc { width: 100%; height: 14px; margin-bottom: 8px; }
+  .skeleton-desc-short { width: 55%; height: 14px; margin-bottom: 20px; }
+  .skeleton-btn { width: 110px; height: 34px; }
 
   .auth-box {
     max-width: 460px; margin: 150px auto 80px; background: var(--surface-color);
@@ -506,15 +580,24 @@
 </div>
 
 <!-- NAVIGATION -->
+<!-- NAVIGATION -->
 <header>
-  <nav class="wrap" style="display: flex; align-items: center; justify-content: space-between; height: 90px;">
+  <nav class="wrap" style="display: flex; align-items: center; justify-content: space-between; height: 85px;">
     
-    <!-- النقر المزدوج على الشعار لفتح لوحة الدخول السرية -->
+    <!-- الشعار والاسم الرسمي -->
     <div class="brand" onclick="navigateTo('main-page', '#home')" ondblclick="handleSecretAdminEntry()" title="وكالة صدى العطاء">
-      <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo-img" onerror="this.src='https://via.placeholder.com/48x48/070B12/D4AF37?text=SADA'">
+      <div class="brand-logo-container">
+        <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('brandLogoFallback').style.display='flex';">
+        <div id="brandLogoFallback" class="brand-logo-fallback" style="display: none;">
+          <i class="fas fa-newspaper" style="color: #D4AF37; font-size: 20px;"></i>
+        </div>
+      </div>
+      <div class="brand-name-group">
+        <span class="brand-title">وكالة صدى العطاء</span>
+      </div>
     </div>
 
-    <!-- قائمة الروابط العامة -->
+    <!-- روابط أقسام الموقع بتسلسل منظم ونظيف -->
     <div class="navlinks" id="navLinks">
       <button onclick="navigateTo('main-page', '#home')">الرئيسية</button>
       <button onclick="navigateTo('main-page', '#news-section')">الأخبار والتغطيات</button>
@@ -526,43 +609,55 @@
       <button onclick="navigateTo('main-page', '#faq')">الأسئلة الشائعة</button>
     </div>
 
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <!-- زر احجز إعلانك المباشر في شريط الموقع -->
-      <a href="booking.html" class="btn-ad-booking" title="احجز إعلانك الترويجي الآن">
+    <!-- جهة الأزرار والخدمات مجمعة بأناقة وترتيب كامل -->
+    <div style="display: flex; align-items: center; gap: 8px;">
+      
+      <!-- زر احجز إعلانك بتصميم متناسق -->
+      <a href="booking.html" class="btn-ad-booking" style="padding: 7px 14px; font-size: 13px; font-weight: 700; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;">
         <i class="fas fa-bullhorn"></i> احجز إعلانك
       </a>
 
+      <!-- زر حسابي / البروفايل منظم في جهة الخدمات -->
+      <a href="profile.html" class="btn-outline" style="padding: 7px 14px; font-size: 13px; font-weight: 700; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; border-color: var(--border-gold); color: var(--gold-light);">
+        <i class="fas fa-user-circle" style="color: var(--gold-primary);"></i> حسابي
+      </a>
+
+      <!-- فاصل عمودي أنيق -->
+      <div style="width: 1px; height: 26px; background: var(--border-subtle); margin: 0 4px;"></div>
+
+      <!-- أيقونة الواتساب المباشرة -->
       <a href="https://wa.me/9647827992437" target="_blank" title="راسلنا عبر الواتساب" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.08); text-decoration: none; transition: var(--transition);">
         <i class="fab fa-whatsapp" style="color: #25D366; font-size: 15px;"></i>
       </a>
 
-      <div style="display: flex; align-items: center; gap: 6px; position: relative;">
-        <div class="social-dropdown-wrapper" style="position: relative; display: inline-block;">
-          <button onclick="toggleCustomDropdown('fbDropdownMenu')" title="فيسبوك" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-primary); background: var(--surface-color); cursor: pointer; transition: var(--transition);">
-            <i class="fab fa-facebook-f" style="font-size: 12px;"></i>
-          </button>
-          <div id="fbDropdownMenu" class="custom-dropdown-content" style="display: none; position: absolute; top: 125%; right: 0; background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 8px; min-width: 110px; box-shadow: 0px 5px 15px rgba(0,0,0,0.3); z-index: 100; overflow: hidden; text-align: right;">
-            <a href="https://www.facebook.com/share/1GxLdw2heB/" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--border-subtle); transition: 0.2s;">الوكالة</a>
-            <a href="https://www.facebook.com/share/1EDiLqoa3E/" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; transition: 0.2s;">المؤسسة</a>
-          </div>
-        </div>
-
-        <div class="social-dropdown-wrapper" style="position: relative; display: inline-block;">
-          <button onclick="toggleCustomDropdown('igDropdownMenu')" title="انستغرام" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-primary); background: var(--surface-color); cursor: pointer; transition: var(--transition);">
-            <i class="fab fa-instagram" style="font-size: 12px;"></i>
-          </button>
-          <div id="igDropdownMenu" class="custom-dropdown-content" style="display: none; position: absolute; top: 125%; right: 0; background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 8px; min-width: 110px; box-shadow: 0px 5px 15px rgba(0,0,0,0.3); z-index: 100; overflow: hidden; text-align: right;">
-            <a href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--border-subtle); transition: 0.2s;">الوكالة</a>
-            <a href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; transition: 0.2s;">المؤسسة</a>
-          </div>
+      <!-- القائمة المنسدلة لفيسبوك -->
+      <div class="social-dropdown-wrapper" style="position: relative; display: inline-block;">
+        <button onclick="toggleCustomDropdown('fbDropdownMenu')" title="فيسبوك" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-primary); background: var(--surface-color); cursor: pointer; transition: var(--transition);">
+          <i class="fab fa-facebook-f" style="font-size: 12px;"></i>
+        </button>
+        <div id="fbDropdownMenu" class="custom-dropdown-content" style="display: none; position: absolute; top: 125%; right: 0; background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 8px; min-width: 110px; box-shadow: 0px 5px 15px rgba(0,0,0,0.3); z-index: 100; overflow: hidden; text-align: right;">
+          <a href="https://www.facebook.com/share/1GxLdw2heB/" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--border-subtle); transition: 0.2s;">الوكالة</a>
+          <a href="https://www.facebook.com/share/1EDiLqoa3E/" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; transition: 0.2s;">المؤسسة</a>
         </div>
       </div>
-    </div>
 
-    <!-- زر تبديل الثيمات -->
-    <button onclick="cycleTheme()" id="themeToggleBtn" style="background: var(--surface-color); border: 1px solid var(--border-gold); color: var(--gold-primary); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; margin-right: 5px;" title="تغيير الثيم">
-      <i class="fas fa-palette" id="themeIcon"></i>
-    </button>
+      <!-- القائمة المنسدلة لانستغرام -->
+      <div class="social-dropdown-wrapper" style="position: relative; display: inline-block;">
+        <button onclick="toggleCustomDropdown('igDropdownMenu')" title="انستغرام" style="width: 32px; height: 32px; border: 1px solid var(--border-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-primary); background: var(--surface-color); cursor: pointer; transition: var(--transition);">
+          <i class="fab fa-instagram" style="font-size: 12px;"></i>
+        </button>
+        <div id="igDropdownMenu" class="custom-dropdown-content" style="display: none; position: absolute; top: 125%; right: 0; background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 8px; min-width: 110px; box-shadow: 0px 5px 15px rgba(0,0,0,0.3); z-index: 100; overflow: hidden; text-align: right;">
+          <a href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--border-subtle); transition: 0.2s;">الوكالة</a>
+          <a href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1" target="_blank" style="display: block; padding: 8px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none; transition: 0.2s;">المؤسسة</a>
+        </div>
+      </div>
+
+      <!-- زر تبديل الثيمات -->
+      <button onclick="cycleTheme()" id="themeToggleBtn" style="background: var(--surface-color); border: 1px solid var(--border-gold); color: var(--gold-primary); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s;" title="تغيير الثيم">
+        <i class="fas fa-palette" id="themeIcon" style="font-size: 12px;"></i>
+      </button>
+
+    </div>
 
     <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
   </nav>
@@ -594,6 +689,7 @@
           <p class="section-desc" style="margin: 0 auto; font-size: 18px;">متابعة مستمرة وتغطيات حية توثق كافة الأنشطة والمبادرات الرسمية والمجتمعية أولاً بأول بجودة وإحترافية عالية.</p>
         </div>
         
+        <!-- شبكة الأخبار وبطاقات الانتظار مع شريط إحصائيات التفاعل -->
         <div class="campaigns-grid" id="liveNewsGrid"></div>
 
         <div id="newsPagination" style="display: none; justify-content: center; align-items: center; gap: 15px; margin-top: 50px;">
@@ -620,19 +716,19 @@
   <section id="about" class="section-alt">
     <div class="wrap">
       <div class="kicker">الهوية والتوجه</div>
-      <h2 class="section-title">من نحن... <b> وكالة صدى العطاء الذراع الاعلامي لمؤسسة صدى العطاء </b></h2>
-      <p class="section-desc">تأسست وكالة صدى العطاء  لتكون جسراً ينقل الحقيقة ويصنع التغيير الإيجابي، تجمع بين قوة التوثيق الإعلامي ونبل الرسالة الإنسانية لتسليط الضوء على القضايا المجتمعية ودعم التنمية.</p>
+      <h2 class="section-title">من نحن... <b> وكالة صدى العطاء لمؤسسة صدى العطاء </b></h2>
+      <p class="section-desc">تأسست وكالة صدى العطاء لتكون جسراً ينقل الحقيقة ويصنع التغيير الإيجابي، تجمع بين قوة التوثيق ونبل الرسالة الإنسانية لتسليط الضوء على القضايا المجتمعية ودعم التنمية.</p>
       
       <div class="about-grid">
         <div class="vm-card">
           <div class="vm-icon"><i class="fas fa-eye"></i></div>
           <h3>الرؤية الاستراتيجية</h3>
-          <p>بناء وكالة  مهنية وموثوقة تسهم في نقل الحقيقة وصناعة محتوى مسؤول يخدم المجتمع ويساند مسارات الإعلام والتنمية المستدامة.</p>
+          <p>بناء وكالة مهنية وموثوقة تسهم في نقل الحقيقة وصناعة محتوى مسؤول يخدم المجتمع ويساند مسارات التنمية المستدامة.</p>
         </div>
         <div class="vm-card">
           <div class="vm-icon"><i class="fas fa-bullseye"></i></div>
           <h3>الرسالة المؤسسية</h3>
-          <p>تقديم محتوى إعلامي مهني يقوم على الدقة والموضوعية والمسؤولية، وتسخير الإعلام التقليدي والرقمي لخدمة المجتمع وإبراز القضايا والإنجازات والمبادرات ذات الأثر الإيجابي.</p>
+          <p>تقديم محتوى مهني يقوم على الدقة والموضوعية والمسؤولية لخدمة المجتمع وإبراز القضايا والإنجازات والمبادرات ذات الأثر الإيجابي.</p>
         </div>
       </div>
     </div>
@@ -650,13 +746,13 @@
         <div class="field-card"><i class="fas fa-camera-retro field-icon"></i><div class="field-title">انتاج</div><p class="field-desc">انتاج وتقديم البرامج والمحتوى المرئي والمسموع والرقمي.</p></div>
         <div class="field-card"><i class="fas fa-film field-icon"></i><div class="field-title">تغطية</div><p class="field-desc">تغطية الأحداث والنشاطات المحلية والوطنية.</p></div>
         <div class="field-card"><i class="fas fa-tv field-icon"></i><div class="field-title">تسليط الضوء</div><p class="field-desc">تسليط الضوء على المبادرات الإنسانية والتنموية والمجتمعية.</p></div>
-        <div class="field-card"><i class="fas fa-pen-nib field-icon"></i><div class="field-title">دعم</div><p class="field-desc">دعم أهداف التنمية المستدامة من خلال العمل الإعلامي.</p></div>
+        <div class="field-card"><i class="fas fa-pen-nib field-icon"></i><div class="field-title">دعم</div><p class="field-desc">دعم أهداف التنمية المستدامة من خلال العمل الصحفي والتوثيقي.</p></div>
         <div class="field-card"><i class="fas fa-hashtag field-icon"></i><div class="field-title">الاخبار المضللة</div><p class="field-desc">مكافحة الأخبار الكاذبة والمعلومات المضللة والشائعات وفق الأساليب المهنية.</p></div>
-        <div class="field-card"><i class="fas fa-shield-alt field-icon"></i><div class="field-title">الأمن الفكري والإعلامي</div><p class="field-desc">المساهمة في مواجهة خطاب الكراهية والطائفية والتطرف العنيف إعلامياً.</p></div>
-        <div class="field-card"><i class="fas fa-user-graduate field-icon"></i><div class="field-title">رعاية الكفاءات الشابة</div><p class="field-desc">تطوير قدرات الشباب والعاملين في جميع المجالات  ودعم المواهب والكفاءات.</p></div>
+        <div class="field-card"><i class="fas fa-shield-alt field-icon"></i><div class="field-title">الأمن الفكري</div><p class="field-desc">المساهمة في مواجهة خطاب الكراهية والطائفية والتطرف العنيف وفق الأصول الصحفية.</p></div>
+        <div class="field-card"><i class="fas fa-user-graduate field-icon"></i><div class="field-title">رعاية الكفاءات الشابة</div><p class="field-desc">تطوير قدرات الشباب في مختلف المجالات ودعم المواهب والكفاءات.</p></div>
         <div class="field-card"><i class="fas fa-laptop-code field-icon"></i><div class="field-title">إدارة المنصات الرقمية</div><p class="field-desc">صناعة وإدارة المحتوى الرقمي والتعريف بأنشطة وبرامج ومشاريع مؤسسة صدى العطاء ومراكزها.</p></div>
-        <div class="field-card"><i class="fas fa-handshake field-icon"></i><div class="field-title">الشراكات الاستراتيجية</div><p class="field-desc">إقامة علاقات وتعاون إعلامي مع المؤسسات والجهات ذات العلاقة.</p></div>
-        <div class="field-card"><i class="fas fa-calendar-alt field-icon"></i><div class="field-title">الملتقيات والأنشطة العامة</div><p class="field-desc">المشاركة في تنظيم المؤتمرات والمهرجانات والندوات والورش والفعاليات </p></div>
+        <div class="field-card"><i class="fas fa-handshake field-icon"></i><div class="field-title">الشراكات الاستراتيجية</div><p class="field-desc">إقامة علاقات وتعاون مشترك مع المؤسسات والجهات ذات العلاقة.</p></div>
+        <div class="field-card"><i class="fas fa-calendar-alt field-icon"></i><div class="field-title">الملتقيات والأنشطة العامة</div><p class="field-desc">المشاركة في تنظيم المؤتمرات والمهرجانات والندوات والورش والفعاليات المتنوعة.</p></div>
         <div class="field-card"><i class="fas fa-network-wired field-icon"></i><div class="field-title">التغطية الميدانية الشاملة</div><p class="field-desc">إنشاء شبكة من المراسلين والمكاتب والفروع في المحافظات العراقية.</p></div>
       </div>
     </div>
@@ -667,12 +763,12 @@
     <div class="wrap">
       <div class="kicker">منظومة الإنتاج</div>
       <h2 class="section-title">كيف نعمل... <b>خطوات تنفيذ المشاريع والتغطيات</b></h2>
-      <p class="section-desc">نتبع منهجية عمل دقيقة ومنظمة لضمان خروج كل مهمة إعلامية أو حملة إنسانية بأعلى معايير الجودة.</p>
+      <p class="section-desc">نتبع منهجية عمل دقيقة ومنظمة لضمان خروج كل مهمة أو حملة بأعلى معايير الجودة.</p>
 
       <div class="process-grid">
         <div class="process-card"><span class="process-step">01</span><h4>الدراسة والتخطيط</h4><p>جلسة عصف ذهني لفهم أهداف الحملة أو التغطية، وتحديد الجمهور المستهدف والرسائل الأساسية المراد إيصالها.</p></div>
-        <div class="process-card"><span class="process-step">02</span><h4>إعداد السيناريو والنص</h4><p>كتابة النصوص الإبداعية وصياغة المحتوى الصحفي أو السينمائي باحترافية وتدقيقه لغوياً وفنياً.</p></div>
-        <div class="process-card"><span class="process-step">03</span><h4>التنفيذ الميداني والتصوير</h4><p>انتقال فرق التصوير والإخراج للموقع واستخدام الميكروفونات والمعدات السينمائية لتوثيق المشاهد.</p></div>
+        <div class="process-card"><span class="process-step">02</span><h4>إعداد السيناريو والنص</h4><p>كتابة النصوص الإبداعية وصياغة المحتوى الصحفي باحترافية وتدقيقه لغوياً وفنياً.</p></div>
+        <div class="process-card"><span class="process-step">03</span><h4>التنفيذ الميداني والتصوير</h4><p>انتقال فرق التصوير والإخراج للموقع واستخدام الميكروفونات والمعدات الاحترافية لتوثيق المشاهد.</p></div>
         <div class="process-card"><span class="process-step">04</span><h4>المونتاج والإنتاج الفني</h4><p>معالجة الألوان، الهندسة الصوتية، إضافة المؤثرات البصرية وتجميع المادة لخروج المنتج النهائي بأجمل صورة.</p></div>
       </div>
     </div>
@@ -690,9 +786,9 @@
         <div class="dept-row"><span class="dept-num">٠٢</span><div class="dept-info"><span class="dept-name">قسم التصوير والإنتاج الميداني</span><span class="dept-sub">يضم المصورين الفوتوغرافيين والسينمائيين وموجهي الإضاءة والصوت.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٣</span><div class="dept-info"><span class="dept-name">قسم المونتاج والمؤثرات البصرية</span><span class="dept-sub">يتولى قص الفيديو، تصحيح الألوان Color Grading، والموشن جرافيك.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٤</span><div class="dept-info"><span class="dept-name">قسم التصميم والهوية البصرية</span><span class="dept-sub">تصميم الإعلانات، البوسترات، وتشكيل الهويات للمؤسسات والأنشطة.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
-        <div class="dept-row"><span class="dept-num">٠٥</span><div class="dept-info"><span class="dept-name">قسم الإعلام الرقمي</span><span class="dept-sub">إدارة جميع المنصات الرسمية وحملات النشر والاستجابة للتفاعلات.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
+        <div class="dept-row"><span class="dept-num">٠٥</span><div class="dept-info"><span class="dept-name">قسم النشر الرقمي</span><span class="dept-sub">إدارة جميع المنصات الرسمية وحملات النشر والاستجابة للتفاعلات.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٦</span><div class="dept-info"><span class="dept-name">قسم العلاقات العامة والشراكات</span><span class="dept-sub">بناء الجسور مع المؤسسات الحكومية والمنظمات والقطاع الخاص.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
-        <div class="dept-row"><span class="dept-num">٠٧</span><div class="dept-info"><span class="dept-name">قسم التدريب والتطوير المؤسسي</span><span class="dept-sub">تنظيم الورش التدريبية وتأهيل الطاقات الشبابية الإعلامية.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
+        <div class="dept-row"><span class="dept-num">٠٧</span><div class="dept-info"><span class="dept-name">قسم التدريب والتطوير المؤسسي</span><span class="dept-sub">تنظيم الورش التدريبية وتأهيل طاقات الشباب الواعدة.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٨</span><div class="dept-info"><span class="dept-name">القسم الإداري والمالي</span><span class="dept-sub">إدارة الشؤون اللوجستية، التخطيط التنظيمي، والتنسيق العام.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
       </div>
     </div>
@@ -707,10 +803,10 @@
 
       <div class="values-grid">
         <div class="value-box"><i class="fas fa-shield-alt"></i><h4>المصداقية والشفافية</h4><p>تحري الحقيقة ونقل الأحداث بكل أمانة ودون أي تحريف أو تزييف للواقع.</p></div>
-        <div class="value-box"><i class="fas fa-award"></i><h4>المهنية العالية</h4><p>تطبيق أحدث المعايير الإعلامية والإنتاجية في كل تفصيلة من أعمالنا.</p></div>
+        <div class="value-box"><i class="fas fa-award"></i><h4>المهنية العالية</h4><p>تطبيق أحدث المعايير الصحفية والإنتاجية في كل تفصيلة من أعمالنا.</p></div>
         <div class="value-box"><i class="fas fa-balance-scale"></i><h4>الحياد والاستقلالية</h4><p>الوقوف على مسافة واحدة ونقل الصوت الإنساني والمجتمعي بانتظام.</p></div>
         <div class="value-box"><i class="fas fa-lightbulb"></i><h4>الإبداع والابتكار</h4><p>تقديم أفكار جديدة وزوايا تصوير غير تقليدية تجذب الجمهور وتؤثر فيه.</p></div>
-        <div class="value-box"><i class="fas fa-hands-helping"></i><h4>المسؤولية المجتمعية</h4><p>تسخير الإعلام لخدمة القضايا الإنسانية والتنموية وتطوير المجتمع.</p></div>
+        <div class="value-box"><i class="fas fa-hands-helping"></i><h4>المسؤولية المجتمعية</h4><p>تسخير العمل والتوثيق لخدمة القضايا الإنسانية والتنموية وتطوير المجتمع.</p></div>
         <div class="value-box"><i class="fas fa-users"></i><h4>روح الفريق الواحد</h4><p>العمل بتناغم كامل بين مختلف الأقسام لضمان سلاسة التنفيذ والإنجاز.</p></div>
       </div>
     </div>
@@ -726,8 +822,8 @@
       <div class="faq-grid">
         <div class="faq-item"><h4><i class="fas fa-question-circle"></i> هل تقتصر خدماتكم على المحافظة أم كافة العراق؟</h4><p>فرقنا الميدانية مستعدة للتغطية والإنتاج في مختلف محافظات العراق، مع تركيز دائم على خدمة وتغطية الأنشطة في محافظة بابل والفرات الأوسط.</p></div>
         <div class="faq-item"><h4><i class="fas fa-question-circle"></i> كيف يمكن الاتفاق على تغطية مؤتمر أو فعالية؟</h4><p>يمكن التواصل معنا عبر الواتساب أو الهاتف قبل موعد الفعالية بوقت كافٍ لتحديد المتطلبات اللوجستية وإرسال فريق التصوير المناسب.</p></div>
-        <div class="faq-item"><h4><i class="fas fa-question-circle"></i> هل تقدم الوكالة ورشاً تدريبية للشباب؟</h4><p>نعم، يختص قسم التدريب والتطوير بتقديم ورش دورية في مجالات التصوير، المونتاج، وإدارة الإعلام الرقمي لبناء قدرات الشباب.</p></div>
-        <div class="faq-item"><h4><i class="fas fa-question-circle"></i> ما هي طبيعة الشراكات مع المنظمات الإنسانية؟</h4><p>نقدم خدمات التوثيق الإعلامي وصناعة الأفلام الوثائقية للمبادرات الإنسانية لضمان إيصال رسالتهم السامية للجمهور والداعمين.</p></div>
+        <div class="faq-item"><h4><i class="fas fa-question-circle"></i> هل تقدم الوكالة ورشاً تدريبية للشباب؟</h4><p>نعم، يختص قسم التدريب والتطوير بتقديم ورش دورية في مجالات التصوير، المونتاج، وإدارة المنصات لبناء قدرات الشباب.</p></div>
+        <div class="faq-item"><h4><i class="fas fa-question-circle"></i> ما هي طبيعة الشراكات مع المنظمات الإنسانية؟</h4><p>نقدم خدمات التوثيق وصناعة الأفلام الوثائقية للمبادرات الإنسانية لضمان إيصال رسالتهم السامية للجمهور والداعمين.</p></div>
       </div>
     </div>
   </section>
@@ -742,12 +838,12 @@
     <div class="wrap">
       <div class="kicker">شبكة العمل والشركاء</div>
       <h2 class="section-title">ندعم <b>ثلاثة قطاعات رئيسية</b></h2>
-      <p class="section-desc">نعمل كشريك إعلامي موثوق لمختلف المؤسسات والجهات لنشكل معاً عماد التنمية والمجتمع.</p>
+      <p class="section-desc">نعمل كشريك موثوق لمختلف المؤسسات والجهات لنشكل معاً عماد التنمية والمجتمع.</p>
 
       <div class="network-grid">
         <div class="network-card"><div class="num">01</div><h4>المؤسسات الحكومية</h4><p>تغطية النشاطات الرسمية، إعداد التقارير الخدمية، وإبراز المشاريع العمرانية والتنموية.</p></div>
         <div class="network-card"><div class="num">02</div><h4>منظمات المجتمع المدني</h4><p>توثيق المبادرات الإنسانية، التوعية الميدانية، وتسليط الضوء على حملات الإغاثة والدعم.</p></div>
-        <div class="network-card"><div class="num">03</div><h4>القطاع الخاص والشركات</h4><p>صناعة الهويات البصرية، الإعلانات السينمائية، وإدارة الإعلام المؤسسي والعلاقات العامة.</p></div>
+        <div class="network-card"><div class="num">03</div><h4>القطاع الخاص والشركات</h4><p>صناعة الهويات البصرية، الإعلانات السينمائية، وإدارة التواصل المؤسسي والعلاقات العامة.</p></div>
       </div>
     </div>
   </section>
@@ -770,15 +866,15 @@
     </div>
 
     <div class="campaigns-grid">
-      <div class="campaign-card"><img src="https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg" alt="ورشة صناعة الشخصية المؤثرة - 1" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3><p class="campaign-desc">جانب من الدورة التخصصية لتطوير المهارات القيادية وتأهيل الشخصيات المؤثرة في المشهد الإعلامي.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg" alt="ورشة صناعة الشخصية المؤثرة - 1" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3><p class="campaign-desc">جانب من الدورة التخصصية لتطوير المهارات القيادية وتأهيل الشخصيات المؤثرة في المشهد العام.</p></div></div>
       <div class="campaign-card"><img src="https://i.postimg.cc/3RHNKfdx/IMG-6998.jpg" alt="ورشة صناعة الشخصية المؤثرة - 2" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3><p class="campaign-desc">تطبيقات عملية ومشاركات تفاعلية في بناء المحتوى الهادف والمؤثر.</p></div></div>
       <div class="campaign-card"><img src="https://i.postimg.cc/1tZX97fs/IMG-6999.jpg" alt="ورشة صناعة الشخصية المؤثرة - 3" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3><p class="campaign-desc">توثيق فعاليات الورشة وتوزيع الشهادات والتفاعل الميداني مع المشاركين.</p></div></div>
       <div class="campaign-card"><img src="https://i.postimg.cc/PxkJtVPX/IMG-7001.jpg" alt="ورشة صناعة الشخصية المؤثرة - 4" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة صناعة الشخصية المؤثرة</h3><p class="campaign-desc">جانب من التغطية الفوتوغرافية للجلسات التدريبية المباشرة.</p></div></div>
       <div class="campaign-card"><img src="https://i.postimg.cc/rmLs8ZKy/IMG-7002.jpg" alt="ورشة من الخبر للتأثير - 1" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة من الخبر للتأثير</h3><p class="campaign-desc">برنامج تدريبي حول صياغة الأخبار والتقارير الصحفية وتحويل المعلومة إلى أثر مجتمعي ملموس.</p></div></div>
-      <div class="campaign-card"><img src="https://i.postimg.cc/W3Pz2Yhj/IMG-7003.jpg" alt="ورشة من الخبر للتأثير - 2" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة من الخبر للتأثير</h3><p class="campaign-desc">شرح المبادئ الأساسية للتغطيات الإعلامية وصناعة الخبر المسؤول.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/W3Pz2Yhj/IMG-7003.jpg" alt="ورشة من الخبر للتأثير - 2" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة من الخبر للتأثير</h3><p class="campaign-desc">شرح المبادئ الأساسية للتغطيات الصحفية وصناعة الخبر المسؤول.</p></div></div>
       <div class="campaign-card"><img src="https://i.postimg.cc/rmLs8ZKq/IMG-7004.jpg" alt="ورشة من الخبر للتأثير - 3" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة من الخبر للتأثير</h3><p class="campaign-desc">لقطات من الجلسات الحوارية والتطبيقات الميدانية لكتابة وتنسيق الأخبار.</p></div></div>
       <div class="campaign-card"><img src="https://i.postimg.cc/C1V5Frz0/IMG-7005.jpg" alt="ورشة من الخبر للتأثير - 4" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة من الخبر للتأثير</h3><p class="campaign-desc">جانب من النقاشات الميدانية وتبادل الخبرات بين المشاركين.</p></div></div>
-      <div class="campaign-card"><img src="https://i.postimg.cc/ydzxVpkq/IMG-7006.jpg" alt="ورشة فريق الإسناد الطبي - 1" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3><p class="campaign-desc">التغطية الإعلامية والتوثيق الميداني للورشة الخاصة بفريق الإسناد الطبي بالتنسيق مع مكتب وزير الصحة.</p></div></div>
+      <div class="campaign-card"><img src="https://i.postimg.cc/ydzxVpkq/IMG-7006.jpg" alt="ورشة فريق الإسناد الطبي - 1" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3><p class="campaign-desc">التغطية الميدانية والتوثيق للورشة الخاصة بفريق الإسناد الطبي بالتنسيق مع مكتب وزير الصحة.</p></div></div>
       <div class="campaign-card"><img src="https://i.postimg.cc/4dTyJ2nD/IMG-7009.jpg" alt="ورشة فريق الإسناد الطبي - 2" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3><p class="campaign-desc">توثيق الجهود والبرامج التنسيقية الطبية الموجهة لدعم القطاع الصحي والإنساني.</p></div></div>
       <div class="campaign-card"><img src="https://i.postimg.cc/cJ36GG4s/IMG-7010.jpg" alt="ورشة فريق الإسناد الطبي - 3" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3><p class="campaign-desc">استعراض الخطط التنفيذية والتوصيات الصادرة عن الورشة الطبية.</p></div></div>
       <div class="campaign-card"><img src="https://i.postimg.cc/JnW01YGV/IMG-7012.jpg" alt="ورشة فريق الإسناد الطبي - 4" class="campaign-img"><div class="campaign-body"><h3 class="campaign-title">ورشة فريق الإسناد الطبي</h3><p class="campaign-desc">لقطات ختامية وتكريم المشاركين والمنظمين في الورشة.</p></div></div>
@@ -862,24 +958,49 @@
       </div>
     </div>
 
-    <!-- قسم إدارة شريط الأخبار العاجلة -->
-    <div class="dash-panel">
-      <h3 style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-bullhorn" style="color: var(--gold-primary);"></i> إدارة شريط الأخبار العاجلة (News Ticker)</h3>
-      <p style="color: var(--dim-color); font-size: 13.5px; margin-bottom: 20px;">اكتب نص الخبر العاجل ليظهر كشريط متحرك في أعلى الموقع للزوار مباشرة، مع إمكانية إيقاف تفعيله أو تغييره متى شئت.</p>
-      
-      <div class="form-group">
-        <label>نص الخبر العاجل المباشر</label>
-        <input type="text" id="adminTickerInput" class="form-control" placeholder="مثال: ترقبوا تغطيتنا الخاصة لمؤتمر التطوير الإعلامي السنوي...">
+    <!-- قسم إدارة وموافقة حسابات المستخدمين الجدد -->
+    <div class="dash-panel" style="border-color: #3498db;">
+      <h3 style="color: #3498db; display:flex; align-items:center; gap:10px;"><i class="fas fa-users-cog"></i> إدارة وتفعيل حسابات المستخدمين</h3>
+      <p style="color: var(--dim-color); font-size: 13.5px; margin-bottom: 20px;">مراجعة طلبات التسجيل الجديدة والموافقة عليها ليتمكن المستخدم من التفاعل والتعليق في الموقع.</p>
+      <div class="table-responsive">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>الاسم الكامل</th>
+              <th>اسم المستخدم</th>
+              <th>البريد الإلكتروني</th>
+              <th>رقم الهاتف</th>
+              <th>الحالة</th>
+              <th>الإجراء والموافقة</th>
+            </tr>
+          </thead>
+          <tbody id="dashUsersTable">
+            <tr><td colspan="6" style="text-align:center; color:var(--dim-color);">جاري جلب المستخدمين...</td></tr>
+          </tbody>
+        </table>
       </div>
+    </div>
 
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; margin-top: 15px;">
-        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-color); font-size: 14px; font-weight: 600;">
-          <input type="checkbox" id="adminTickerCheckbox" checked style="width: 18px; height: 18px; accent-color: var(--gold-primary); cursor: pointer;">
-          تفعيل وإظهار الشريط العاجل في أعلى الموقع للزوار
-        </label>
-        <button type="button" onclick="saveTickerFromDashboard()" class="form-btn" style="width: auto; padding: 10px 28px; margin-top: 0;">
-          <i class="fas fa-save"></i> حفظ وتحديث الشريط
-        </button>
+    <!-- قسم إدارة ومراجعة التعليقات الواردة -->
+    <div class="dash-panel" style="border-color: #9b59b6;">
+      <h3 style="color: #9b59b6; display:flex; align-items:center; gap:10px;"><i class="fas fa-comment-dots"></i> إدارة ومراجعة تعليقات الأخبار</h3>
+      <p style="color: var(--dim-color); font-size: 13.5px; margin-bottom: 20px;">التعليقات الجديدة تخضع لموافقتك قبل ظهورها للعامة على الخبر في الصفحة الرئيسية.</p>
+      <div class="table-responsive">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>الخبر المرتبط</th>
+              <th>الكاتب</th>
+              <th>نص التعليق</th>
+              <th>التاريخ</th>
+              <th>الحالة</th>
+              <th>الإجراء والاعتماد</th>
+            </tr>
+          </thead>
+          <tbody id="dashCommentsTable">
+            <tr><td colspan="6" style="text-align:center; color:var(--dim-color);">جاري جلب التعليقات...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -903,6 +1024,27 @@
             <tr><td colspan="7" style="text-align:center; color:var(--dim-color);">جاري جلب الطلبات...</td></tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- قسم إدارة شريط الأخبار العاجلة -->
+    <div class="dash-panel">
+      <h3 style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-bullhorn" style="color: var(--gold-primary);"></i> إدارة شريط الأخبار العاجلة (News Ticker)</h3>
+      <p style="color: var(--dim-color); font-size: 13.5px; margin-bottom: 20px;">اكتب نص الخبر العاجل ليظهر كشريط متحرك في أعلى الموقع للزوار مباشرة، مع إمكانية إيقاف تفعيله أو تغييره متى شئت.</p>
+      
+      <div class="form-group">
+        <label>نص الخبر العاجل المباشر</label>
+        <input type="text" id="adminTickerInput" class="form-control" placeholder="مثال: ترقبوا تغطيتنا الخاصة لمؤتمر التطوير السنوي...">
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; margin-top: 15px;">
+        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-color); font-size: 14px; font-weight: 600;">
+          <input type="checkbox" id="adminTickerCheckbox" checked style="width: 18px; height: 18px; accent-color: var(--gold-primary); cursor: pointer;">
+          تفعيل وإظهار الشريط العاجل في أعلى الموقع للزوار
+        </label>
+        <button type="button" onclick="saveTickerFromDashboard()" class="form-btn" style="width: auto; padding: 10px 28px; margin-top: 0;">
+          <i class="fas fa-save"></i> حفظ وتحديث الشريط
+        </button>
       </div>
     </div>
 
@@ -1003,7 +1145,7 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <b>وكالة صدى العطاء</b>
-        <p>صوتٌ يصنع الأثر وخبرٌ له صدى. ذراع إعلامي يعمل باحترافية لنقل الحقيقة ودعم التنمية.</p>
+        <p>صوتٌ يصنع الأثر وخبرٌ له صدى. نعمل باحترافية لنقل الحقيقة ودعم التنمية.</p>
       </div>
       <div class="footer-col">
         <h5>روابط سريعة</h5>
@@ -1135,7 +1277,6 @@ function getPostShares(postId) {
   return (post && post.shares) ? post.shares : 0;
 }
 
-// دالة حساب مجموع المشاهدات لجميع الأخبار
 function getTotalPostViewsSum() {
   let total = 0;
   if (Array.isArray(allPosts)) {
@@ -1146,7 +1287,6 @@ function getTotalPostViewsSum() {
   return total;
 }
 
-// زيادة المشاهدات فورياً عند فتح الخبر
 async function incrementPostViews(postId) {
   if (localStorage.getItem('sada_token')) return;
 
@@ -1162,7 +1302,6 @@ async function incrementPostViews(postId) {
   } catch(e) {}
 }
 
-// احتساب المشاركات عند الضغط على أزرار النشر
 async function trackShare(postId) {
   try {
     const res = await fetch(`${API_URL}/posts/${postId}/share`, { method: 'POST' });
@@ -1181,7 +1320,7 @@ function initTicker() {
   const tickerText = document.getElementById('liveTickerText');
   const tickerTextDup = document.getElementById('liveTickerTextDup');
   
-  const savedTicker = localStorage.getItem('sada_ticker_text') || 'أهلاً بكم في الموقع الرسمي لوكالة صدى العطاء  - صوتٌ يصنع الأثر وخبرٌ له صدى.';
+  const savedTicker = localStorage.getItem('sada_ticker_text') || 'أهلاً بكم في الموقع الرسمي لوكالة صدى العطاء - صوتٌ يصنع الأثر وخبرٌ له صدى.';
   const isEnabled = localStorage.getItem('sada_ticker_active') !== 'false';
 
   if (tickerText) tickerText.innerText = savedTicker;
@@ -1291,12 +1430,25 @@ function navigateTo(pageId, targetSectionId = null) {
   if (pageId === 'dashboard-page') renderDashboard();
 }
 
-function handleSecretAdminEntry() {
+async function handleSecretAdminEntry() {
   const token = localStorage.getItem('sada_token');
-  if (token) {
-    navigateTo('dashboard-page');
-  } else {
+  if (!token) {
     navigateTo('login-page');
+    return;
+  }
+  try {
+    const res = await fetch(`${API_URL}/verify-auth`, {
+      headers: { 'Authorization': token }
+    });
+    if (res.ok) {
+      navigateTo('dashboard-page');
+    } else {
+      localStorage.removeItem('sada_token');
+      localStorage.removeItem('sada_admin_name');
+      navigateTo('login-page');
+    }
+  } catch(e) {
+    navigateTo('dashboard-page');
   }
 }
 
@@ -1336,7 +1488,7 @@ async function processLogin() {
 function processLogout() {
   localStorage.removeItem('sada_token');
   localStorage.removeItem('sada_admin_name');
-  showToast('تم تسجيل الخروج بنجاح', 'info');
+  showToast('تم تسجيل الخروج وإلغاء الجلسة بنجاح', 'info');
   navigateTo('main-page', '#home');
 }
 
@@ -1387,15 +1539,22 @@ function displayPostsGrid() {
   const paginatedPosts = publishedPosts.slice(start, start + newsPerPage);
 
   paginatedPosts.forEach((p) => {
+    let urls = [];
+    if (Array.isArray(p.mediaUrls) && p.mediaUrls.length > 0 && p.mediaUrls[0]) {
+      urls = p.mediaUrls;
+    } else if (p.mediaUrl) {
+      urls = [p.mediaUrl];
+    } else {
+      urls = ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"];
+    }
+
     let mediaHtml = '';
-    let urls = p.mediaUrls || (p.mediaUrl ? [p.mediaUrl] : ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"]);
-    
     if (urls.length === 1) {
-      mediaHtml = `<img src="${urls[0]}" alt="${escapeText(p.title)}" class="campaign-img" loading="lazy">`;
+      mediaHtml = `<img src="${urls[0]}" alt="${escapeText(p.title || '')}" class="campaign-img" loading="lazy" onerror="this.src='https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg'">`;
     } else {
       mediaHtml = `<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 12px;">`;
       urls.forEach(imgUrl => {
-        mediaHtml += `<img src="${imgUrl}" alt="صورة الخبر" class="campaign-img" style="height: 120px;" loading="lazy">`;
+        mediaHtml += `<img src="${imgUrl}" alt="صورة الخبر" class="campaign-img" style="height: 120px;" loading="lazy" onerror="this.src='https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg'">`;
       });
       mediaHtml += `</div>`;
     }
@@ -1414,17 +1573,29 @@ function displayPostsGrid() {
         <div class="campaign-body">
           <div style="display:flex; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
             ${pinnedBadgeHtml}
-            <span class="news-badge" style="display:inline-block; font-size: 11.5px; color: var(--gold-primary); border: 1px solid var(--border-gold); padding: 3px 10px; border-radius: 4px;">${escapeText(p.category)}</span>
+            <span class="news-badge" style="display:inline-block; font-size: 11.5px; color: var(--gold-primary); border: 1px solid var(--border-gold); padding: 3px 10px; border-radius: 4px;">${escapeText(p.category || 'عام')}</span>
           </div>
-          <h3 class="campaign-title">${escapeText(p.title)}</h3>
+          <h3 class="campaign-title">${escapeText(p.title || '')}</h3>
           <div class="news-text-content">${shortText}</div>
         </div>
       </div>
       <div>
-        <div style="font-size: 12px; color: var(--dim-color); margin-bottom: 14px;">
+        <div style="font-size: 12px; color: var(--dim-color); margin-bottom: 8px;">
           <i class="fas fa-calendar-alt" style="color: var(--gold-primary);"></i> ${postDate}
         </div>
-        <button class="read-more-btn" onclick="openPublicSingleNews('${p._id}', true)">قراءة المزيد</button>
+        
+        <!-- شريط إحصائيات التفاعل أسفل كل خبر في القائمة الرئيسية -->
+        <div class="news-stats-bar">
+          <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+            <span class="news-stats-item" title="عدد الإعجابات"><i class="fas fa-thumbs-up" style="color:var(--gold-primary);"></i> ${p.likesCount || 0}</span>
+            <span class="news-stats-item" title="عدد عدم الإعجاب"><i class="fas fa-thumbs-down" style="color:#e74c3c;"></i> ${p.dislikesCount || 0}</span>
+            <span class="news-stats-item" title="عدد التعليقات المعتمدة"><i class="fas fa-comments" style="color:#3498db;"></i> ${p.commentsCount || 0} تعليق</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 14px;">
+          <button class="read-more-btn" onclick="openPublicSingleNews('${p._id}', true)">قراءة المزيد</button>
+        </div>
       </div>
     `;
     grid.appendChild(card);
@@ -1470,22 +1641,15 @@ async function renderLiveNews() {
   if (mainListView) mainListView.style.display = 'block';
   if (detailView) detailView.style.display = 'none';
 
-  if (allPosts.length === 0) {
-    const cached = localStorage.getItem('sada_cached_posts');
-    if (cached) {
-      try {
-        allPosts = JSON.parse(cached);
-      } catch(e) {}
-    }
-  }
+  // إظهار بطاقات الانتظار المتوهجة فوراً
+  grid.innerHTML = `
+    <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+    <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+    <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+  `;
 
-  if (allPosts.length > 0) {
-    displayPostsGrid();
-  }
-
-  fetchPostsFromServer().then(() => {
-    displayPostsGrid();
-  });
+  await fetchPostsFromServer();
+  displayPostsGrid();
 }
 
 function openPublicSingleNews(postId, updateHash = true) {
@@ -1496,8 +1660,17 @@ function openPublicSingleNews(postId, updateHash = true) {
 
   document.title = `${post.title} - وكالة صدى العطاء`;
 
-  const firstImg = (post.mediaUrls && post.mediaUrls[0]) || post.mediaUrl || "https://i.postimg.cc/vBQyqJ4V/IMG-7018.png";
-  const shortDesc = post.content ? post.content.substring(0, 160) : 'وكالة صدى العطاء الإخبارية';
+  let urls = [];
+  if (Array.isArray(post.mediaUrls) && post.mediaUrls.length > 0 && post.mediaUrls[0]) {
+    urls = post.mediaUrls;
+  } else if (post.mediaUrl) {
+    urls = [post.mediaUrl];
+  } else {
+    urls = ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"];
+  }
+
+  const firstImg = urls[0];
+  const shortDesc = post.content ? post.content.substring(0, 160) : 'وكالة صدى العطاء';
 
   const ogTitle = document.getElementById('ogTitle');
   const ogDesc = document.getElementById('ogDesc');
@@ -1508,13 +1681,6 @@ function openPublicSingleNews(postId, updateHash = true) {
   if (ogImage) ogImage.content = firstImg;
   if (ogUrl) ogUrl.content = `${window.location.href.split('#')[0]}#news-${post._id}`;
 
-  const twTitle = document.getElementById('twTitle');
-  const twDesc = document.getElementById('twDesc');
-  const twImage = document.getElementById('twImage');
-  if (twTitle) twTitle.content = post.title;
-  if (twDesc) twDesc.content = shortDesc;
-  if (twImage) twImage.content = firstImg;
-
   if (updateHash) {
     history.pushState(null, null, `#news-${post._id}`);
   }
@@ -1522,15 +1688,11 @@ function openPublicSingleNews(postId, updateHash = true) {
   document.getElementById('mainNewsListView').style.display = 'none';
   document.getElementById('singleNewsDetailView').style.display = 'block';
 
-  let mediaHtml = '';
-  let urls = post.mediaUrls || (post.mediaUrl ? [post.mediaUrl] : []);
-  if (urls.length > 0) {
-    mediaHtml = `<div style="margin-bottom: 20px;">`;
-    urls.forEach(imgUrl => {
-      mediaHtml += `<img src="${imgUrl}" alt="صورة الخبر" class="campaign-img" style="margin-bottom: 10px;" loading="lazy">`;
-    });
-    mediaHtml += `</div>`;
-  }
+  let mediaHtml = `<div style="margin-bottom: 20px;">`;
+  urls.forEach(imgUrl => {
+    mediaHtml += `<img src="${imgUrl}" alt="صورة الخبر" class="campaign-img" style="margin-bottom: 10px;" loading="lazy" onerror="this.src='https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg'">`;
+  });
+  mediaHtml += `</div>`;
 
   const detailBox = document.getElementById('singleNewsContentBox');
   const postDate = post.date ? new Date(post.date).toLocaleDateString('ar-IQ') : 'اليوم';
@@ -1559,6 +1721,17 @@ function openPublicSingleNews(postId, updateHash = true) {
       ${post.content || ''}
     </div>
     
+    <!-- شريط التفاعلات المباشرة (أعجبني / لم يعجبني) -->
+    <div class="reactions-interactive-box">
+      <span style="font-size: 14px; font-weight: 700; color: var(--gold-light); margin-left: 10px;">التفاعل مع هذا الخبر:</span>
+      <button id="likeBtn_${post._id}" onclick="submitReaction('${post._id}', 'like')" class="react-btn">
+        <i class="fas fa-thumbs-up" style="color:var(--gold-primary);"></i> أعجبني (<span id="likesVal_${post._id}">${post.likesCount || 0}</span>)
+      </button>
+      <button id="dislikeBtn_${post._id}" onclick="submitReaction('${post._id}', 'dislike')" class="react-btn">
+        <i class="fas fa-thumbs-down" style="color:#e74c3c;"></i> لم يعجبني (<span id="dislikesVal_${post._id}">${post.dislikesCount || 0}</span>)
+      </button>
+    </div>
+
     <div class="social-share-container">
       <span style="font-size: 14px; font-weight: 700; color: var(--gold-light); margin-left: 10px;">مشاركة الخبر:</span>
       
@@ -1582,31 +1755,23 @@ function openPublicSingleNews(postId, updateHash = true) {
         <i class="fas fa-link"></i> نسخ الرابط
       </button>
     </div>
+
+    <!-- قسم التعليقات المعتمدة وإضافة تعليق جديد -->
+    <div class="comments-container">
+      <h3 style="color: var(--gold-light); font-size: 20px; margin-bottom: 18px; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-comments" style="color: var(--gold-primary);"></i> التعليقات والآراء (<span id="commentsCountHeader_${post._id}">${post.commentsCount || 0}</span>)
+      </h3>
+      
+      <div id="commentsList_${post._id}">
+        <p style="color:var(--dim-color); font-size:13.5px;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل التعليقات...</p>
+      </div>
+
+      <div id="commentFormContainer_${post._id}"></div>
+    </div>
   `;
 
-  const relatedGrid = document.getElementById('relatedNewsGrid');
-  if(relatedGrid) {
-    relatedGrid.innerHTML = '';
-    const otherPosts = allPosts.filter(p => String(p._id) !== String(postId) && p.status !== 'draft').slice(0, 3);
-    
-    if(otherPosts.length === 0) {
-      relatedGrid.innerHTML = '<p style="color: var(--dim-color); font-size: 14px;">لا توجد أخبار أخرى حالياً.</p>';
-    } else {
-      otherPosts.forEach(item => {
-        const relCard = document.createElement('div');
-        relCard.className = 'campaign-card';
-        relCard.style.padding = '15px';
-        relCard.innerHTML = `
-          <div>
-            <span style="font-size: 10px; color: var(--gold-light);">${escapeText(item.category || 'عام')}</span>
-            <h4 style="color: var(--text-color); font-size: 15px; margin: 6px 0 10px;">${escapeText(item.title || '')}</h4>
-          </div>
-          <button class="read-more-btn" style="padding: 4px 10px; font-size: 12px;" onclick="openPublicSingleNews('${item._id}', true)">عرض الخبر</button>
-        `;
-        relatedGrid.appendChild(relCard);
-      });
-    }
-  }
+  loadCommentsForPost(post._id);
+  initCommentForm(post._id);
 
   document.getElementById('news-section').scrollIntoView({ behavior: 'smooth' });
 }
@@ -1633,6 +1798,166 @@ function changeNewsPage(direction) {
   currentNewsPage += direction;
   displayPostsGrid();
   document.getElementById('news-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ========================================================
+   دوال التفاعلات والتعليقات على الأخبار في الصفحة الرئيسية
+   ======================================================== */
+
+async function submitReaction(postId, type) {
+  const token = localStorage.getItem('sada_user_token');
+  if (!token) {
+    showToast('يرجى تسجيل الدخول بحساب معتمد للتفاعل مع الأخبار', 'info');
+    setTimeout(() => { window.location.href = 'profile.html'; }, 1200);
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/posts/${postId}/react`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ type })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      const likesEl = document.getElementById(`likesVal_${postId}`);
+      const dislikesEl = document.getElementById(`dislikesVal_${postId}`);
+      const likeBtn = document.getElementById(`likeBtn_${postId}`);
+      const dislikeBtn = document.getElementById(`dislikeBtn_${postId}`);
+
+      if (likesEl) likesEl.innerText = data.likesCount;
+      if (dislikesEl) dislikesEl.innerText = data.dislikesCount;
+
+      if (likeBtn) likeBtn.classList.remove('active-like');
+      if (dislikeBtn) dislikeBtn.classList.remove('active-dislike');
+
+      if (data.userReaction === 'like' && likeBtn) {
+        likeBtn.classList.add('active-like');
+        showToast('تم تسجيل إعجابك بالخبر!', 'success');
+      } else if (data.userReaction === 'dislike' && dislikeBtn) {
+        dislikeBtn.classList.add('active-dislike');
+        showToast('تم تسجيل عدم الإعجاب بالخبر', 'info');
+      } else {
+        showToast('تم إلغاء التفاعل مع الخبر', 'info');
+      }
+
+      // تحديث الكاش المحلي
+      const post = allPosts.find(p => String(p._id) === String(postId));
+      if (post) {
+        post.likesCount = data.likesCount;
+        post.dislikesCount = data.dislikesCount;
+      }
+    } else {
+      showToast(data.error || 'تعذر تسجيل التفاعل', 'danger');
+    }
+  } catch (err) {
+    showToast('تعذر الاتصال بالسيرفر لتسجيل التفاعل', 'danger');
+  }
+}
+
+async function loadCommentsForPost(postId) {
+  const container = document.getElementById(`commentsList_${postId}`);
+  if (!container) return;
+
+  try {
+    const res = await fetch(`${API_URL}/posts/${postId}/comments`);
+    const comments = await res.json();
+
+    if (!Array.isArray(comments) || comments.length === 0) {
+      container.innerHTML = '<p style="color:var(--dim-color); font-size:14px; padding:12px 0;">لا توجد تعليقات منشورة حتى الآن. كن أول من يشارك برأيه!</p>';
+      return;
+    }
+
+    let html = '';
+    comments.forEach(c => {
+      const dateStr = c.date ? new Date(c.date).toLocaleString('ar-IQ') : 'مؤخراً';
+      const avatarUrl = c.userAvatar || `https://via.placeholder.com/100/111A2E/D4AF37?text=${encodeURIComponent((c.userName || 'U').slice(0, 2).toUpperCase())}`;
+      
+      html += `
+        <div class="comment-item">
+          <img src="${avatarUrl}" alt="صورة المعلق" class="comment-avatar" onerror="this.src='https://via.placeholder.com/100/111A2E/D4AF37?text=U'">
+          <div class="comment-body">
+            <div class="comment-author">${escapeText(c.userName || 'مستخدم')}</div>
+            <div class="comment-date"><i class="fas fa-clock"></i> ${dateStr}</div>
+            <div class="comment-text">${escapeText(c.content || '')}</div>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = '<p style="color:var(--danger); font-size:13px;">تعذر تحميل التعليقات حالياً.</p>';
+  }
+}
+
+function initCommentForm(postId) {
+  const container = document.getElementById(`commentFormContainer_${postId}`);
+  if (!container) return;
+
+  const token = localStorage.getItem('sada_user_token');
+  const userData = localStorage.getItem('sada_user_data');
+
+  if (token && userData) {
+    let userObj = {};
+    try { userObj = JSON.parse(userData); } catch(e) {}
+
+    container.innerHTML = `
+      <div class="comment-form-box">
+        <h4 style="color:var(--gold-light); font-size:16px; margin-bottom:12px;">
+          <i class="fas fa-pen"></i> أضف تعليقك باسم: <span style="color:var(--gold-primary);">${escapeText(userObj.fullName || userObj.username || 'أنت')}</span>
+        </h4>
+        <textarea id="newCommentInput_${postId}" rows="3" class="form-control" placeholder="اكتب تعليقك هنا بكل احترام وموضوعية..." style="margin-bottom:12px;"></textarea>
+        <button type="button" onclick="submitCommentAction('${postId}')" class="submit-btn" style="width:auto; padding:8px 24px; font-size:14px; margin-top:0;">
+          <i class="fas fa-paper-plane"></i> إرسال التعليق للمراجعة
+        </button>
+      </div>
+    `;
+  } else {
+    container.innerHTML = `
+      <div class="comment-login-prompt">
+        <i class="fas fa-user-lock" style="font-size:26px; color:var(--gold-primary); margin-bottom:10px; display:block;"></i>
+        <span style="font-size:14px; color:var(--text-color);">هل ترغب في التعليق والتفاعل مع الخبر؟ </span>
+        <a href="profile.html" style="color:var(--gold-light); font-weight:700; text-decoration:underline;">سجل الدخول أو أنشئ حسابك</a> لتشارك برأيك.
+      </div>
+    `;
+  }
+}
+
+async function submitCommentAction(postId) {
+  const input = document.getElementById(`newCommentInput_${postId}`);
+  if (!input) return;
+  const content = input.value.trim();
+
+  if (!content) {
+    showToast('يرجى كتابة نص التعليق قبل الإرسال', 'danger');
+    return;
+  }
+
+  const token = localStorage.getItem('sada_user_token');
+  try {
+    const res = await fetch(`${API_URL}/posts/${postId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ content })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      input.value = '';
+      showToast(data.message || 'تم إرسال التعليق وهو قيد مراجعة الإدارة!', 'success');
+    } else {
+      showToast(data.error || 'تعذر إرسال التعليق', 'danger');
+    }
+  } catch (err) {
+    showToast('تعذر الاتصال بالسيرفر', 'danger');
+  }
 }
 
 /* ========================================================
@@ -1665,6 +1990,180 @@ async function updateDashboardStats() {
       tickerStatusEl.innerText = 'متوقف حالياً';
       tickerStatusEl.style.color = 'var(--danger)';
     }
+  }
+}
+
+async function renderDashboardUsers() {
+  const token = localStorage.getItem('sada_token');
+  const tableBody = document.getElementById('dashUsersTable');
+  if (!tableBody || !token) return;
+
+  try {
+    const res = await fetch(`${API_URL}/admin/users`, {
+      headers: { 'Authorization': token }
+    });
+    const users = await res.json();
+
+    if (!Array.isArray(users) || users.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--dim-color);">لا يوجد مستخدمون مسجلون حالياً.</td></tr>';
+      return;
+    }
+
+    tableBody.innerHTML = '';
+    users.forEach(u => {
+      let statusBadge = '<span style="color:#f1c40f;">⏳ بانتظار الموافقة</span>';
+      if (u.status === 'approved') statusBadge = '<span style="color:#2ecc71;">✅ مقبول ونشط</span>';
+      if (u.status === 'rejected') statusBadge = '<span style="color:#e74c3c;">❌ مرفوض</span>';
+      if (u.status === 'suspended') statusBadge = '<span style="color:#e67e22;">⚠️ موقوف مؤقتاً</span>';
+
+      let actionsHtml = '';
+      if (u.status === 'pending') {
+        actionsHtml = `
+          <button class="action-btn btn-approve" onclick="setUserStatusAction('${u._id}', 'approved')"><i class="fas fa-check"></i> موافقة وتفعيل</button>
+          <button class="action-btn btn-reject" onclick="setUserStatusAction('${u._id}', 'rejected')"><i class="fas fa-times"></i> رفض</button>
+        `;
+      } else if (u.status === 'approved') {
+        actionsHtml = `
+          <button class="action-btn" style="background:#e67e22; color:#fff;" onclick="setUserStatusAction('${u._id}', 'suspended')"><i class="fas fa-ban"></i> إيقاف مؤقت</button>
+        `;
+      } else if (u.status === 'suspended' || u.status === 'rejected') {
+        actionsHtml = `
+          <button class="action-btn btn-approve" onclick="setUserStatusAction('${u._id}', 'approved')"><i class="fas fa-check"></i> إعادة تفعيل</button>
+        `;
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><b>${escapeText(u.fullName || u.username)}</b></td>
+        <td>@${escapeText(u.username)}</td>
+        <td>${escapeText(u.email)}</td>
+        <td>${escapeText(u.phone)}</td>
+        <td>${statusBadge}</td>
+        <td>${actionsHtml}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  } catch (e) {
+    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--danger);">تعذر جلب بيانات المستخدمين.</td></tr>';
+  }
+}
+
+async function setUserStatusAction(userId, status) {
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/users/${userId}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ status })
+    });
+    if (res.ok) {
+      showToast('تم تحديث حالة المستخدم بنجاح!', 'success');
+      renderDashboardUsers();
+    }
+  } catch (e) {
+    showToast('حدث خطأ أثناء تعديل حالة المستخدم', 'danger');
+  }
+}
+
+async function renderDashboardComments() {
+  const token = localStorage.getItem('sada_token');
+  const tableBody = document.getElementById('dashCommentsTable');
+  if (!tableBody || !token) return;
+
+  try {
+    const res = await fetch(`${API_URL}/admin/comments`, {
+      headers: { 'Authorization': token }
+    });
+    const comments = await res.json();
+
+    if (!Array.isArray(comments) || comments.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--dim-color);">لا توجد تعليقات واردة حالياً.</td></tr>';
+      return;
+    }
+
+    tableBody.innerHTML = '';
+    comments.forEach(c => {
+      let statusBadge = '<span style="color:#f1c40f;">⏳ قيد المراجعة</span>';
+      if (c.status === 'approved') statusBadge = '<span style="color:#2ecc71;">✅ منشور ومعتمد</span>';
+      if (c.status === 'rejected') statusBadge = '<span style="color:#e74c3c;">❌ مرفوض</span>';
+
+      const postTitle = (c.postId && c.postId.title) ? c.postId.title : 'خبر عام';
+      const dateStr = c.date ? new Date(c.date).toLocaleDateString('ar-IQ') : 'اليوم';
+
+      let actionsHtml = '';
+      if (c.status === 'pending') {
+        actionsHtml = `
+          <button class="action-btn btn-approve" onclick="setCommentStatusAction('${c._id}', 'approved')"><i class="fas fa-check"></i> موافقة ونشر</button>
+          <button class="action-btn btn-reject" onclick="setCommentStatusAction('${c._id}', 'rejected')"><i class="fas fa-times"></i> رفض</button>
+          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
+        `;
+      } else if (c.status === 'approved') {
+        actionsHtml = `
+          <button class="action-btn btn-reject" onclick="setCommentStatusAction('${c._id}', 'rejected')"><i class="fas fa-times"></i> إلغاء النشر</button>
+          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
+        `;
+      } else {
+        actionsHtml = `
+          <button class="action-btn btn-approve" onclick="setCommentStatusAction('${c._id}', 'approved')"><i class="fas fa-check"></i> موافقة ونشر</button>
+          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
+        `;
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><b>${escapeText(postTitle)}</b></td>
+        <td>${escapeText(c.userName || 'مستخدم')}</td>
+        <td style="max-width:280px; font-size:13px;">${escapeText(c.content || '')}</td>
+        <td>${dateStr}</td>
+        <td>${statusBadge}</td>
+        <td>${actionsHtml}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  } catch (e) {
+    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--danger);">تعذر جلب التعليقات.</td></tr>';
+  }
+}
+
+async function setCommentStatusAction(commentId, status) {
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/comments/${commentId}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ status })
+    });
+    if (res.ok) {
+      showToast('تم تحديث حالة التعليق بنجاح!', 'success');
+      renderDashboardComments();
+      fetchPostsFromServer().then(() => displayPostsGrid());
+    }
+  } catch (e) {
+    showToast('تعذر تعديل حالة التعليق', 'danger');
+  }
+}
+
+async function deleteCommentAction(commentId) {
+  if (!confirm('هل تريد حذف هذا التعليق نهائياً؟')) return;
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/comments/${commentId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': token }
+    });
+    if (res.ok) {
+      showToast('تم حذف التعليق بنجاح', 'info');
+      renderDashboardComments();
+      fetchPostsFromServer().then(() => displayPostsGrid());
+    }
+  } catch (e) {
+    showToast('تعذر حذف التعليق', 'danger');
   }
 }
 
@@ -1770,6 +2269,8 @@ async function renderDashboard() {
   await updateDashboardStats();
   initTicker();
   renderDashboardAds();
+  renderDashboardUsers();
+  renderDashboardComments();
 
   const tableBody = document.getElementById('dashPostsTable');
   tableBody.innerHTML = '';

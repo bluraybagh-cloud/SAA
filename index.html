@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>وكالة صدى العطاء - صوتٌ يصنع الأثر... و خبرٌ له صدى</title>
 
 <!-- بطاقات الميتا الاجتماعية -->
@@ -44,7 +44,7 @@
     --border-subtle: rgba(255, 255, 255, 0.06);
   }
 
-  /* الثيم المضيء عالي التباين */
+  /* الثيم المضيء مع نصوص نيلي ملكي */
   [data-theme="light"] {
     --bg-color: #F8F9FA;
     --main-bg: #FFFFFF;
@@ -53,29 +53,36 @@
     --surface-light: #EDF2F7;
     --dim-color: #4A5568;
     
-    --gold-primary: #0D2B52;
-    --gold-light: #081C36;
-    --gold-deep: #1A3E72;
+    /* تحويل النصوص والحدود الذهبية إلى نيلي فخم وواضح */
+    --gold-primary: #0D2B52;      /* نيلي داكن وواضح جداً للنصوص والعناوين */
+    --gold-light: #081C36;        /* كحلي / نيلي غامق للعناوين البارزة والشعار */
+    --gold-deep: #1A3E72;         /* نيلي متوسط */
     --gold-gradient: linear-gradient(135deg, #0D2B52 0%, #1A3E72 100%);
     --border-gold: rgba(13, 43, 82, 0.22);
     --border-subtle: rgba(0, 0, 0, 0.08);
   }
 
+  /* كتابة ذهبية على أي خلفية نيلية في الثيم المضيء */
   [data-theme="light"] .nav-cta,
   [data-theme="light"] .form-btn {
     background: linear-gradient(135deg, #0D2B52 0%, #1A3E72 100%) !important;
     color: #D4AF37 !important;
     border: 1px solid rgba(212, 175, 55, 0.4);
   }
+
   [data-theme="light"] .nav-cta:hover,
   [data-theme="light"] .form-btn:hover {
     color: #FFF !important;
   }
+
   [data-theme="light"] .sub-social-box {
     background: #0D2B52 !important;
   }
   [data-theme="light"] .sub-social-box a {
     color: #D4AF37 !important;
+  }
+  [data-theme="light"] .sub-social-box a:hover {
+    color: #FFFFFF !important;
   }
 
   [data-theme="neon"] {
@@ -93,30 +100,20 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  
-  html, body {
-    scroll-behavior: smooth;
-    overflow-x: hidden !important;
-    width: 100% !important;
-    max-width: 100vw !important;
-    position: relative;
-    -webkit-text-size-adjust: 100%;
+  html { scroll-behavior: smooth; }
+
+  body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: 'Tajawal', sans-serif;
     line-height: 1.8;
+    overflow-x: hidden;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1, h2, h3, .font-arabic { font-family: 'Tajawal', sans-serif; font-weight: 900; }
   a { color: inherit; text-decoration: none; }
-  .wrap {
-    width: 100%;
-    max-width: var(--max-w);
-    margin: 0 auto;
-    padding: 0 24px;
-    box-sizing: border-box;
-  }
+  .wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
   ::selection { background: var(--gold-primary); color: var(--bg-color); }
 
   .ambient-bg {
@@ -134,84 +131,49 @@
     -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border-gold);
     transition: var(--transition);
-    height: 80px;
+    height: 85px;
   }
 
   nav.wrap {
     display: flex; align-items: center; justify-content: space-between;
-    height: 80px;
+    height: 85px;
   }
 
-  /* الشعار والاسم */
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    user-select: none;
-    flex-shrink: 0;
+  /* تصميم الشعار والاسم الرسمي */
+  .brand { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+  .brand-logo-container {
+    display: flex; align-items: center; justify-content: center;
   }
-  .brand-logo-container { display: flex; align-items: center; justify-content: center; }
   .brand-logo-img {
-    height: 42px; width: auto; border-radius: 6px;
+    height: 48px; width: auto; border-radius: 6px;
     border: 1px solid var(--gold-primary);
     background: var(--surface-color);
     display: block;
   }
   .brand-logo-fallback {
-    width: 42px; height: 42px; border-radius: 6px;
+    width: 48px; height: 48px; border-radius: 6px;
     border: 1px solid var(--gold-primary);
     background: rgba(212, 175, 55, 0.1);
     display: flex; align-items: center; justify-content: center;
   }
-  .brand-name-group { display: flex; flex-direction: column; line-height: 1.2; text-align: right; }
+  .brand-name-group {
+    display: flex; flex-direction: column; line-height: 1.2; text-align: right;
+  }
   .brand-title {
-    font-size: 18px;
-    font-weight: 900;
-    color: var(--gold-light);
-    white-space: nowrap !important;
-    letter-spacing: 0.3px;
+    font-size: 19px; font-weight: 900; color: var(--gold-light);
   }
 
-  /* روابط الهيدر للكمبيوتر */
-  .navlinks {
-    display: flex;
-    gap: 14px;
-    font-size: 13.5px;
-    font-weight: 600;
-    align-items: center;
-    flex: 1;
-    justify-content: center;
-    margin: 0 15px;
-  }
+  .navlinks { display: flex; gap: 18px; font-size: 14px; font-weight: 600; align-items: center; }
   .navlinks a, .navlinks button {
-    background: none;
-    border: none;
-    font-family: 'Tajawal', sans-serif;
-    cursor: pointer;
-    color: var(--dim-color);
-    position: relative;
-    padding: 6px 0;
-    transition: var(--transition);
-    white-space: nowrap !important;
-    font-size: 13.5px;
+    background: none; border: none; font-family: 'Tajawal', sans-serif; cursor: pointer;
+    color: var(--dim-color); position: relative; padding: 6px 0; transition: var(--transition);
   }
   .navlinks a::after, .navlinks button::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 0;
-    height: 2px;
-    background: var(--gold-primary);
-    transition: var(--transition);
+    content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 2px;
+    background: var(--gold-primary); transition: var(--transition);
   }
-  .navlinks a:hover, .navlinks button:hover {
-    color: var(--gold-light);
-  }
-  .navlinks a:hover::after, .navlinks button:hover::after {
-    width: 100%;
-  }
+  .navlinks a:hover, .navlinks button:hover { color: var(--gold-light); }
+  .navlinks a:hover::after, .navlinks button:hover::after { width: 100%; }
 
   .nav-cta {
     background: var(--gold-gradient); color: var(--bg-color);
@@ -225,7 +187,7 @@
     background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
     color: #fff; padding: 7px 14px; font-size: 13px; font-weight: 800; border-radius: 6px;
     display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(230, 126, 34, 0.35);
-    transition: var(--transition); white-space: nowrap; flex-shrink: 0;
+    transition: var(--transition); white-space: nowrap; text-decoration: none;
   }
   .btn-ad-booking:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(230, 126, 34, 0.5); }
 
@@ -233,37 +195,36 @@
 
   /* شريط الأخبار العاجلة */
   .ticker-container {
-    position: fixed; top: 80px; left: 0; right: 0; z-index: 990;
+    position: fixed; top: 85px; left: 0; right: 0; z-index: 990;
     background: var(--surface-color); border-bottom: 1px solid var(--border-gold);
     box-shadow: 0 4px 20px rgba(0,0,0,0.15); backdrop-filter: blur(12px);
-    height: 40px; display: flex; align-items: center;
+    height: 42px; display: flex; align-items: center;
   }
   .ticker-inner { display: flex; align-items: center; width: 100%; height: 100%; gap: 15px; }
   .ticker-badge {
     background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-    color: #ffffff; font-size: 12px; font-weight: 800; padding: 4px 12px;
-    border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;
-    white-space: nowrap; box-shadow: 0 0 10px rgba(231, 76, 60, 0.5); z-index: 5; flex-shrink: 0;
+    color: #ffffff; font-size: 12.5px; font-weight: 800; padding: 4px 14px;
+    border-radius: 4px; display: inline-flex; align-items: center; gap: 8px;
+    white-space: nowrap; box-shadow: 0 0 10px rgba(231, 76, 60, 0.5); z-index: 5;
   }
   .live-dot {
-    width: 6px; height: 6px; background: #ffffff; border-radius: 50%;
+    width: 7px; height: 7px; background: #ffffff; border-radius: 50%;
     display: inline-block; animation: blinkDot 1s infinite alternate;
   }
   @keyframes blinkDot { from { opacity: 0.3; transform: scale(0.8); } to { opacity: 1; transform: scale(1.2); } }
   .ticker-marquee-box { flex: 1; overflow: hidden; position: relative; height: 100%; display: flex; align-items: center; }
   .ticker-track { display: inline-flex; white-space: nowrap; gap: 50px; animation: tickerSeamless 20s linear infinite; will-change: transform; }
   .ticker-track:hover { animation-play-state: paused; }
-  .ticker-item { font-size: 13.5px; font-weight: 600; color: var(--gold-light); display: inline-flex; align-items: center; gap: 10px; }
+  .ticker-item { font-size: 14px; font-weight: 600; color: var(--gold-light); display: inline-flex; align-items: center; gap: 10px; }
   .ticker-item::after { content: '✦'; color: var(--gold-primary); margin-right: 25px; font-size: 12px; }
   @keyframes tickerSeamless { 0% { transform: translateX(0); } 100% { transform: translateX(50%); } }
 
   .page-view { display: block; }
   .page-view.hidden-page { display: none !important; }
 
-  /* الهيرو على شاشات الكمبيوتر */
   .hero {
-    position: relative; min-height: 85vh; display: flex; align-items: center;
-    padding: 170px 0 100px; overflow: hidden;
+    position: relative; min-height: 90vh; display: flex; align-items: center;
+    padding: 160px 0 100px; overflow: hidden;
     background: linear-gradient(180deg, rgba(7, 11, 18, 0.75) 0%, var(--bg-color) 100%),
                 url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
   }
@@ -272,141 +233,149 @@
                 url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
   }
   .hero-inner { position: relative; z-index: 2; width: 100%; text-align: center; }
-  .hero h1 { font-size: clamp(32px, 5.5vw, 72px); line-height: 1.35; margin-bottom: 20px; color: var(--text-color); }
+  .hero h1 { font-size: clamp(38px, 6vw, 76px); line-height: 1.3; margin-bottom: 20px; color: var(--text-color); }
   .hero h1 span { color: var(--gold-primary); }
-  .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
   .btn-outline {
     border: 1px solid var(--gold-primary); color: var(--text-color);
-    padding: 10px 24px; font-size: 14px; font-weight: 700; border-radius: 4px;
+    padding: 12px 30px; font-size: 15px; font-weight: 700; border-radius: 4px;
     transition: var(--transition); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; background: transparent;
-    font-family: 'Tajawal', sans-serif;
+    font-family: 'Tajawal', sans-serif; text-decoration: none;
   }
   .btn-outline:hover { background: rgba(13, 43, 82, 0.08); }
 
-  section { position: relative; z-index: 1; padding: 100px 0; }
+  .hero-stats {
+    margin-top: 70px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px; background: var(--surface-color); border: 1px solid var(--border-gold);
+    border-radius: 8px; padding: 32px; backdrop-filter: blur(10px);
+  }
+  .stat-number { font-family: 'Tajawal', sans-serif; font-weight: 900; font-size: 38px; color: var(--gold-primary); line-height: 1; margin-bottom: 8px; }
+  .stat-label { font-size: 14px; color: var(--dim-color); font-weight: 600; }
+
+  section { position: relative; z-index: 1; padding: 110px 0; }
   .section-alt { background: var(--main-bg); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); }
   .kicker {
     display: inline-flex; align-items: center; gap: 10px; color: var(--gold-primary);
     font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
   }
   .kicker::before { content: ''; width: 24px; height: 1px; background: var(--gold-primary); }
-  .section-title { font-size: clamp(26px, 3.8vw, 42px); margin-bottom: 20px; line-height: 1.3; color: var(--text-color); }
+  .section-title { font-size: clamp(28px, 4vw, 42px); margin-bottom: 24px; line-height: 1.3; color: var(--text-color); }
   .section-title b { color: var(--gold-primary); font-family: 'Tajawal', sans-serif; font-weight: 900; }
-  .section-desc { color: var(--dim-color); font-size: 16px; max-width: 800px; line-height: 1.8; margin-bottom: 35px; }
+  .section-desc { color: var(--dim-color); font-size: 16.5px; max-width: 800px; line-height: 1.9; margin-bottom: 40px; }
 
-  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 35px; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 40px; }
   .vm-card {
     background: var(--surface-color); border: 1px solid var(--border-gold);
-    padding: 35px 28px; border-radius: 6px; position: relative; transition: var(--transition);
+    padding: 40px 32px; border-radius: 6px; position: relative; transition: var(--transition);
   }
-  .vm-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.15); }
+  .vm-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.15); }
   .vm-card::before { content: ''; position: absolute; top: 0; right: 0; width: 60px; height: 3px; background: var(--gold-gradient); }
-  .vm-icon { font-size: 30px; color: var(--gold-primary); margin-bottom: 16px; }
-  .vm-card h3 { font-size: 22px; color: var(--gold-light); margin-bottom: 12px; }
-  .vm-card p { color: var(--dim-color); font-size: 15px; line-height: 1.8; }
+  .vm-icon { font-size: 32px; color: var(--gold-primary); margin-bottom: 18px; }
+  .vm-card h3 { font-size: 24px; color: var(--gold-light); margin-bottom: 14px; }
+  .vm-card p { color: var(--dim-color); font-size: 15.5px; line-height: 1.9; }
 
-  .fields-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 35px; }
+  .fields-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-top: 40px; }
   .field-card {
     background: var(--surface-color); border: 1px solid var(--border-subtle);
-    padding: 28px 22px; border-radius: 6px; transition: var(--transition);
-    display: flex; flex-direction: column; gap: 12px;
+    padding: 32px 24px; border-radius: 6px; transition: var(--transition);
+    display: flex; flex-direction: column; gap: 14px;
   }
   .field-card:hover { border-color: var(--gold-primary); transform: translateY(-4px); background: var(--surface-light); }
-  .field-icon { font-size: 26px; color: var(--gold-primary); }
-  .field-title { font-size: 17px; font-weight: 700; color: var(--text-color); }
+  .field-icon { font-size: 28px; color: var(--gold-primary); }
+  .field-title { font-size: 18px; font-weight: 700; color: var(--text-color); }
   .field-desc { font-size: 13.5px; color: var(--dim-color); line-height: 1.7; }
 
-  .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 35px; }
+  .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 40px; }
   .process-card {
     background: var(--surface-color); border: 1px solid var(--border-gold);
-    padding: 26px; border-radius: 6px; position: relative;
+    padding: 30px; border-radius: 6px; position: relative;
   }
   .process-step {
-    font-family: 'Tajawal', sans-serif; font-weight: 900; font-size: 30px; color: var(--gold-primary);
-    position: absolute; top: 15px; left: 18px; opacity: 0.35;
+    font-family: 'Tajawal', sans-serif; font-weight: 900; font-size: 32px; color: var(--gold-primary);
+    position: absolute; top: 15px; left: 20px; opacity: 0.35;
   }
-  .process-card h4 { font-size: 17px; color: var(--gold-light); margin-bottom: 10px; }
-  .process-card p { font-size: 13.5px; color: var(--dim-color); line-height: 1.7; }
+  .process-card h4 { font-size: 18px; color: var(--gold-light); margin-bottom: 12px; }
+  .process-card p { font-size: 14px; color: var(--dim-color); line-height: 1.7; }
 
-  .dept-list { margin-top: 35px; border-top: 1px solid var(--border-subtle); }
+  .dept-list { margin-top: 40px; border-top: 1px solid var(--border-subtle); }
   .dept-row {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 20px 14px; border-bottom: 1px solid var(--border-subtle);
+    padding: 24px 16px; border-bottom: 1px solid var(--border-subtle);
     transition: var(--transition); flex-wrap: wrap; gap: 12px;
   }
-  .dept-row:hover { padding-right: 22px; background: rgba(13, 43, 82, 0.04); }
-  .dept-num { font-family: 'Tajawal', sans-serif; font-weight: 700; color: var(--gold-deep); font-size: 20px; width: 45px; }
+  .dept-row:hover { padding-right: 28px; background: rgba(13, 43, 82, 0.04); }
+  .dept-num { font-family: 'Tajawal', sans-serif; font-weight: 700; color: var(--gold-deep); font-size: 22px; width: 50px; }
   .dept-info { flex: 1; }
-  .dept-name { font-size: 18px; font-weight: 700; color: var(--text-color); transition: var(--transition); display: block; }
-  .dept-sub { font-size: 13px; color: var(--dim-color); margin-top: 4px; }
-  .dept-arrow { color: var(--gold-primary); font-size: 16px; opacity: 0; transition: var(--transition); }
+  .dept-name { font-size: 19px; font-weight: 700; color: var(--text-color); transition: var(--transition); display: block; }
+  .dept-sub { font-size: 13.5px; color: var(--dim-color); margin-top: 4px; }
+  .dept-arrow { color: var(--gold-primary); font-size: 18px; opacity: 0; transition: var(--transition); }
   .dept-row:hover .dept-arrow { opacity: 1; transform: translateX(-6px); }
 
-  .values-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; margin-top: 35px; }
+  .values-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 40px; }
   .value-box {
     background: var(--surface-color); border: 1px solid var(--border-gold);
-    padding: 22px; border-radius: 6px; transition: var(--transition);
+    padding: 24px; border-radius: 6px; transition: var(--transition);
   }
   .value-box:hover { transform: translateY(-3px); }
-  .value-box i { font-size: 20px; color: var(--gold-primary); margin-bottom: 10px; display: block; }
-  .value-box h4 { font-size: 16.5px; color: var(--gold-light); margin-bottom: 8px; }
-  .value-box p { font-size: 13px; color: var(--dim-color); line-height: 1.6; }
+  .value-box i { font-size: 22px; color: var(--gold-primary); margin-bottom: 12px; display: block; }
+  .value-box h4 { font-size: 17px; color: var(--gold-light); margin-bottom: 8px; }
+  .value-box p { font-size: 13.5px; color: var(--dim-color); line-height: 1.6; }
 
-  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 35px; }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 40px; }
   .faq-item {
     background: var(--surface-color); border: 1px solid var(--border-subtle);
-    padding: 24px; border-radius: 6px;
+    padding: 28px; border-radius: 6px;
   }
-  .faq-item h4 { font-size: 16.5px; color: var(--gold-light); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-  .faq-item h4 i { color: var(--gold-primary); font-size: 13px; }
-  .faq-item p { font-size: 13.5px; color: var(--dim-color); line-height: 1.7; }
+  .faq-item h4 { font-size: 17px; color: var(--gold-light); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+  .faq-item h4 i { color: var(--gold-primary); font-size: 14px; }
+  .faq-item p { font-size: 14px; color: var(--dim-color); line-height: 1.8; }
 
   .slogan-band {
-    padding: 90px 0; text-align: center; position: relative;
+    padding: 100px 0; text-align: center; position: relative;
     background: linear-gradient(180deg, var(--bg-color) 0%, var(--surface-color) 50%, var(--bg-color) 100%);
     border-top: 1px solid var(--border-gold); border-bottom: 1px solid var(--border-gold);
   }
   .slogan-band p {
-    font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: clamp(24px, 3.8vw, 38px);
+    font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: clamp(26px, 4vw, 42px);
     color: var(--gold-light); max-width: 900px; margin: 0 auto; line-height: 1.8;
   }
 
-  .network-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 35px; }
+  .network-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
   .network-card {
     background: var(--surface-color); border: 1px solid var(--border-subtle);
-    padding: 30px 20px; text-align: center; border-radius: 6px; transition: var(--transition);
+    padding: 36px 24px; text-align: center; border-radius: 6px; transition: var(--transition);
   }
   .network-card:hover { border-color: var(--gold-primary); transform: translateY(-4px); }
-  .network-card .num { font-family: 'Tajawal', sans-serif; font-weight: 900; font-size: 34px; color: var(--gold-primary); margin-bottom: 6px; }
-  .network-card h4 { font-size: 17px; color: var(--gold-light); margin-bottom: 8px; }
-  .network-card p { font-size: 13px; color: var(--dim-color); line-height: 1.6; }
+  .network-card .num { font-family: 'Tajawal', sans-serif; font-weight: 900; font-size: 38px; color: var(--gold-primary); margin-bottom: 8px; }
+  .network-card h4 { font-size: 18px; color: var(--gold-light); margin-bottom: 8px; }
+  .network-card p { font-size: 13.5px; color: var(--dim-color); line-height: 1.6; }
 
-  #campaigns-page { padding-top: 130px; min-height: 80vh; }
-  .campaigns-header { text-align: center; margin-bottom: 45px; }
-  .campaigns-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; margin-top: 25px; }
+  #campaigns-page { padding-top: 140px; min-height: 80vh; }
+  .campaigns-header { text-align: center; margin-bottom: 50px; }
+  .campaigns-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-top: 30px; }
   .campaign-card {
     background: var(--surface-color); border: 1px solid var(--border-gold);
     border-radius: 8px; overflow: hidden; transition: var(--transition);
-    display: flex; flex-direction: column; justify-content: space-between; padding: 20px;
+    display: flex; flex-direction: column; justify-content: space-between; padding: 22px;
   }
-  .campaign-card:hover { transform: translateY(-4px); border-color: var(--gold-light); }
+  .campaign-card:hover { transform: translateY(-5px); border-color: var(--gold-light); }
 
   .campaign-img { 
-    width: 100%; height: auto; max-height: 420px;
+    width: 100%; height: auto; max-height: 450px;
     object-fit: contain; background-color: var(--bg-color);
     border: 2px solid var(--gold-primary); border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(13, 43, 82, 0.12); margin-bottom: 14px;
+    box-shadow: 0 4px 12px rgba(13, 43, 82, 0.12); margin-bottom: 15px;
   }
   .campaign-body { padding: 0; }
-  .campaign-title { font-size: 18px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; }
-  .campaign-desc { font-size: 13.5px; color: var(--dim-color); line-height: 1.6; }
-  .back-btn-container { margin-bottom: 30px; }
+  .campaign-title { font-size: 18.5px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; }
+  .campaign-desc { font-size: 14px; color: var(--dim-color); line-height: 1.6; }
+  .back-btn-container { margin-bottom: 35px; }
 
-  .news-text-content { color: var(--dim-color); font-size: 13.5px; line-height: 1.7; margin-bottom: 18px; }
+  .news-text-content { color: var(--dim-color); font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
   .read-more-btn {
     background: transparent; border: 1px solid var(--border-gold);
-    color: var(--gold-light); padding: 7px 16px; border-radius: 6px;
+    color: var(--gold-light); padding: 8px 18px; border-radius: 6px;
     cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.3s;
     align-self: flex-start;
   }
@@ -414,7 +383,7 @@
 
   .pagination-btn {
     background: var(--surface-color); border: 1px solid var(--border-gold);
-    color: var(--gold-light); padding: 8px 18px; border-radius: 8px;
+    color: var(--gold-light); padding: 8px 20px; border-radius: 8px;
     cursor: pointer; font-weight: bold; transition: 0.3s;
   }
   .pagination-btn:hover:not(:disabled) { background: var(--gold-primary); color: #fff; }
@@ -430,13 +399,13 @@
   .news-stats-item i { font-size: 14px; }
 
   .reactions-interactive-box {
-    display: flex; align-items: center; gap: 14px; margin: 25px 0; padding: 18px 20px;
+    display: flex; align-items: center; gap: 14px; margin: 25px 0; padding: 18px 22px;
     background: var(--surface-light); border: 1px solid var(--border-gold);
     border-radius: 8px; flex-wrap: wrap;
   }
   .react-btn {
     background: var(--surface-color); border: 1px solid var(--border-subtle);
-    color: var(--text-color); padding: 8px 16px; border-radius: 6px; font-weight: 700;
+    color: var(--text-color); padding: 8px 18px; border-radius: 6px; font-weight: 700;
     font-size: 13.5px; cursor: pointer; transition: var(--transition);
     display: inline-flex; align-items: center; gap: 8px; font-family: 'Tajawal', sans-serif;
   }
@@ -460,11 +429,11 @@
 
   .comment-form-box {
     background: var(--surface-light); border: 1px solid var(--border-gold);
-    border-radius: 8px; padding: 20px; margin-top: 25px;
+    border-radius: 8px; padding: 22px; margin-top: 25px;
   }
   .comment-login-prompt {
     background: rgba(13, 43, 82, 0.05); border: 1px dashed var(--border-gold);
-    border-radius: 8px; padding: 18px; text-align: center; margin-top: 25px;
+    border-radius: 8px; padding: 20px; text-align: center; margin-top: 25px;
   }
 
   /* أزرار المشاركة الاجتماعية */
@@ -473,8 +442,8 @@
     margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-subtle);
   }
   .share-btn {
-    padding: 7px 14px; border-radius: 6px; font-size: 12.5px; font-weight: 700;
-    display: inline-flex; align-items: center; gap: 7px; color: #ffffff;
+    padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 8px; color: #ffffff;
     text-decoration: none; cursor: pointer; border: none; font-family: 'Tajawal', sans-serif;
     transition: var(--transition);
   }
@@ -486,39 +455,48 @@
   .share-copy { background: rgba(13, 43, 82, 0.12); color: var(--gold-light); border: 1px solid var(--border-gold); }
   .share-copy:hover { background: var(--gold-primary); color: #fff; }
 
-  /* بطاقات الانتظار المتوهجة */
+  /* بطاقات الانتظار المتوهجة Skeleton Loader */
   .skeleton-card {
-    background: var(--surface-color); border: 1px solid var(--border-subtle);
-    border-radius: 8px; padding: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 22px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   }
   .skeleton-box {
     background: linear-gradient(90deg, var(--surface-light) 25%, rgba(13, 43, 82, 0.1) 50%, var(--surface-light) 75%);
-    background-size: 200% 100%; animation: skeletonGlow 1.4s infinite linear; border-radius: 6px;
+    background-size: 200% 100%;
+    animation: skeletonGlow 1.4s infinite linear;
+    border-radius: 6px;
   }
-  @keyframes skeletonGlow { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-  .skeleton-img { width: 100%; height: 180px; margin-bottom: 15px; }
-  .skeleton-title { width: 75%; height: 20px; margin-bottom: 12px; }
-  .skeleton-desc { width: 100%; height: 13px; margin-bottom: 8px; }
-  .skeleton-desc-short { width: 55%; height: 13px; margin-bottom: 18px; }
-  .skeleton-btn { width: 100px; height: 32px; }
+  @keyframes skeletonGlow {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .skeleton-img { width: 100%; height: 200px; margin-bottom: 15px; }
+  .skeleton-title { width: 75%; height: 22px; margin-bottom: 12px; }
+  .skeleton-desc { width: 100%; height: 14px; margin-bottom: 8px; }
+  .skeleton-desc-short { width: 55%; height: 14px; margin-bottom: 20px; }
+  .skeleton-btn { width: 110px; height: 34px; }
 
   .auth-box {
-    max-width: 440px; margin: 140px auto 70px; background: var(--surface-color);
-    border: 1px solid var(--border-gold); border-radius: 8px; padding: 35px;
+    max-width: 460px; margin: 150px auto 80px; background: var(--surface-color);
+    border: 1px solid var(--border-gold); border-radius: 8px; padding: 40px;
   }
-  .auth-box h2 { font-size: 26px; color: var(--gold-light); margin-bottom: 20px; text-align: center; }
-  .form-group { margin-bottom: 16px; }
+  .auth-box h2 { font-size: 28px; color: var(--gold-light); margin-bottom: 22px; text-align: center; }
+  .form-group { margin-bottom: 18px; }
   .form-group label { display: block; font-size: 13.5px; color: var(--dim-color); margin-bottom: 6px; }
   .form-control {
-    width: 100%; padding: 11px 14px; background: var(--bg-color);
+    width: 100%; padding: 12px 15px; background: var(--bg-color);
     border: 1px solid var(--border-subtle); color: var(--text-color); border-radius: 4px;
-    font-family: 'Tajawal', sans-serif; font-size: 14px; outline: none; transition: var(--transition);
+    font-family: 'Tajawal', sans-serif; font-size: 14.5px; outline: none; transition: var(--transition);
   }
   .form-control:focus { border-color: var(--gold-primary); }
   .form-btn {
     width: 100%; padding: 12px; background: var(--gold-gradient);
     color: var(--bg-color); border: none; border-radius: 4px; font-weight: 700;
-    cursor: pointer; margin-top: 10px; font-family: 'Tajawal', sans-serif; font-size: 15px; transition: var(--transition);
+    cursor: pointer; margin-top: 12px; font-family: 'Tajawal', sans-serif; font-size: 15px; transition: var(--transition);
   }
   .form-btn:hover { box-shadow: 0 6px 20px rgba(13, 43, 82, 0.25); }
 
@@ -530,80 +508,61 @@
   .dash-container { padding-top: 130px; min-height: 85vh; padding-bottom: 80px; }
   .dash-header {
     display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 1px solid var(--border-gold); padding-bottom: 20px; margin-bottom: 25px;
-    flex-wrap: wrap; gap: 14px;
+    border-bottom: 1px solid var(--border-gold); padding-bottom: 22px; margin-bottom: 30px;
+    flex-wrap: wrap; gap: 16px;
   }
   .dash-stats-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px; margin-bottom: 30px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px; margin-bottom: 35px;
   }
   .dash-stat-card {
     background: var(--surface-color); border: 1px solid var(--border-gold);
-    border-radius: 8px; padding: 20px; display: flex; align-items: center;
+    border-radius: 8px; padding: 24px; display: flex; align-items: center;
     justify-content: space-between; transition: var(--transition);
   }
-  .dash-stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
-  .stat-card-info h4 { font-size: 13.5px; color: var(--dim-color); margin-bottom: 6px; font-weight: 600; }
-  .stat-card-info .stat-val { font-size: 28px; font-weight: 900; color: var(--gold-primary); line-height: 1; }
+  .dash-stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+  .stat-card-info h4 { font-size: 14px; color: var(--dim-color); margin-bottom: 8px; font-weight: 600; }
+  .stat-card-info .stat-val { font-size: 32px; font-weight: 900; color: var(--gold-primary); line-height: 1; }
   .stat-card-icon {
-    width: 48px; height: 48px; border-radius: 50%; background: rgba(13, 43, 82, 0.08);
+    width: 52px; height: 52px; border-radius: 50%; background: rgba(13, 43, 82, 0.08);
     border: 1px solid var(--border-gold); display: flex; align-items: center;
-    justify-content: center; font-size: 20px; color: var(--gold-primary);
+    justify-content: center; font-size: 22px; color: var(--gold-primary);
   }
 
   .dash-panel {
     background: var(--surface-color); border: 1px solid var(--border-gold);
-    border-radius: 8px; padding: 28px; margin-bottom: 30px;
+    border-radius: 8px; padding: 32px; margin-bottom: 35px;
   }
-  .dash-panel h3 { color: var(--gold-light); margin-bottom: 18px; font-size: 20px; }
-  
-  /* الحماية والتجاوب الكامل للجداول على الموبايل لمنع انكسار النصوص */
-  .table-responsive {
-    width: 100% !important;
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    border: 1px solid var(--border-subtle);
-  }
-  table.custom-table {
-    width: 100% !important;
-    min-width: 740px !important;
-    border-collapse: collapse;
-    text-align: right;
-  }
-  table.custom-table th, table.custom-table td {
-    padding: 12px 14px !important;
-    border-bottom: 1px solid var(--border-subtle);
-    font-size: 13.5px !important;
-    white-space: nowrap !important;
-  }
+  .dash-panel h3 { color: var(--gold-light); margin-bottom: 22px; font-size: 22px; }
+  .table-responsive { overflow-x: auto; }
+  table.custom-table { width: 100%; border-collapse: collapse; text-align: right; }
+  table.custom-table th, table.custom-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); font-size: 14px; }
   table.custom-table th { background: var(--surface-light); color: var(--gold-light); }
-  
-  .action-btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-family: 'Tajawal', sans-serif; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
-  .btn-edit { background: var(--gold-deep); color: #fff; margin-left: 5px; }
+  .action-btn { padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 12.5px; font-family: 'Tajawal', sans-serif; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-edit { background: var(--gold-deep); color: #fff; margin-left: 6px; }
   .btn-delete { background: var(--danger); color: #fff; }
-  .btn-approve { background: #2ecc71; color: #fff; margin-left: 5px; }
+  .btn-approve { background: #2ecc71; color: #fff; margin-left: 6px; }
   .btn-reject { background: #e74c3c; color: #fff; }
   .btn-export { background: #1f7a43; color: #ffffff; border: 1px solid #2ecc71; }
   .btn-export:hover { background: #27ae60; }
 
   .views-summary-bar {
-    margin-top: 18px; padding: 14px 20px; background: var(--surface-light);
+    margin-top: 22px; padding: 16px 24px; background: var(--surface-light);
     border: 1px solid var(--border-gold); border-radius: 8px;
     display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
   }
-  .views-summary-title { font-size: 14.5px; font-weight: 700; color: var(--gold-light); display: flex; align-items: center; gap: 8px; }
-  .views-summary-val { font-size: 20px; font-weight: 900; color: var(--gold-primary); }
+  .views-summary-title { font-size: 15px; font-weight: 700; color: var(--gold-light); display: flex; align-items: center; gap: 8px; }
+  .views-summary-val { font-size: 22px; font-weight: 900; color: var(--gold-primary); }
 
+  /* نظام الإشعارات Toast */
   #toastContainer {
     position: fixed; bottom: 30px; left: 30px; z-index: 999999; display: flex; flex-direction: column; gap: 10px;
   }
   .toast-item {
     background: var(--surface-color); border: 1px solid var(--border-gold); color: var(--text-color);
-    padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    display: flex; align-items: center; gap: 10px; font-family: 'Tajawal', sans-serif;
-    font-size: 14px; font-weight: 600; pointer-events: auto; transform: translateY(30px);
+    padding: 14px 22px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    display: flex; align-items: center; gap: 12px; font-family: 'Tajawal', sans-serif;
+    font-size: 14.5px; font-weight: 600; pointer-events: auto; transform: translateY(30px);
     opacity: 0; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); max-width: 380px;
   }
   .toast-item.show { transform: translateY(0); opacity: 1; }
@@ -611,185 +570,155 @@
   .toast-item.danger { border-color: var(--danger); color: #c0392b; }
   .toast-item.info { border-color: var(--gold-primary); color: var(--gold-light); }
 
-  footer { background: var(--main-bg); border-top: 1px solid var(--border-gold); padding: 80px 0 30px; }
-  .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border-subtle); }
-  .footer-brand b { font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 22px; color: var(--gold-light); }
-  .footer-brand p { color: var(--dim-color); font-size: 14px; margin-top: 12px; line-height: 1.8; max-width: 380px; }
-  .footer-col h5 { font-size: 14px; color: var(--gold-primary); margin-bottom: 18px; letter-spacing: 1px; }
-  .footer-col a, .footer-col button { display: block; background: none; border: none; color: var(--dim-color); font-size: 14px; margin-bottom: 10px; transition: var(--transition); text-align: right; cursor: pointer; font-family: 'Tajawal', sans-serif; }
+  footer { background: var(--main-bg); border-top: 1px solid var(--border-gold); padding: 90px 0 35px; }
+  .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 50px; padding-bottom: 50px; border-bottom: 1px solid var(--border-subtle); }
+  .footer-brand b { font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 24px; color: var(--gold-light); }
+  .footer-brand p { color: var(--dim-color); font-size: 14px; margin-top: 14px; line-height: 1.8; max-width: 380px; }
+  .footer-col h5 { font-size: 14px; color: var(--gold-primary); margin-bottom: 20px; letter-spacing: 1px; }
+  .footer-col a, .footer-col button { display: block; background: none; border: none; color: var(--dim-color); font-size: 14.5px; margin-bottom: 12px; transition: var(--transition); text-align: right; cursor: pointer; font-family: 'Tajawal', sans-serif; }
   .footer-col a:hover, .footer-col button:hover { color: var(--gold-light); transform: translateX(-4px); }
-  .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 25px; font-size: 13px; color: var(--dim-color); flex-wrap: wrap; gap: 14px; }
 
-  /* قسم تواصل معنا في القائمة الجانبية للموبايل */
-  .drawer-contact-section {
-    display: none;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px dashed var(--border-gold);
-    width: 100%;
-    text-align: right;
-  }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 30px; font-size: 13px; color: var(--dim-color); flex-wrap: wrap; gap: 16px; }
 
-  /* عند شاشات التابلت واللابتوب الصغير (1120px فأقل) */
-  @media (max-width: 1120px) {
-    .wrap { padding: 0 16px !important; }
-    header { height: 72px !important; }
-    nav.wrap { height: 72px !important; gap: 8px !important; }
-    .ticker-container { top: 72px !important; height: 38px !important; }
-
-    .brand-title { font-size: 16px !important; }
-    .brand-logo-img, .brand-logo-fallback { height: 38px !important; width: 38px !important; }
-
+  /* ========================================================
+     التجاوب الذكي والشامل مع شاشات الهواتف والأجهزة اللوحية
+     ======================================================== */
+  @media (max-width: 992px) {
+    /* قائمة الموبايل الجانبية الفاخرة */
     .navlinks {
       position: fixed;
-      top: 72px;
+      top: 85px;
       right: -100%;
       width: 100%;
-      height: calc(100vh - 72px);
+      height: calc(100vh - 85px);
       background: var(--surface-color);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       flex-direction: column;
-      align-items: stretch;
+      align-items: center;
       justify-content: flex-start;
-      padding: 24px 20px;
+      padding: 35px 20px 50px;
+      gap: 12px;
       overflow-y: auto;
-      gap: 10px;
-      margin: 0;
+      z-index: 999;
+      box-shadow: -5px 0 25px rgba(0,0,0,0.3);
       transition: var(--transition);
-      z-index: 1000;
-      box-shadow: -5px 0 25px rgba(0,0,0,0.5);
     }
-    .navlinks.active { right: 0; }
-    .drawer-contact-section { display: block !important; }
-    .navlinks button, .navlinks a {
-      font-size: 16px !important;
-      padding: 12px 14px !important;
+    .navlinks.active {
+      right: 0;
+    }
+    .navlinks button {
       width: 100%;
-      text-align: right;
-      border-bottom: 1px solid var(--border-subtle);
+      max-width: 340px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+      border-radius: 8px;
+      background: var(--surface-light);
+      color: var(--text-color);
+      border: 1px solid var(--border-subtle);
+      transition: var(--transition);
     }
-
-    .menu-toggle { display: flex !important; align-items: center; justify-content: center; font-size: 22px !important; cursor: pointer; }
-    .about-grid, .faq-grid { grid-template-columns: 1fr !important; }
-    .network-grid { grid-template-columns: 1fr !important; }
-    .footer-grid { grid-template-columns: 1fr !important; gap: 32px; }
-    #toastContainer { left: 15px; right: 15px; bottom: 20px; }
-    .toast-item { max-width: 100%; }
-
-    /* زيادة مسافة الهيرو العلوية لتفادي اختفاء العنوان خلف الشريط */
-    .hero { padding: 155px 0 70px !important; min-height: auto !important; }
-    .hero h1 { font-size: 28px !important; }
-    .hero-ctas { gap: 10px !important; }
-    .hero-ctas .nav-cta, .hero-ctas .btn-outline { width: 100%; justify-content: center; font-size: 14px; }
-    
-    .dash-container { padding-top: 120px !important; }
-    .dash-panel { padding: 18px !important; }
-    .dash-header h2 { font-size: 22px !important; }
-  }
-
-  /* قواعد شاشات الهواتف والآيفون (<= 640px) */
-  @media (max-width: 640px) {
-    header { height: 68px !important; }
-    nav.wrap { height: 68px !important; padding: 0 12px !important; gap: 6px !important; }
-    .ticker-container { top: 68px !important; height: 36px !important; }
-
-    /* المسافة العلوية لقسم الهيرو لمنع اختفاء العنوان بالكامل */
-    .hero {
-      padding-top: 155px !important;
-      padding-bottom: 60px !important;
-      min-height: auto !important;
+    .navlinks button:hover,
+    .navlinks button:active {
+      color: var(--gold-light);
+      border-color: var(--gold-primary);
+      background: rgba(13, 43, 82, 0.08);
     }
-    .hero h1 {
-      font-size: 24px !important;
-      line-height: 1.4 !important;
-      margin-bottom: 18px !important;
-    }
-
-    .brand-title {
-      font-size: 14px !important;
-      white-space: nowrap !important;
-    }
-    .brand-logo-img, .brand-logo-fallback {
-      height: 32px !important;
-      width: 32px !important;
-    }
-    .brand { gap: 6px !important; }
-
-    .header-actions {
-      gap: 6px !important;
-    }
-    .btn-ad-booking {
-      padding: 5px 8px !important;
-      font-size: 11px !important;
-      gap: 4px !important;
-    }
-    .btn-ad-booking i { font-size: 10.5px !important; }
-
-    .nav-profile-btn {
-      padding: 5px 7px !important;
-      font-size: 11px !important;
-      gap: 3px !important;
-    }
-    .nav-profile-btn i { font-size: 10.5px !important; }
-
-    .theme-btn-header {
-      display: none !important;
-    }
-    .nav-divider-line {
-      display: none !important;
-    }
-
-    /* زر تواصل معنا كأيقونة ذكية في الهيدر */
-    .header-social-dropdown {
-      display: inline-block !important;
-    }
-    .header-social-dropdown .custom-dropdown-content {
-      right: auto !important;
-      left: 0 !important;
-    }
-    .nav-social-btn {
-      width: 30px !important;
-      height: 30px !important;
-      padding: 0 !important;
-      border-radius: 50% !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      background: var(--surface-light) !important;
-      border: 1px solid var(--border-gold) !important;
-    }
-    .nav-social-btn .social-btn-label,
-    .nav-social-btn .social-btn-arrow {
-      display: none !important;
-    }
-    .nav-social-btn i.fa-share-nodes {
-      font-size: 13px !important;
-      margin: 0 !important;
-    }
-
-    /* إظهار خيار تبديل الثيم داخل قائمة الهامبرغر للموبايل */
-    .mobile-drawer-theme {
-      display: flex !important;
+    .navlinks button::after {
+      display: none;
     }
 
     .menu-toggle {
-      display: flex !important;
+      display: flex;
       align-items: center;
       justify-content: center;
-      width: 30px !important;
-      height: 30px !important;
-      font-size: 20px !important;
+      width: 36px;
+      height: 36px;
+    }
+
+    .about-grid, .faq-grid { grid-template-columns: 1fr; }
+    .network-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+    #toastContainer { left: 15px; right: 15px; bottom: 20px; }
+    .toast-item { max-width: 100%; }
+  }
+
+  /* تنسيق الهيدر للشاشات المتوسطة والصغيرة */
+  @media (max-width: 768px) {
+    nav.wrap {
+      padding: 0 14px;
+      gap: 8px;
+    }
+    .nav-actions-group {
+      gap: 6px !important;
+    }
+  }
+
+  /* تخصيص دقيق ومتقن للهواتف الصغيرة جداً (< 540px) */
+  @media (max-width: 540px) {
+    .brand {
+      gap: 8px;
+    }
+    .brand-logo-container {
+      width: 38px !important;
+      height: 38px !important;
+    }
+    .brand-logo-img {
+      height: 38px !important;
+    }
+    .brand-title {
+      font-size: 14.5px !important;
+    }
+    
+    /* جعل زر احجز إعلانك مناسباً لحجم الشاشة */
+    .btn-ad-booking {
+      padding: 6px 10px !important;
+      font-size: 11.5px !important;
+      gap: 4px !important;
+    }
+
+    /* إخفاء نصوص الأزرار الجانبية والاكتفاء بالأيقونات الدائرية المتناسقة */
+    .btn-account-text {
+      display: none;
+    }
+    .btn-account-mobile {
+      padding: 0 !important;
+      width: 34px !important;
+      height: 34px !important;
+      border-radius: 50% !important;
+      justify-content: center !important;
+    }
+    .btn-account-mobile i {
+      font-size: 15px !important;
       margin: 0 !important;
-      flex-shrink: 0 !important;
     }
 
-    .campaigns-grid {
-      grid-template-columns: 1fr !important;
-      gap: 16px !important;
+    .btn-social-mobile span,
+    .btn-social-mobile i.fa-chevron-down {
+      display: none;
+    }
+    .btn-social-mobile {
+      padding: 0 !important;
+      width: 34px !important;
+      height: 34px !important;
+      border-radius: 50% !important;
+      justify-content: center !important;
+    }
+    .btn-social-mobile i.fa-share-nodes {
+      font-size: 14px !important;
+      margin: 0 !important;
     }
 
-    #campaigns-page { padding-top: 135px !important; }
-    .dash-container { padding-top: 125px !important; }
-    .auth-box { margin-top: 130px !important; }
+    .nav-divider-line {
+      display: none;
+    }
+
+    #themeToggleBtn {
+      width: 34px !important;
+      height: 34px !important;
+    }
   }
 </style>
 </head>
@@ -822,21 +751,16 @@
       <div class="brand-logo-container">
         <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('brandLogoFallback').style.display='flex';">
         <div id="brandLogoFallback" class="brand-logo-fallback" style="display: none;">
-          <i class="fas fa-newspaper" style="color: var(--gold-primary); font-size: 18px;"></i>
+          <i class="fas fa-newspaper" style="color: var(--gold-primary); font-size: 20px;"></i>
         </div>
       </div>
       <div class="brand-name-group">
-        <span class="brand-title">وكالة صدى العطاء</span>
+        <span class="brand-title" style="letter-spacing: 0.3px;">وكالة صدى العطاء</span>
       </div>
     </div>
 
     <!-- روابط أقسام الموقع -->
     <div class="navlinks" id="navLinks">
-      <!-- خيار تبديل الثيم على الموبايل داخل القائمة -->
-      <div class="mobile-drawer-theme" style="display: none; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 6px;">
-        <span style="font-size: 14px; font-weight: 700; color: var(--gold-light);"><i class="fas fa-palette" style="color: var(--gold-primary);"></i> مظهر الموقع</span>
-        <button type="button" onclick="cycleTheme()" class="btn-outline" style="padding: 4px 12px; font-size: 12px; border-radius: 20px; color: var(--gold-primary); border-color: var(--border-gold);">تبديل الثيم 🎨</button>
-      </div>
       <button type="button" onclick="navigateTo('main-page', '#home')">الرئيسية</button>
       <button type="button" onclick="navigateTo('main-page', '#news-section')">الأخبار والتغطيات</button>
       <button type="button" onclick="navigateTo('campaigns-page')">معرض الحملات</button>
@@ -845,136 +769,160 @@
       <button type="button" onclick="navigateTo('main-page', '#process')">آلية العمل</button>
       <button type="button" onclick="navigateTo('main-page', '#departments')">الأقسام</button>
       <button type="button" onclick="navigateTo('main-page', '#faq')">الأسئلة الشائعة</button>
-
-      <!-- قسم تواصل معنا المخصص لقائمة الهاتف -->
-      <div class="drawer-contact-section">
-        <span style="font-size: 13.5px; color: var(--gold-light); font-weight: 700; display: block; margin-bottom: 10px;">
-          <i class="fas fa-headset" style="color: var(--gold-primary);"></i> تواصل معنا مباشرة:
-        </span>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <a href="https://wa.me/9647827992437" target="_blank" style="display: flex; align-items: center; gap: 10px; color: #25D366; font-size: 13.5px; text-decoration: none; border: none !important; padding: 5px 0 !important;">
-            <i class="fab fa-whatsapp" style="font-size: 17px; width: 20px; text-align: center;"></i> واتساب الوكالة المباشر
-          </a>
-          <a href="https://www.facebook.com/share/1GxLdw2heB/" target="_blank" style="display: flex; align-items: center; gap: 10px; color: #1877F2; font-size: 13.5px; text-decoration: none; border: none !important; padding: 5px 0 !important;">
-            <i class="fab fa-facebook-f" style="font-size: 16px; width: 20px; text-align: center;"></i> فيسبوك الوكالة
-          </a>
-          <a href="https://www.facebook.com/share/1EDiLqoa3E/" target="_blank" style="display: flex; align-items: center; gap: 10px; color: #1877F2; font-size: 13.5px; text-decoration: none; border: none !important; padding: 5px 0 !important;">
-            <i class="fab fa-facebook-f" style="font-size: 16px; width: 20px; text-align: center;"></i> فيسبوك المؤسسة
-          </a>
-          <a href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4" target="_blank" style="display: flex; align-items: center; gap: 10px; color: #E1306C; font-size: 13.5px; text-decoration: none; border: none !important; padding: 5px 0 !important;">
-            <i class="fab fa-instagram" style="font-size: 16px; width: 20px; text-align: center;"></i> انستغرام الوكالة
-          </a>
-          <a href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1" target="_blank" style="display: flex; align-items: center; gap: 10px; color: #E1306C; font-size: 13.5px; text-decoration: none; border: none !important; padding: 5px 0 !important;">
-            <i class="fab fa-instagram" style="font-size: 16px; width: 20px; text-align: center;"></i> انستغرام المؤسسة
-          </a>
-        </div>
-      </div>
     </div>
 
-    <!-- جهة الأزرار السريعة وقائمة التواصل -->
-    <div class="header-actions" style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+    <!-- جهة الأزرار وقائمة التواصل الموحدة بتجاوب كامل للهاتف -->
+    <div class="nav-actions-group" style="display: flex; align-items: center; gap: 8px;">
       
       <!-- زر احجز إعلانك -->
-      <a href="booking.html" class="btn-ad-booking" title="احجز إعلانك">
+      <a href="booking.html" class="btn-ad-booking">
         <i class="fas fa-bullhorn"></i>
         <span>احجز إعلانك</span>
       </a>
 
-      <!-- زر حسابي -->
-      <a href="profile.html" class="btn-outline nav-profile-btn" style="padding: 7px 13px; font-size: 12.5px; font-weight: 700; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; border-color: var(--border-gold); color: var(--gold-primary); background: rgba(13, 43, 82, 0.05);" title="حسابي والملف الشخصي">
+      <!-- زر حسابي (يتحول لأيقونة دائرية أنيقة في الشاشات الصغيرة) -->
+      <a href="profile.html" class="btn-outline btn-account-mobile" style="padding: 7px 13px; font-size: 13px; font-weight: 700; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; border-color: var(--border-gold); color: var(--gold-primary); background: rgba(13, 43, 82, 0.05);" title="حسابي">
         <i class="fas fa-user-circle" style="color: var(--gold-primary);"></i>
-        <span>حسابي</span>
+        <span class="btn-account-text">حسابي</span>
       </a>
 
       <!-- فاصل عمودي -->
-      <div class="nav-divider-line" style="width: 1px; height: 24px; background: var(--border-subtle); margin: 0 2px;"></div>
+      <div class="nav-divider-line" style="width: 1px; height: 26px; background: var(--border-subtle); margin: 0 2px;"></div>
 
-      <!-- زر وقائمة تواصل معنا الموحدة والأنيقة -->
-      <div class="social-dropdown-wrapper header-social-dropdown" style="position: relative; display: inline-block;">
+      <!-- زر وقائمة تواصل معنا الموحدة -->
+      <div class="social-dropdown-wrapper" style="position: relative; display: inline-block;">
         <button
           type="button"
+          class="btn-social-mobile"
           onclick="toggleCustomDropdown('socialMediaMenu')"
-          title="تواصل معنا ومواقع التواصل"
-          class="nav-social-btn"
-          style="padding: 7px 12px; font-size: 12px; font-weight: 700; font-family: 'Tajawal', sans-serif; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; background: var(--surface-light); border: 1px solid var(--border-gold); color: var(--gold-primary); cursor: pointer; transition: var(--transition);"
+          title="مواقع التواصل الاجتماعي"
+          style="padding: 7px 13px; font-size: 12.5px; font-weight: 700; font-family: 'Tajawal', sans-serif; border-radius: 20px; display: inline-flex; align-items: center; gap: 7px; background: var(--surface-light); border: 1px solid var(--border-gold); color: var(--gold-primary); cursor: pointer; transition: var(--transition);"
         >
-          <i class="fas fa-share-nodes" style="font-size: 12px;"></i>
-          <span class="social-btn-label">تواصل معنا</span>
-          <i class="fas fa-chevron-down social-btn-arrow" style="font-size: 9px; opacity: 0.8;"></i>
+          <i class="fas fa-share-nodes" style="font-size: 13px;"></i>
+          <span>تواصل معنا</span>
+          <i class="fas fa-chevron-down" style="font-size: 10px; opacity: 0.8;"></i>
         </button>
 
+        <!-- محتوى القائمة المنسدلة -->
         <div
           id="socialMediaMenu"
           class="custom-dropdown-content"
-          style="display: none; position: absolute; top: calc(100% + 8px); right: 0; width: 200px; background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); z-index: 1000; overflow: hidden; padding: 4px 0; text-align: right;"
+          style="display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 210px; max-width: calc(100vw - 20px); background: var(--surface-color); border: 1px solid var(--border-gold); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); z-index: 1000; overflow: hidden; padding: 6px 0; text-align: right;"
         >
+          <!-- 1. الواتساب المباشر -->
           <a
             href="https://wa.me/9647827992437"
             target="_blank"
-            style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; color: var(--text-color); font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--border-subtle);"
+            style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--border-subtle); transition: var(--transition);"
+            onmouseover="this.style.background='rgba(37,211,102,0.1)'"
+            onmouseout="this.style.background='transparent'"
           >
-            <i class="fab fa-whatsapp" style="color: #25D366; font-size: 15px; width: 18px; text-align: center;"></i>
+            <i class="fab fa-whatsapp" style="color: #25D366; font-size: 16px; width: 18px; text-align: center;"></i>
             <span>الواتساب المباشر</span>
           </a>
 
+          <!-- 2. فيسبوك -->
           <div style="border-bottom: 1px solid var(--border-subtle);">
             <div
               onclick="toggleSubSocialMenu('fbSubMenu', 'fbSubArrow')"
-              style="display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; color: var(--text-color); font-size: 13px; font-weight: 600; cursor: pointer; user-select: none;"
+              style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; cursor: pointer; user-select: none; transition: var(--transition);"
+              onmouseover="this.style.background='rgba(24,119,242,0.1)'"
+              onmouseout="this.style.background='transparent'"
             >
               <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fab fa-facebook-f" style="color: #1877F2; font-size: 14px; width: 18px; text-align: center;"></i>
+                <i class="fab fa-facebook-f" style="color: #1877F2; font-size: 15px; width: 18px; text-align: center;"></i>
                 <span>فيسبوك</span>
               </div>
-              <i id="fbSubArrow" class="fas fa-chevron-down" style="font-size: 9px; color: var(--dim-color); transition: transform 0.25s ease;"></i>
+              <i id="fbSubArrow" class="fas fa-chevron-down" style="font-size: 10px; color: var(--dim-color); transition: transform 0.25s ease;"></i>
             </div>
 
+            <!-- القائمة الفرعية لفيسبوك -->
             <div id="fbSubMenu" class="sub-social-box" style="display: none; background: rgba(0,0,0,0.25); padding: 4px 0; margin: 0 8px 6px; border-radius: 6px;">
-              <a href="https://www.facebook.com/share/1GxLdw2heB/" target="_blank" style="display: block; padding: 6px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none;">الوكالة</a>
-              <a href="https://www.facebook.com/share/1EDiLqoa3E/" target="_blank" style="display: block; padding: 6px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none;">المؤسسة</a>
+              <a
+                href="https://www.facebook.com/share/1GxLdw2heB/"
+                target="_blank"
+                style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: var(--gold-light); font-size: 12.5px; text-decoration: none; transition: var(--transition);"
+                onmouseover="this.style.paddingRight='18px';"
+                onmouseout="this.style.paddingRight='14px';"
+              >
+                <i class="fas fa-arrow-left" style="font-size: 9px;"></i>
+                <span>الوكالة</span>
+              </a>
+              <a
+                href="https://www.facebook.com/share/1EDiLqoa3E/"
+                target="_blank"
+                style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: var(--gold-light); font-size: 12.5px; text-decoration: none; transition: var(--transition);"
+                onmouseover="this.style.paddingRight='18px';"
+                onmouseout="this.style.paddingRight='14px';"
+              >
+                <i class="fas fa-arrow-left" style="font-size: 9px;"></i>
+                <span>المؤسسة</span>
+              </a>
             </div>
           </div>
 
+          <!-- 3. انستغرام -->
           <div>
             <div
               onclick="toggleSubSocialMenu('igSubMenu', 'igSubArrow')"
-              style="display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; color: var(--text-color); font-size: 13px; font-weight: 600; cursor: pointer; user-select: none;"
+              style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; color: var(--text-color); font-size: 13px; font-weight: 600; cursor: pointer; user-select: none; transition: var(--transition);"
+              onmouseover="this.style.background='rgba(225,48,108,0.1)'"
+              onmouseout="this.style.background='transparent'"
             >
               <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fab fa-instagram" style="color: #E1306C; font-size: 14px; width: 18px; text-align: center;"></i>
+                <i class="fab fa-instagram" style="color: #E1306C; font-size: 15px; width: 18px; text-align: center;"></i>
                 <span>انستغرام</span>
               </div>
-              <i id="igSubArrow" class="fas fa-chevron-down" style="font-size: 9px; color: var(--dim-color); transition: transform 0.25s ease;"></i>
+              <i id="igSubArrow" class="fas fa-chevron-down" style="font-size: 10px; color: var(--dim-color); transition: transform 0.25s ease;"></i>
             </div>
 
+            <!-- القائمة الفرعية لانستغرام -->
             <div id="igSubMenu" class="sub-social-box" style="display: none; background: rgba(0,0,0,0.25); padding: 4px 0; margin: 0 8px 6px; border-radius: 6px;">
-              <a href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4" target="_blank" style="display: block; padding: 6px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none;">الوكالة</a>
-              <a href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1" target="_blank" style="display: block; padding: 6px 12px; color: var(--gold-light); font-size: 12px; text-decoration: none;">المؤسسة</a>
+              <a
+                href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4"
+                target="_blank"
+                style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: var(--gold-light); font-size: 12.5px; text-decoration: none; transition: var(--transition);"
+                onmouseover="this.style.paddingRight='18px';"
+                onmouseout="this.style.paddingRight='14px';"
+              >
+                <i class="fas fa-arrow-left" style="font-size: 9px;"></i>
+                <span>الوكالة</span>
+              </a>
+              <a
+                href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1"
+                target="_blank"
+                style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: var(--gold-light); font-size: 12.5px; text-decoration: none; transition: var(--transition);"
+                onmouseover="this.style.paddingRight='18px';"
+                onmouseout="this.style.paddingRight='14px';"
+              >
+                <i class="fas fa-arrow-left" style="font-size: 9px;"></i>
+                <span>المؤسسة</span>
+              </a>
             </div>
           </div>
 
         </div>
       </div>
 
-      <!-- زر تغيير الثيم للكمبيوتر -->
+      <!-- زر تغيير الثيم -->
       <button
         type="button"
         onclick="cycleTheme()"
         id="themeToggleBtn"
-        class="theme-btn-header"
         title="تغيير الثيم"
         aria-label="تغيير الثيم"
-        style="width: 34px; height: 34px; border: 1px solid var(--border-gold); border-radius: 50%; background: var(--surface-light); color: var(--gold-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition);"
+        style="width: 36px; height: 36px; border: 1px solid var(--border-gold); border-radius: 50%; background: var(--surface-light); color: var(--gold-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition);"
       >
         <i class="fas fa-palette" id="themeIcon" style="font-size: 13px;"></i>
       </button>
 
       <!-- زر قائمة الموبايل -->
-      <div class="menu-toggle" id="menuToggle">
+      <div class="menu-toggle" id="menuToggle" title="القائمة الرئيسية" style="color: var(--gold-primary); font-size: 24px; cursor: pointer;">
         <i class="fas fa-bars"></i>
       </div>
 
     </div>
+
   </nav>
 </header>
 
@@ -998,29 +946,29 @@
     <div class="wrap" style="position: relative; z-index: 2;">
       
       <div id="mainNewsListView">
-        <div style="text-align: center; max-width: 800px; margin: 0 auto 50px;">
+        <div style="text-align: center; max-width: 800px; margin: 0 auto 60px;">
           <div class="kicker" style="justify-content: center;"><i class="fas fa-satellite-dish" style="animation: pulse 2s infinite;"></i> التغطيات الإخبارية الحية</div>
-          <h2 class="section-title" style="font-size: clamp(28px, 4.5vw, 48px);">أحدث <b>الأخبار والتقارير الميدانية</b></h2>
-          <p class="section-desc" style="margin: 0 auto; font-size: 16.5px;">متابعة مستمرة وتغطيات حية توثق كافة الأنشطة والمبادرات الرسمية والمجتمعية أولاً بأول بجودة وإحترافية عالية.</p>
+          <h2 class="section-title" style="font-size: clamp(32px, 5vw, 50px);">أحدث <b>الأخبار والتقارير الميدانية</b></h2>
+          <p class="section-desc" style="margin: 0 auto; font-size: 18px;">متابعة مستمرة وتغطيات حية توثق كافة الأنشطة والمبادرات الرسمية والمجتمعية أولاً بأول بجودة وإحترافية عالية.</p>
         </div>
         
-        <!-- شبكة الأخبار -->
+        <!-- شبكة الأخبار وبطاقات الانتظار -->
         <div class="campaigns-grid" id="liveNewsGrid"></div>
 
-        <div id="newsPagination" style="display: none; justify-content: center; align-items: center; gap: 15px; margin-top: 40px;">
+        <div id="newsPagination" style="display: none; justify-content: center; align-items: center; gap: 15px; margin-top: 50px;">
           <button id="prevPageBtn" onclick="changeNewsPage(-1)" class="pagination-btn">الصفحة السابقة</button>
-          <span id="pageIndicator" style="color: var(--gold-light); font-weight: bold; font-size: 15px;">الصفحة 1</span>
+          <span id="pageIndicator" style="color: var(--gold-light); font-weight: bold; font-size: 16px;">الصفحة 1</span>
           <button id="nextPageBtn" onclick="changeNewsPage(1)" class="pagination-btn">الصفحة التالية</button>
         </div>
       </div>
 
       <div id="singleNewsDetailView" style="display: none; max-width: 900px; margin: 0 auto;">
         <button onclick="backToNewsList()" class="pagination-btn" style="margin-bottom: 25px;"><i class="fas fa-arrow-right"></i> العودة إلى قائمة الأخبار</button>
-        <div id="singleNewsContentBox" style="background: var(--surface-color); border: 1px solid var(--border-gold); padding: 35px 25px; border-radius: 12px; backdrop-filter: blur(12px);"></div>
+        <div id="singleNewsContentBox" style="background: var(--surface-color); border: 1px solid var(--border-gold); padding: 40px; border-radius: 16px; backdrop-filter: blur(12px);"></div>
 
-        <div style="margin-top: 50px;">
-          <h3 style="color: var(--gold-light); font-size: 22px; margin-bottom: 20px; border-bottom: 1px solid var(--border-gold); padding-bottom: 8px;">قد يهمك أيضاً</h3>
-          <div id="relatedNewsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px;"></div>
+        <div style="margin-top: 60px;">
+          <h3 style="color: var(--gold-light); font-size: 24px; margin-bottom: 25px; border-bottom: 1px solid var(--border-gold); padding-bottom: 10px;">قد يهمك أيضاً</h3>
+          <div id="relatedNewsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;"></div>
         </div>
       </div>
 
@@ -1043,7 +991,7 @@
         <div class="vm-card">
           <div class="vm-icon"><i class="fas fa-bullseye"></i></div>
           <h3>الرسالة المؤسسية</h3>
-          <p>تقديم محتوى مهني يقوم على الدقة والموضوعية والمسؤولية، وتسخير المنصات الرقمية لخدمة المجتمع وإبراز القضايا والإنجازات والمبادرات ذات الأثر الإيجابي.</p>
+          <p>تقديم محتوى مهني يقوم على الدقة والموضوعية والمسؤولية لخدمة المجتمع وإبراز القضايا والإنجازات والمبادرات ذات الأثر الإيجابي.</p>
         </div>
       </div>
     </div>
@@ -1061,10 +1009,10 @@
         <div class="field-card"><i class="fas fa-camera-retro field-icon"></i><div class="field-title">انتاج</div><p class="field-desc">انتاج وتقديم البرامج والمحتوى المرئي والمسموع والرقمي.</p></div>
         <div class="field-card"><i class="fas fa-film field-icon"></i><div class="field-title">تغطية</div><p class="field-desc">تغطية الأحداث والنشاطات المحلية والوطنية.</p></div>
         <div class="field-card"><i class="fas fa-tv field-icon"></i><div class="field-title">تسليط الضوء</div><p class="field-desc">تسليط الضوء على المبادرات الإنسانية والتنموية والمجتمعية.</p></div>
-        <div class="field-card"><i class="fas fa-pen-nib field-icon"></i><div class="field-title">دعم</div><p class="field-desc">دعم أهداف التنمية المستدامة من خلال العمل التوثيقي.</p></div>
+        <div class="field-card"><i class="fas fa-pen-nib field-icon"></i><div class="field-title">دعم</div><p class="field-desc">دعم أهداف التنمية المستدامة من خلال العمل الصحفي والتوثيقي.</p></div>
         <div class="field-card"><i class="fas fa-hashtag field-icon"></i><div class="field-title">الاخبار المضللة</div><p class="field-desc">مكافحة الأخبار الكاذبة والمعلومات المضللة والشائعات وفق الأساليب المهنية.</p></div>
         <div class="field-card"><i class="fas fa-shield-alt field-icon"></i><div class="field-title">الأمن الفكري</div><p class="field-desc">المساهمة في مواجهة خطاب الكراهية والطائفية والتطرف العنيف وفق الأصول الصحفية.</p></div>
-        <div class="field-card"><i class="fas fa-user-graduate field-icon"></i><div class="field-title">رعاية الكفاءات الشابة</div><p class="field-desc">تطوير قدرات الشباب والعاملين في مختلف المجالات ودعم المواهب والكفاءات.</p></div>
+        <div class="field-card"><i class="fas fa-user-graduate field-icon"></i><div class="field-title">رعاية الكفاءات الشابة</div><p class="field-desc">تطوير قدرات الشباب في مختلف المجالات ودعم المواهب والكفاءات.</p></div>
         <div class="field-card"><i class="fas fa-laptop-code field-icon"></i><div class="field-title">إدارة المنصات الرقمية</div><p class="field-desc">صناعة وإدارة المحتوى الرقمي والتعريف بأنشطة وبرامج ومشاريع مؤسسة صدى العطاء ومراكزها.</p></div>
         <div class="field-card"><i class="fas fa-handshake field-icon"></i><div class="field-title">الشراكات الاستراتيجية</div><p class="field-desc">إقامة علاقات وتعاون مشترك مع المؤسسات والجهات ذات العلاقة.</p></div>
         <div class="field-card"><i class="fas fa-calendar-alt field-icon"></i><div class="field-title">الملتقيات والأنشطة العامة</div><p class="field-desc">المشاركة في تنظيم المؤتمرات والمهرجانات والندوات والورش والفعاليات المتنوعة.</p></div>
@@ -1078,7 +1026,7 @@
     <div class="wrap">
       <div class="kicker">منظومة الإنتاج</div>
       <h2 class="section-title">كيف نعمل... <b>خطوات تنفيذ المشاريع والتغطيات</b></h2>
-      <p class="section-desc">نتبع منهجية عمل دقيقة ومنظمة لضمان خروج كل مهمة أو حملة إنسانية بأعلى معايير الجودة.</p>
+      <p class="section-desc">نتبع منهجية عمل دقيقة ومنظمة لضمان خروج كل مهمة أو حملة بأعلى معايير الجودة.</p>
 
       <div class="process-grid">
         <div class="process-card"><span class="process-step">01</span><h4>الدراسة والتخطيط</h4><p>جلسة عصف ذهني لفهم أهداف الحملة أو التغطية، وتحديد الجمهور المستهدف والرسائل الأساسية المراد إيصالها.</p></div>
@@ -1137,7 +1085,7 @@
       <div class="faq-grid">
         <div class="faq-item"><h4><i class="fas fa-question-circle"></i> هل تقتصر خدماتكم على المحافظة أم كافة العراق؟</h4><p>فرقنا الميدانية مستعدة للتغطية والإنتاج في مختلف محافظات العراق، مع تركيز دائم على خدمة وتغطية الأنشطة في محافظة بابل والفرات الأوسط.</p></div>
         <div class="faq-item"><h4><i class="fas fa-question-circle"></i> كيف يمكن الاتفاق على تغطية مؤتمر أو فعالية؟</h4><p>يمكن التواصل معنا عبر الواتساب أو الهاتف قبل موعد الفعالية بوقت كافٍ لتحديد المتطلبات اللوجستية وإرسال فريق التصوير المناسب.</p></div>
-        <div class="faq-item"><h4><i class="fas fa-question-circle"></i> هل تقدم الوكالة ورشاً تدريبية للشباب؟</h4><p>نعم، يختص قسم التدريب والتطوير بتقديم ورش دورية في مجالات التصوير، المونتاج، وإدارة المنصات الرقمية لبناء قدرات الشباب.</p></div>
+        <div class="faq-item"><h4><i class="fas fa-question-circle"></i> هل تقدم الوكالة ورشاً تدريبية للشباب؟</h4><p>نعم، يختص قسم التدريب والتطوير بتقديم ورش دورية في مجالات التصوير، المونتاج، وإدارة المنصات لبناء قدرات الشباب.</p></div>
         <div class="faq-item"><h4><i class="fas fa-question-circle"></i> ما هي طبيعة الشراكات مع المنظمات الإنسانية؟</h4><p>نقدم خدمات التوثيق وصناعة الأفلام الوثائقية للمبادرات الإنسانية لضمان إيصال رسالتهم السامية للجمهور والداعمين.</p></div>
       </div>
     </div>
@@ -1231,7 +1179,7 @@
   <div class="wrap dash-container">
     <div class="dash-header">
       <div>
-        <h2 class="font-arabic" style="color: var(--gold-light); font-size: 28px;">لوحة تحكم الأخبار والمنشورات</h2>
+        <h2 class="font-arabic" style="color: var(--gold-light); font-size: 32px;">لوحة تحكم الأخبار والمنشورات</h2>
         <span style="font-size: 14px; color: var(--dim-color);">المسؤول الحالي: <b id="dashUserName" style="color: var(--gold-primary);"></b></span>
       </div>
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -1265,7 +1213,7 @@
       <div class="dash-stat-card">
         <div class="stat-card-info">
           <h4>شريط الأخبار العاجلة</h4>
-          <div class="stat-val" id="dashTickerStatusText" style="font-size: 18px; font-weight: 700; color: var(--success);">مفعّل</div>
+          <div class="stat-val" id="dashTickerStatusText" style="font-size: 20px; font-weight: 700; color: var(--success);">مفعّل</div>
         </div>
         <div class="stat-card-icon">
           <i class="fas fa-broadcast-tower"></i>
@@ -1277,7 +1225,6 @@
     <div class="dash-panel" style="border-color: #3498db;">
       <h3 style="color: #3498db; display:flex; align-items:center; gap:10px;"><i class="fas fa-users-cog"></i> إدارة وتفعيل حسابات المستخدمين</h3>
       <p style="color: var(--dim-color); font-size: 13.5px; margin-bottom: 20px;">مراجعة طلبات التسجيل الجديدة، وطلبات تعديل كلمة المرور أو الاسم أو المعرف، والموافقة عليها أو رفضها.</p>
-      
       <div class="table-responsive">
         <table class="custom-table">
           <thead>
@@ -1302,7 +1249,6 @@
     <div class="dash-panel" style="border-color: #9b59b6;">
       <h3 style="color: #9b59b6; display:flex; align-items:center; gap:10px;"><i class="fas fa-comment-dots"></i> إدارة ومراجعة تعليقات الأخبار</h3>
       <p style="color: var(--dim-color); font-size: 13.5px; margin-bottom: 20px;">التعليقات الجديدة تخضع لموافقتك قبل ظهورها للعامة على الخبر في الصفحة الرئيسية.</p>
-      
       <div class="table-responsive">
         <table class="custom-table">
           <thead>
@@ -1325,7 +1271,6 @@
     <!-- قسم إدارة طلبات الإعلانات الواردة -->
     <div class="dash-panel" style="border-color: #f39c12;">
       <h3 style="color: #f39c12;"><i class="fas fa-bullhorn"></i> إدارة طلبات الإعلانات الواردة من المعلنين</h3>
-      
       <div class="table-responsive">
         <table class="custom-table">
           <thead>
@@ -1490,154 +1435,6 @@ let allPosts = [];
 let currentNewsPage = 1;
 const newsPerPage = 6;
 let globalVisitsCount = 0;
-
-// الأخبار الرسمية الافتراضية للوكالة لضمان عدم بقاء الموقع فارغاً أثناء استيقاظ السيرفر
-const DEFAULT_FALLBACK_POSTS = [
-  {
-    "_id": "seed_news_1",
-    "title": "ورشة صناعة الشخصية المؤثرة وتأهيل القيادات الشابة",
-    "category": "تطوير وبناء قدرات",
-    "status": "published",
-    "isPinned": true,
-    "mediaUrls": ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg", "https://i.postimg.cc/3RHNKfdx/IMG-6998.jpg", "https://i.postimg.cc/1tZX97fs/IMG-6999.jpg"],
-    "content": "نظمت وكالة صدى العطاء بالتعاون مع المؤسسة الدورة التخصصية لتطوير المهارات القيادية وتأهيل الشخصيات المؤثرة في المشهد العام.\n\nشهدت الورشة تفاعلاً واسعاً وتطبيقات عملية على صناعة المحتوى الهادف وبناء الحضور المجتمعي المسؤول ودعم مسارات التنمية.",
-    "date": "2026-09-02T10:00:00.000Z",
-    "views": 520,
-    "shares": 38,
-    "likesCount": 42,
-    "dislikesCount": 1,
-    "commentsCount": 8
-  },
-  {
-    "_id": "seed_news_2",
-    "title": "برنامج تدريبي تخصصي: من الخبر إلى التأثير وصناعة الخبر المسؤول",
-    "category": "ورش عمل وتدريب",
-    "status": "published",
-    "isPinned": true,
-    "mediaUrls": ["https://i.postimg.cc/rmLs8ZKy/IMG-7002.jpg", "https://i.postimg.cc/W3Pz2Yhj/IMG-7003.jpg", "https://i.postimg.cc/rmLs8ZKq/IMG-7004.jpg"],
-    "content": "اختتام فعاليات البرنامج التدريبي التخصصي في صياغة الأخبار والتقارير الميدانية وفق المعايير المهنية الدقيقة.\n\nركزت الجلسات على مهارات التحقق من الأخبار ومكافحة الشائعات ونقل المعلومة الصادقة لخدمة قضايا المجتمع المحلي.",
-    "date": "2026-09-01T14:30:00.000Z",
-    "views": 415,
-    "shares": 26,
-    "likesCount": 31,
-    "dislikesCount": 0,
-    "commentsCount": 5
-  },
-  {
-    "_id": "seed_news_3",
-    "title": "تغطية شاملة وميدانية لورشة فريق الإسناد الطبي في بابل",
-    "category": "تغطية إنسانية وميدانية",
-    "status": "published",
-    "isPinned": false,
-    "mediaUrls": ["https://i.postimg.cc/ydzxVpkq/IMG-7006.jpg", "https://i.postimg.cc/4dTyJ2nD/IMG-7009.jpg", "https://i.postimg.cc/cJ36GG4s/IMG-7010.jpg"],
-    "content": "وثقت فرق وكالة صدى العطاء الميدانية فعاليات الورشة التنسيقية الخاصة بفريق الإسناد الطبي بالتنسيق مع الجهات المعنية في بابل.\n\nهدفت الورشة لتعزيز جاهزية الفرق الصحية وتنسيق جهود الإغاثة الطبية والتطوعية لخدمة مختلف مناطق المحافظة.",
-    "date": "2026-08-30T09:00:00.000Z",
-    "views": 360,
-    "shares": 19,
-    "likesCount": 24,
-    "dislikesCount": 0,
-    "commentsCount": 4
-  }
-];
-
-let isFetchingPosts = false;
-
-// استرجاع الأخبار المحفوظة محلياً أولاً لضمان عدم اختفاء الأخبار نهائياً
-function loadInitialCachedPosts() {
-  try {
-    const cached = localStorage.getItem('sada_cached_posts');
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        allPosts = parsed;
-        return true;
-      }
-    }
-  } catch (e) {}
-
-  // إذا لم يكن هناك كاش، استخدم الأخبار الرسمية الافتراضية
-  allPosts = [...DEFAULT_FALLBACK_POSTS];
-  return true;
-}
-
-async function fetchPostsFromServer(retryCount = 0) {
-  if (isFetchingPosts && retryCount === 0) return;
-  isFetchingPosts = true;
-
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 ثانية كحد أقصى
-
-    const res = await fetch(`${API_URL}/posts`, { signal: controller.signal });
-    clearTimeout(timeoutId);
-
-    if (res.ok) {
-      const fetched = await res.json();
-      if (Array.isArray(fetched) && fetched.length > 0) {
-        allPosts = fetched;
-        allPosts.sort((a, b) => {
-          const aPinned = a.isPinned ? 1 : 0;
-          const bPinned = b.isPinned ? 1 : 0;
-          if (bPinned !== aPinned) return bPinned - aPinned;
-          return new Date(b.date || 0) - new Date(a.date || 0);
-        });
-        localStorage.setItem('sada_cached_posts', JSON.stringify(allPosts));
-        displayPostsGrid();
-      }
-    } else {
-      throw new Error(`Server returned ${res.status}`);
-    }
-  } catch (err) {
-    console.log("السيرفر السحابي قيد الاستيقاظ، جلب الكاش المحلي والافتراضي:", err.message);
-    // تأكد من بقاء الأخبار معروضة للمستخدم ولا تختفي
-    if (!allPosts || allPosts.length === 0) {
-      loadInitialCachedPosts();
-      displayPostsGrid();
-    }
-    // محاولة إعادة الاتصال التلقائي في حال كان سيرفر Render يستيقظ من وضع الخمول
-    if (retryCount < 3) {
-      setTimeout(() => {
-        fetchPostsFromServer(retryCount + 1);
-      }, 3500);
-    }
-  } finally {
-    isFetchingPosts = false;
-  }
-}
-
-async function renderLiveNews() {
-  const grid = document.getElementById('liveNewsGrid');
-  const mainListView = document.getElementById('mainNewsListView');
-  const detailView = document.getElementById('singleNewsDetailView');
-
-  if (!grid) return;
-
-  const hash = window.location.hash;
-  if (hash && hash.startsWith('#news-')) {
-    const targetId = hash.replace('#news-', '');
-    if (allPosts.length > 0) {
-      openPublicSingleNews(targetId, false);
-      return;
-    }
-  }
-
-  if (hash === '#admin' || hash === '#login') {
-    handleSecretAdminEntry();
-    return;
-  }
-
-  if (mainListView) mainListView.style.display = 'block';
-  if (detailView) detailView.style.display = 'none';
-
-  // 1. عرض الأخبار فوراً في اللحظة الأولى (0 ثانية) من الكاش أو الأخبار الافتراضية
-  if (!allPosts || allPosts.length === 0) {
-    loadInitialCachedPosts();
-  }
-  displayPostsGrid();
-
-  // 2. تحديث الأخبار في الخلفية مباشرة من السيرفر دون إفراغ الصفحة أو إخفاء الأخبار
-  fetchPostsFromServer();
-}
 
 /* ========================================================
    نظام الإشعارات Toast
@@ -1970,6 +1767,25 @@ function processLogout() {
   navigateTo('main-page', '#home');
 }
 
+async function fetchPostsFromServer() {
+  try {
+    const res = await fetch(`${API_URL}/posts`);
+    if (res.ok) {
+      const fetched = await res.json();
+      allPosts = Array.isArray(fetched) ? fetched : [];
+      allPosts.sort((a, b) => {
+        const aPinned = a.isPinned ? 1 : 0;
+        const bPinned = b.isPinned ? 1 : 0;
+        if (bPinned !== aPinned) return bPinned - aPinned;
+        return new Date(b.date || 0) - new Date(a.date || 0);
+      });
+      localStorage.setItem('sada_cached_posts', JSON.stringify(allPosts));
+    }
+  } catch (err) {
+    console.log("استخدام الكاش المحلي للأخبار");
+  }
+}
+
 function displayPostsGrid() {
   const grid = document.getElementById('liveNewsGrid');
   const paginationDiv = document.getElementById('newsPagination');
@@ -2076,6 +1892,40 @@ function checkUrlHashForAdmin() {
   }
 }
 
+async function renderLiveNews() {
+  const grid = document.getElementById('liveNewsGrid');
+  const mainListView = document.getElementById('mainNewsListView');
+  const detailView = document.getElementById('singleNewsDetailView');
+
+  if (!grid) return;
+
+  const hash = window.location.hash;
+  if (hash && hash.startsWith('#news-')) {
+    const targetId = hash.replace('#news-', '');
+    if (allPosts.length > 0) {
+      openPublicSingleNews(targetId, false);
+      return;
+    }
+  }
+
+  if (hash === '#admin' || hash === '#login') {
+    handleSecretAdminEntry();
+    return;
+  }
+
+  if (mainListView) mainListView.style.display = 'block';
+  if (detailView) detailView.style.display = 'none';
+
+  grid.innerHTML = `
+    <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+    <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+    <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+  `;
+
+  await fetchPostsFromServer();
+  displayPostsGrid();
+}
+
 function openPublicSingleNews(postId, updateHash = true) {
   incrementPostViews(postId);
   
@@ -2134,14 +1984,14 @@ function openPublicSingleNews(postId, updateHash = true) {
       <span style="font-size: 12px; color: var(--gold-light); background: rgba(13,43,82,0.08); padding: 4px 10px; border-radius: 4px;">${escapeText(post.category || 'عام')}</span>
     </div>
     
-    <h2 style="color: var(--text-color); font-size: 26px; margin-bottom: 15px;">${escapeText(post.title || '')}</h2>
+    <h2 style="color: var(--text-color); font-size: 28px; margin-bottom: 15px;">${escapeText(post.title || '')}</h2>
     
     <div style="font-size: 13px; color: var(--dim-color); margin-bottom: 25px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px;">
       <i class="fas fa-calendar-alt" style="color: var(--gold-primary);"></i> تاريخ النشر: ${postDate}
     </div>
 
     ${mediaHtml}
-    <div style="color: var(--text-color); font-size: 15.5px; line-height: 1.9; white-space: pre-line; margin-bottom: 25px;">
+    <div style="color: var(--text-color); font-size: 16px; line-height: 1.9; white-space: pre-line; margin-bottom: 25px;">
       ${post.content || ''}
     </div>
     
@@ -2262,7 +2112,7 @@ async function submitReaction(postId, type) {
         likeBtn.classList.add('active-like');
         showToast('تم تسجيل إعجابك بالخبر!', 'success');
       } else if (data.userReaction === 'dislike' && dislikeBtn) {
-        dislikeBtn.classList.add('active-dislike');
+        likeBtn.classList.add('active-dislike');
         showToast('تم تسجيل عدم الإعجاب بالخبر', 'info');
       } else {
         showToast('تم إلغاء التفاعل مع الخبر', 'info');
@@ -2948,17 +2798,19 @@ function escapeText(str) {
 
 const menuToggle = document.getElementById('menuToggle');
 const navLinks = document.getElementById('navLinks');
-if (menuToggle && navLinks) {
+if(menuToggle && navLinks) {
   menuToggle.addEventListener('click', () => {
     navLinks.classList.toggle('active');
     const icon = menuToggle.querySelector('i');
-    icon.classList.toggle('fa-bars');
-    icon.classList.toggle('fa-times');
+    if (icon) {
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-times');
+    }
   });
 }
 
 function closeMobileMenu() {
-  if (navLinks) navLinks.classList.remove('active');
+  if(navLinks) navLinks.classList.remove('active');
   const icon = menuToggle ? menuToggle.querySelector('i') : null;
   if (icon) {
     icon.classList.add('fa-bars');

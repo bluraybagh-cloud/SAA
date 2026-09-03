@@ -94,9 +94,6 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
-  /* ========================================================
-     نظام الهيدر والتجاوب الاحترافي المتناسق لجميع الشاشات
-     ======================================================== */
   html, body {
     scroll-behavior: smooth;
     overflow-x: hidden !important;
@@ -137,12 +134,12 @@
     -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border-gold);
     transition: var(--transition);
-    height: 85px;
+    height: 80px;
   }
 
   nav.wrap {
     display: flex; align-items: center; justify-content: space-between;
-    height: 85px;
+    height: 80px;
   }
 
   /* الشعار والاسم */
@@ -156,13 +153,13 @@
   }
   .brand-logo-container { display: flex; align-items: center; justify-content: center; }
   .brand-logo-img {
-    height: 44px; width: auto; border-radius: 6px;
+    height: 42px; width: auto; border-radius: 6px;
     border: 1px solid var(--gold-primary);
     background: var(--surface-color);
     display: block;
   }
   .brand-logo-fallback {
-    width: 44px; height: 44px; border-radius: 6px;
+    width: 42px; height: 42px; border-radius: 6px;
     border: 1px solid var(--gold-primary);
     background: rgba(212, 175, 55, 0.1);
     display: flex; align-items: center; justify-content: center;
@@ -234,12 +231,12 @@
 
   .menu-toggle { display: none; color: var(--gold-primary); font-size: 24px; cursor: pointer; }
 
-  /* شريط الأخبار العاجلة السلس */
+  /* شريط الأخبار العاجلة */
   .ticker-container {
-    position: fixed; top: 85px; left: 0; right: 0; z-index: 990;
+    position: fixed; top: 80px; left: 0; right: 0; z-index: 990;
     background: var(--surface-color); border-bottom: 1px solid var(--border-gold);
     box-shadow: 0 4px 20px rgba(0,0,0,0.15); backdrop-filter: blur(12px);
-    height: 42px; display: flex; align-items: center;
+    height: 40px; display: flex; align-items: center;
   }
   .ticker-inner { display: flex; align-items: center; width: 100%; height: 100%; gap: 15px; }
   .ticker-badge {
@@ -263,9 +260,10 @@
   .page-view { display: block; }
   .page-view.hidden-page { display: none !important; }
 
+  /* الهيرو على شاشات الكمبيوتر */
   .hero {
     position: relative; min-height: 85vh; display: flex; align-items: center;
-    padding: 160px 0 100px; overflow: hidden;
+    padding: 170px 0 100px; overflow: hidden;
     background: linear-gradient(180deg, rgba(7, 11, 18, 0.75) 0%, var(--bg-color) 100%),
                 url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
   }
@@ -622,22 +620,22 @@
   .footer-col a:hover, .footer-col button:hover { color: var(--gold-light); transform: translateX(-4px); }
   .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 25px; font-size: 13px; color: var(--dim-color); flex-wrap: wrap; gap: 14px; }
 
-  /* عند شاشات التابلت واللابتوب الصغير (1120px فأقل) تتحول القائمة تلقائياً لهامبرغر لمنع أي تداخل نهائياً */
+  /* عند شاشات التابلت واللابتوب الصغير (1120px فأقل) */
   @media (max-width: 1120px) {
     .wrap { padding: 0 16px !important; }
-    header { height: 75px !important; }
-    nav.wrap { height: 75px !important; gap: 8px !important; }
-    .ticker-container { top: 75px !important; }
+    header { height: 72px !important; }
+    nav.wrap { height: 72px !important; gap: 8px !important; }
+    .ticker-container { top: 72px !important; height: 38px !important; }
 
     .brand-title { font-size: 16px !important; }
-    .brand-logo-img, .brand-logo-fallback { height: 40px !important; width: 40px !important; }
+    .brand-logo-img, .brand-logo-fallback { height: 38px !important; width: 38px !important; }
 
     .navlinks {
       position: fixed;
-      top: 75px;
+      top: 72px;
       right: -100%;
       width: 100%;
-      height: calc(100vh - 75px);
+      height: calc(100vh - 72px);
       background: var(--surface-color);
       flex-direction: column;
       align-items: stretch;
@@ -659,53 +657,106 @@
       border-bottom: 1px solid var(--border-subtle);
     }
 
-    .menu-toggle { display: block !important; font-size: 22px !important; cursor: pointer; }
+    .menu-toggle { display: flex !important; align-items: center; justify-content: center; font-size: 22px !important; cursor: pointer; }
     .about-grid, .faq-grid { grid-template-columns: 1fr !important; }
     .network-grid { grid-template-columns: 1fr !important; }
     .footer-grid { grid-template-columns: 1fr !important; gap: 32px; }
     #toastContainer { left: 15px; right: 15px; bottom: 20px; }
     .toast-item { max-width: 100%; }
 
-    .hero { padding: 130px 0 70px !important; min-height: auto !important; }
+    /* زيادة مسافة الهيرو العلوية لتفادي اختفاء العنوان خلف الشريط */
+    .hero { padding: 155px 0 70px !important; min-height: auto !important; }
     .hero h1 { font-size: 28px !important; }
     .hero-ctas { gap: 10px !important; }
     .hero-ctas .nav-cta, .hero-ctas .btn-outline { width: 100%; justify-content: center; font-size: 14px; }
     
-    .dash-container { padding-top: 100px !important; }
+    .dash-container { padding-top: 120px !important; }
     .dash-panel { padding: 18px !important; }
     .dash-header h2 { font-size: 22px !important; }
   }
 
-  /* قواعد شاشات الهواتف والآيفون (<= 640px) */
+  /* قواعد شاشات الهواتف والآيفون (<= 640px) - حل مشكلة اختفاء الهيدر وزر القائمة نهائياً */
   @media (max-width: 640px) {
+    header { height: 68px !important; }
+    nav.wrap { height: 68px !important; padding: 0 12px !important; gap: 6px !important; }
+    .ticker-container { top: 68px !important; height: 36px !important; }
+
+    /* المسافة العلوية للهيرو لمنع اختفاء كلمة وكالة صدى العطاء خلف شريط الأخبار */
+    .hero {
+      padding-top: 155px !important;
+      padding-bottom: 60px !important;
+      min-height: auto !important;
+    }
+    .hero h1 {
+      font-size: 24px !important;
+      line-height: 1.4 !important;
+      margin-bottom: 18px !important;
+    }
+
+    .brand-title {
+      font-size: 14px !important;
+      white-space: nowrap !important;
+    }
+    .brand-logo-img, .brand-logo-fallback {
+      height: 32px !important;
+      width: 32px !important;
+    }
+    .brand { gap: 6px !important; }
+
+    /* تصغير الأزرار بحساب هندسي دقيق لمنع خروج القائمة عن الشاشة */
+    .header-actions {
+      gap: 6px !important;
+    }
     .btn-ad-booking {
-      padding: 6px 10px !important;
-      font-size: 12px !important;
+      padding: 5px 8px !important;
+      font-size: 11px !important;
+      gap: 4px !important;
     }
-    .btn-outline.nav-profile-btn {
-      padding: 6px 10px !important;
-      font-size: 12px !important;
+    .btn-ad-booking i { font-size: 10.5px !important; }
+
+    .nav-profile-btn {
+      padding: 5px 7px !important;
+      font-size: 11px !important;
+      gap: 3px !important;
     }
-    /* إخفاء زر تواصل معنا من الهيدر على الشاشات الصغيرة جداً لمنع أي تزاحم */
+    .nav-profile-btn i { font-size: 10.5px !important; }
+
+    /* إخفاء زر الثيم وتواصل معنا من شريط الهيدر الضيق ليتسع زر القائمة بالكامل */
+    .theme-btn-header {
+      display: none !important;
+    }
     .header-social-dropdown {
       display: none !important;
     }
     .nav-divider-line {
       display: none !important;
     }
-    .brand-title {
-      font-size: 14px !important;
+
+    /* إظهار خيار تبديل الثيم بأناقة داخل قائمة الهامبرغر للموبايل */
+    .mobile-drawer-theme {
+      display: flex !important;
     }
-    .brand-logo-img, .brand-logo-fallback {
-      height: 34px !important;
-      width: 34px !important;
+
+    /* زر القائمة ثابت وظاهر بالكامل وله مساحة مريحة على يسار الشاشة */
+    .menu-toggle {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      width: 30px !important;
+      height: 30px !important;
+      font-size: 20px !important;
+      margin: 0 !important;
+      flex-shrink: 0 !important;
     }
-    .brand { gap: 8px !important; }
 
     .campaigns-grid {
       grid-template-columns: 1fr !important;
       gap: 16px !important;
     }
+
+    #campaigns-page { padding-top: 135px !important; }
+    .dash-container { padding-top: 125px !important; }
+    .auth-box { margin-top: 130px !important; }
   }
 </style>
 </head>
@@ -748,6 +799,11 @@
 
     <!-- روابط أقسام الموقع (فقط الروابط النظيفة بدون أي عناصر دخيلة) -->
     <div class="navlinks" id="navLinks">
+      <!-- خيار تبديل الثيم على الموبايل داخل القائمة -->
+      <div class="mobile-drawer-theme" style="display: none; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 6px;">
+        <span style="font-size: 14px; font-weight: 700; color: var(--gold-light);"><i class="fas fa-palette" style="color: var(--gold-primary);"></i> مظهر الموقع</span>
+        <button type="button" onclick="cycleTheme()" class="btn-outline" style="padding: 4px 12px; font-size: 12px; border-radius: 20px; color: var(--gold-primary); border-color: var(--border-gold);">تبديل الثيم 🎨</button>
+      </div>
       <button type="button" onclick="navigateTo('main-page', '#home')">الرئيسية</button>
       <button type="button" onclick="navigateTo('main-page', '#news-section')">الأخبار والتغطيات</button>
       <button type="button" onclick="navigateTo('campaigns-page')">معرض الحملات</button>
@@ -986,7 +1042,7 @@
         <div class="dept-row"><span class="dept-num">٠١</span><div class="dept-info"><span class="dept-name">قسم الأخبار والتحرير</span><span class="dept-sub">مسؤول عن صياغة الأخبار، بيانات الصحافة، والتقارير المكتوبة.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٢</span><div class="dept-info"><span class="dept-name">قسم التصوير والإنتاج الميداني</span><span class="dept-sub">يضم المصورين الفوتوغرافيين والسينمائيين وموجهي الإضاءة والصوت.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٣</span><div class="dept-info"><span class="dept-name">قسم المونتاج والمؤثرات البصرية</span><span class="dept-sub">يتولى قص الفيديو، تصحيح الألوان Color Grading، والموشن جرافيك.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
-        <div class="dept-row"><span class="dept-num">٠٤</span><div class="dept-info"><span class="dept-name">قسم التصميم والهوية البصرية</span><span class="dept-sub">تصميم الإعلانات، البوسترات، وتشكيل الهويات للمؤسسات والأنشطة.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
+        <div class="dept-row"><span class="dept-num">٠</span><div class="dept-info"><span class="dept-name">قسم التصميم والهوية البصرية</span><span class="dept-sub">تصميم الإعلانات، البوسترات، وتشكيل الهويات للمؤسسات والأنشطة.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٥</span><div class="dept-info"><span class="dept-name">قسم النشر الرقمي</span><span class="dept-sub">إدارة جميع المنصات الرسمية وحملات النشر والاستجابة للتفاعلات.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٦</span><div class="dept-info"><span class="dept-name">قسم العلاقات العامة والشراكات</span><span class="dept-sub">بناء الجسور مع المؤسسات الحكومية والمنظمات والقطاع الخاص.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٧</span><div class="dept-info"><span class="dept-name">قسم التدريب والتطوير المؤسسي</span><span class="dept-sub">تنظيم الورش التدريبية وتأهيل طاقات الشباب الواعدة.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>

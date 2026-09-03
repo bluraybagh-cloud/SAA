@@ -620,6 +620,16 @@
   .footer-col a:hover, .footer-col button:hover { color: var(--gold-light); transform: translateX(-4px); }
   .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 25px; font-size: 13px; color: var(--dim-color); flex-wrap: wrap; gap: 14px; }
 
+  /* قسم تواصل معنا في القائمة الجانبية (مخفي تماماً على الكمبيوتر ويظهر فقط في القائمة الجانبية للموبايل) */
+  .drawer-contact-section {
+    display: none;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--border-gold);
+    width: 100%;
+    text-align: right;
+  }
+
   /* عند شاشات التابلت واللابتوب الصغير (1120px فأقل) */
   @media (max-width: 1120px) {
     .wrap { padding: 0 16px !important; }
@@ -649,6 +659,7 @@
       box-shadow: -5px 0 25px rgba(0,0,0,0.5);
     }
     .navlinks.active { right: 0; }
+    .drawer-contact-section { display: block !important; }
     .navlinks button, .navlinks a {
       font-size: 16px !important;
       padding: 12px 14px !important;
@@ -675,7 +686,7 @@
     .dash-header h2 { font-size: 22px !important; }
   }
 
-  /* قواعد شاشات الهواتف والآيفون (<= 640px) - حل مشكلة اختفاء الهيدر وزر القائمة نهائياً */
+  /* قواعد شاشات الهواتف والآيفون (<= 640px) */
   @media (max-width: 640px) {
     header { height: 68px !important; }
     nav.wrap { height: 68px !important; padding: 0 12px !important; gap: 6px !important; }
@@ -703,7 +714,6 @@
     }
     .brand { gap: 6px !important; }
 
-    /* تصغير الأزرار بحساب هندسي دقيق لمنع خروج القائمة عن الشاشة */
     .header-actions {
       gap: 6px !important;
     }
@@ -721,15 +731,39 @@
     }
     .nav-profile-btn i { font-size: 10.5px !important; }
 
-    /* إخفاء زر الثيم وتواصل معنا من شريط الهيدر الضيق ليتسع زر القائمة بالكامل */
     .theme-btn-header {
-      display: none !important;
-    }
-    .header-social-dropdown {
       display: none !important;
     }
     .nav-divider-line {
       display: none !important;
+    }
+
+    /* إبقاء زر تواصل معنا في الهيدر كأيقونة اتصال دائرية ذكية لا تأخذ مساحة */
+    .header-social-dropdown {
+      display: inline-block !important;
+    }
+    .header-social-dropdown .custom-dropdown-content {
+      right: auto !important;
+      left: 0 !important;
+    }
+    .nav-social-btn {
+      width: 30px !important;
+      height: 30px !important;
+      padding: 0 !important;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background: var(--surface-light) !important;
+      border: 1px solid var(--border-gold) !important;
+    }
+    .nav-social-btn .social-btn-label,
+    .nav-social-btn .social-btn-arrow {
+      display: none !important;
+    }
+    .nav-social-btn i.fa-share-nodes {
+      font-size: 13px !important;
+      margin: 0 !important;
     }
 
     /* إظهار خيار تبديل الثيم بأناقة داخل قائمة الهامبرغر للموبايل */
@@ -797,7 +831,7 @@
       </div>
     </div>
 
-    <!-- روابط أقسام الموقع (فقط الروابط النظيفة بدون أي عناصر دخيلة) -->
+    <!-- روابط أقسام الموقع -->
     <div class="navlinks" id="navLinks">
       <!-- خيار تبديل الثيم على الموبايل داخل القائمة -->
       <div class="mobile-drawer-theme" style="display: none; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 6px;">
@@ -812,6 +846,30 @@
       <button type="button" onclick="navigateTo('main-page', '#process')">آلية العمل</button>
       <button type="button" onclick="navigateTo('main-page', '#departments')">الأقسام</button>
       <button type="button" onclick="navigateTo('main-page', '#faq')">الأسئلة الشائعة</button>
+
+      <!-- قسم تواصل معنا المخصص لقائمة الهاتف (مخفي تماماً على الكمبيوتر ويظهر فقط في القائمة الجانبية للموبايل) -->
+      <div class="drawer-contact-section">
+        <span style="font-size: 13.5px; color: var(--gold-light); font-weight: 700; display: block; margin-bottom: 10px;">
+          <i class="fas fa-headset" style="color: var(--gold-primary);"></i> تواصل معنا مباشرة:
+        </span>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <a href="https://wa.me/9647827992437" target="_blank" style="display: flex; align-items: center; gap: 10px; color: #25D366; font-size: 13.5px; text-decoration: none; border: none !important; padding: 5px 0 !important;">
+            <i class="fab fa-whatsapp" style="font-size: 17px; width: 20px; text-align: center;"></i> واتساب الوكالة المباشر
+          </a>
+          <a href="https://www.facebook.com/share/1GxLdw2heB/" target="_blank" style="display: flex; align-items: center; gap: 10px; color: #1877F2; font-size: 13.5px; text-decoration: none; border: none !important; padding: 5px 0 !important;">
+            <i class="fab fa-facebook-f" style="font-size: 16px; width: 20px; text-align: center;"></i> فيسبوك الوكالة
+          </a>
+          <a href="https://www.facebook.com/share/1EDiLqoa3E/" target="_blank" style="display: flex; align-items: center; gap: 10px; color: #1877F2; font-size: 13.5px; text-decoration: none; border: none !important; padding: 5px 0 !important;">
+            <i class="fab fa-facebook-f" style="font-size: 16px; width: 20px; text-align: center;"></i> فيسبوك المؤسسة
+          </a>
+          <a href="https://www.instagram.com/sada.alataa.agency?igsi=bTduMmJqdzlqajU4" target="_blank" style="display: flex; align-items: center; gap: 10px; color: #E1306C; font-size: 13.5px; text-decoration: none; border: none !important; padding: 5px 0 !important;">
+            <i class="fab fa-instagram" style="font-size: 16px; width: 20px; text-align: center;"></i> انستغرام الوكالة
+          </a>
+          <a href="https://www.instagram.com/sada.alataa?igsi=MjRhdG96MTBla2d1" target="_blank" style="display: flex; align-items: center; gap: 10px; color: #E1306C; font-size: 13.5px; text-decoration: none; border: none !important; padding: 5px 0 !important;">
+            <i class="fab fa-instagram" style="font-size: 16px; width: 20px; text-align: center;"></i> انستغرام المؤسسة
+          </a>
+        </div>
+      </div>
     </div>
 
     <!-- جهة الأزرار السريعة وقائمة التواصل -->
@@ -832,17 +890,18 @@
       <!-- فاصل عمودي -->
       <div class="nav-divider-line" style="width: 1px; height: 24px; background: var(--border-subtle); margin: 0 2px;"></div>
 
-      <!-- زر وقائمة تواصل معنا الموحدة والأنيقة -->
+      <!-- زر وقائمة تواصل معنا الموحدة والأنيقة (تظهر كنص على الكمبيوتر وكأيقونة اتصال دائرية على الهاتف) -->
       <div class="social-dropdown-wrapper header-social-dropdown" style="position: relative; display: inline-block;">
         <button
           type="button"
           onclick="toggleCustomDropdown('socialMediaMenu')"
-          title="مواقع التواصل الاجتماعي"
+          title="تواصل معنا ومواقع التواصل"
+          class="nav-social-btn"
           style="padding: 7px 12px; font-size: 12px; font-weight: 700; font-family: 'Tajawal', sans-serif; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; background: var(--surface-light); border: 1px solid var(--border-gold); color: var(--gold-primary); cursor: pointer; transition: var(--transition);"
         >
           <i class="fas fa-share-nodes" style="font-size: 12px;"></i>
-          <span>تواصل معنا</span>
-          <i class="fas fa-chevron-down" style="font-size: 9px; opacity: 0.8;"></i>
+          <span class="social-btn-label">تواصل معنا</span>
+          <i class="fas fa-chevron-down social-btn-arrow" style="font-size: 9px; opacity: 0.8;"></i>
         </button>
 
         <div
@@ -898,7 +957,7 @@
         </div>
       </div>
 
-      <!-- زر تغيير الثيم -->
+      <!-- زر تغيير الثيم للكمبيوتر -->
       <button
         type="button"
         onclick="cycleTheme()"
@@ -1042,7 +1101,7 @@
         <div class="dept-row"><span class="dept-num">٠١</span><div class="dept-info"><span class="dept-name">قسم الأخبار والتحرير</span><span class="dept-sub">مسؤول عن صياغة الأخبار، بيانات الصحافة، والتقارير المكتوبة.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٢</span><div class="dept-info"><span class="dept-name">قسم التصوير والإنتاج الميداني</span><span class="dept-sub">يضم المصورين الفوتوغرافيين والسينمائيين وموجهي الإضاءة والصوت.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٣</span><div class="dept-info"><span class="dept-name">قسم المونتاج والمؤثرات البصرية</span><span class="dept-sub">يتولى قص الفيديو، تصحيح الألوان Color Grading، والموشن جرافيك.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
-        <div class="dept-row"><span class="dept-num">٠</span><div class="dept-info"><span class="dept-name">قسم التصميم والهوية البصرية</span><span class="dept-sub">تصميم الإعلانات، البوسترات، وتشكيل الهويات للمؤسسات والأنشطة.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
+        <div class="dept-row"><span class="dept-num">٠٤</span><div class="dept-info"><span class="dept-name">قسم التصميم والهوية البصرية</span><span class="dept-sub">تصميم الإعلانات، البوسترات، وتشكيل الهويات للمؤسسات والأنشطة.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٥</span><div class="dept-info"><span class="dept-name">قسم النشر الرقمي</span><span class="dept-sub">إدارة جميع المنصات الرسمية وحملات النشر والاستجابة للتفاعلات.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٦</span><div class="dept-info"><span class="dept-name">قسم العلاقات العامة والشراكات</span><span class="dept-sub">بناء الجسور مع المؤسسات الحكومية والمنظمات والقطاع الخاص.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
         <div class="dept-row"><span class="dept-num">٠٧</span><div class="dept-info"><span class="dept-name">قسم التدريب والتطوير المؤسسي</span><span class="dept-sub">تنظيم الورش التدريبية وتأهيل طاقات الشباب الواعدة.</span></div><i class="fas fa-arrow-left dept-arrow"></i></div>
@@ -1833,7 +1892,7 @@ function displayPostsGrid() {
 
     const fullContent = p.content || '';
     const shortText = fullContent.length > 130 ? fullContent.substring(0, 130) + '...' : fullContent;
-    const postDate = p.date ? new Date(p.date).toLocaleDateString('ar-IQ') : 'اليوم';
+    const postDate = p.date ? new Date(post.date).toLocaleDateString('ar-IQ') : 'اليوم';
 
     const pinnedBadgeHtml = p.isPinned ? `<span style="display:inline-flex; align-items:center; gap:5px; font-size:11px; background:rgba(13,43,82,0.12); color:var(--gold-light); border:1px solid var(--gold-primary); padding:3px 8px; border-radius:4px; margin-left:6px;"><i class="fas fa-thumbtack" style="color:var(--gold-primary);"></i> خبر مثبت</span>` : '';
 

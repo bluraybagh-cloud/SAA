@@ -17,6 +17,7 @@
     --danger: #e74c3c;
     --success: #2ecc71;
     --warning: #f1c40f;
+    --info: #3498db;
     --bg-color: #070B12;
     --main-bg: #0B1220;
     --text-color: #F4F6F8;
@@ -28,6 +29,43 @@
     --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  /* الثيم المضيء مع نصوص نيلي ملكي */
+  [data-theme="light"] {
+    --bg-color: #F8F9FA;
+    --main-bg: #FFFFFF;
+    --text-color: #0B1220;
+    --surface-color: #FFFFFF;
+    --surface-light: #EDF2F7;
+    --dim-color: #4A5568;
+    --gold-primary: #0D2B52;
+    --gold-light: #081C36;
+    --gold-deep: #1A3E72;
+    --gold-gradient: linear-gradient(135deg, #0D2B52 0%, #1A3E72 100%);
+    --border-gold: rgba(13, 43, 82, 0.22);
+    --border-subtle: rgba(0, 0, 0, 0.08);
+  }
+
+  [data-theme="light"] .submit-btn,
+  [data-theme="light"] .btn-gold-card {
+    background: linear-gradient(135deg, #0D2B52 0%, #1A3E72 100%) !important;
+    color: #D4AF37 !important;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+  }
+
+  [data-theme="neon"] {
+    --bg-color: #030712;
+    --main-bg: #0b0f19;
+    --text-color: #e0f2fe;
+    --surface-color: #1e1b4b;
+    --surface-light: #312e81;
+    --dim-color: #93c5fd;
+    --border-gold: rgba(56, 189, 248, 0.4);
+    --border-subtle: rgba(56, 189, 248, 0.15);
+    --gold-primary: #38bdf8;
+    --gold-light: #bae6fd;
+    --gold-gradient: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     background-color: var(--bg-color);
@@ -36,9 +74,10 @@
     line-height: 1.8;
     min-height: 100vh;
     padding-bottom: 60px;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  .wrap { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
   a { text-decoration: none; color: inherit; }
 
   header {
@@ -47,6 +86,7 @@
     padding: 16px 0;
     margin-bottom: 35px;
     backdrop-filter: blur(10px);
+    position: sticky; top: 0; z-index: 1000;
   }
   .header-inner {
     display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
@@ -65,7 +105,7 @@
     cursor: pointer; background: transparent; transition: var(--transition);
     display: inline-flex; align-items: center; gap: 6px; font-family: 'Tajawal', sans-serif;
   }
-  .btn-outline:hover { background: var(--gold-primary); color: var(--bg-color); }
+  .btn-outline:hover { background: var(--gold-primary); color: #fff; }
 
   .btn-logout-prominent {
     background: rgba(231, 76, 60, 0.15);
@@ -92,8 +132,9 @@
     background: var(--surface-color);
     border: 1px solid var(--border-gold);
     border-radius: 12px;
-    padding: 35px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    margin-bottom: 25px;
   }
 
   /* تبويبات التسجيل والدخول */
@@ -119,7 +160,7 @@
 
   .submit-btn {
     width: 100%; padding: 13px; background: var(--gold-gradient);
-    color: var(--bg-color); border: none; border-radius: 6px; font-weight: 900;
+    color: #070B12; border: none; border-radius: 6px; font-weight: 900;
     cursor: pointer; font-family: 'Tajawal', sans-serif; font-size: 15.5px; transition: var(--transition);
     display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px;
   }
@@ -158,6 +199,110 @@
   }
   .badge-approved { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid #2ecc71; }
   .badge-pending { background: rgba(241, 196, 15, 0.15); color: #f1c40f; border: 1px solid #f1c40f; }
+  .badge-gold { background: rgba(212, 175, 55, 0.15); color: var(--gold-light); border: 1px solid var(--gold-primary); }
+  .badge-danger { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid #e74c3c; }
+
+  /* تصميم بطاقة العضوية الذهبية (Membership Golden Card) */
+  .membership-gold-card {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(17, 26, 46, 0.95) 100%);
+    border: 2px solid var(--gold-primary);
+    border-radius: 12px;
+    padding: 26px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.2);
+    margin-top: 15px;
+  }
+  .membership-gold-card::after {
+    content: 'صَدَى العَطَاء';
+    position: absolute;
+    left: 20px;
+    bottom: -15px;
+    font-size: 65px;
+    font-weight: 900;
+    color: var(--gold-primary);
+    opacity: 0.07;
+    pointer-events: none;
+    letter-spacing: 2px;
+  }
+
+  .membership-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .membership-detail-item {
+    background: var(--surface-light);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .membership-detail-label { font-size: 12px; color: var(--dim-color); margin-bottom: 4px; }
+  .membership-detail-val { font-size: 15px; font-weight: 800; color: var(--gold-light); }
+
+  /* معرض الصور بإطار ذهبي أنيق */
+  .gold-framed-image {
+    border: 2px solid var(--gold-primary) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25) !important;
+    object-fit: cover;
+    transition: transform 0.25s ease;
+  }
+  .gold-framed-image:hover {
+    transform: scale(1.03);
+  }
+
+  .images-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .preview-thumb-box {
+    position: relative;
+    width: 100%;
+    height: 110px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .preview-thumb-box img {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* بطاقات انتظار تحميل البيانات (Skeleton Loaders) */
+  .skeleton-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 22px;
+    overflow: hidden;
+    margin-bottom: 15px;
+  }
+  .skeleton-box {
+    background: linear-gradient(90deg, var(--surface-light) 25%, rgba(212, 175, 55, 0.15) 50%, var(--surface-light) 75%);
+    background-size: 200% 100%;
+    animation: skeletonGlow 1.4s infinite linear;
+    border-radius: 6px;
+  }
+  @keyframes skeletonGlow {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* منشورات العضو */
+  .member-post-card {
+    background: var(--surface-light);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 18px;
+    transition: var(--transition);
+  }
+  .member-post-card:hover {
+    border-color: var(--gold-primary);
+  }
 
   /* نظام الإشعارات Toast */
   #toastContainer {
@@ -181,7 +326,7 @@
     <a href="index.html" class="brand-logo-container" title="العودة للصفحة الرئيسية">
       <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('headerLogoFallback').style.display='flex';">
       <div id="headerLogoFallback" class="brand-logo-fallback" style="display: none;">
-        <i class="fas fa-newspaper" style="color: #D4AF37; font-size: 20px;"></i>
+        <i class="fas fa-newspaper" style="color: var(--gold-primary); font-size: 20px;"></i>
       </div>
       <span class="brand-name">وكالة صدى العطاء</span>
     </a>
@@ -189,6 +334,12 @@
     <div style="display: flex; align-items: center; gap: 10px;">
       <a href="index.html" class="btn-outline"><i class="fas fa-home"></i> الرئيسية</a>
       <a href="booking.html" class="btn-outline" style="border-color: #f39c12; color: #f39c12;"><i class="fas fa-bullhorn"></i> إعلاناتي</a>
+      
+      <!-- زر تبديل الثيم متوافق مع الصفحة الرئيسية -->
+      <button type="button" onclick="cycleTheme()" id="themeToggleBtn" title="تغيير الثيم" aria-label="تغيير الثيم" class="btn-outline" style="padding: 7px 12px; border-radius: 50%;">
+        <i class="fas fa-palette"></i>
+      </button>
+
       <button type="button" id="headerLogoutBtn" onclick="handleLogout()" class="btn-logout-prominent" style="display: none;">
         <i class="fas fa-sign-out-alt"></i> خروج
       </button>
@@ -205,7 +356,7 @@
     <div style="text-align: center; margin-bottom: 24px;">
       <i class="fas fa-user-circle" style="font-size: 50px; color: var(--gold-primary);"></i>
       <h2 style="font-size: 24px; color: var(--gold-light); margin-top: 8px;">بوابة حسابات المستخدمين</h2>
-      <p style="font-size: 13.5px; color: var(--dim-color);">أنشئ حسابك للمشاركة والتفاعل والتعليق على الأخبار</p>
+      <p style="font-size: 13.5px; color: var(--dim-color);">أنشئ حسابك للمشاركة والتفاعل وتفعيل عضوية صدى العطاء</p>
     </div>
 
     <div class="auth-tabs">
@@ -222,7 +373,7 @@
 
       <div class="form-group">
         <label>اسم المستخدم (Username) *</label>
-        <input type="text" id="regUsername" class="form-control" placeholder="اختر اسماً فريداً بدون مسافات (مثال: Ali_Hillah)" required>
+        <input type="text" id="regUsername" class="form-control" placeholder="اختر اسماً فريداً بالإنجليزية بدون مسافات (مثال: Ali_Hillah)" required>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
@@ -265,7 +416,42 @@
         <input type="password" id="loginPassword" class="form-control" placeholder="كلمة المرور" required>
       </div>
       <button type="submit" class="submit-btn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
+      <div style="text-align:center; margin-top:14px;">
+        <a href="javascript:void(0)" onclick="openRequestResetView()" style="color: var(--gold-primary); font-size: 12.5px;"><i class="fas fa-key"></i> نسيت كلمة المرور؟ (إرسال طلب تغيير للإدارة)</a>
+      </div>
     </form>
+
+    <!-- نموذج إرسال طلب تغيير كلمة المرور لموافقة الأدمن -->
+    <div id="requestResetBox" style="display: none; margin-top: 15px; border-top: 1px dashed var(--border-subtle); padding-top: 15px;">
+      <h3 style="color: var(--gold-light); font-size: 17px; margin-bottom: 8px;"><i class="fas fa-shield-alt"></i> طلب تعديل بيانات الحساب / كلمة المرور</h3>
+      <p style="font-size: 13px; color: var(--dim-color); margin-bottom: 14px;">أدخل بيانات حسابك وأي بيان ترغب في تعديله ليتم مراجعته واعتماده فوراً من الإدارة:</p>
+      
+      <div class="form-group">
+        <label>اسم المستخدم أو البريد الإلكتروني الحالي *</label>
+        <input type="text" id="reqResetIdentifier" class="form-control" placeholder="اسم المستخدم أو الإيميل" required>
+      </div>
+
+      <div class="form-group">
+        <label>كلمة المرور الجديدة (اختياري)</label>
+        <input type="password" id="reqResetNewPassword" class="form-control" placeholder="أدخل كلمة مرور جديدة إن رغبت بتغييرها">
+      </div>
+
+      <div class="form-group">
+        <label>الاسم الكامل الجديد (اختياري)</label>
+        <input type="text" id="reqResetNewName" class="form-control" placeholder="أدخل الاسم الجديد إن رغبت بتعديله">
+      </div>
+
+      <div class="form-group">
+        <label>اسم المعرف الجديد Username (اختياري)</label>
+        <input type="text" id="reqResetNewUsername" class="form-control" placeholder="أدخل المعرف الجديد بدون مسافات">
+      </div>
+
+      <button type="button" onclick="submitRequestAccountUpdate()" class="submit-btn"><i class="fas fa-paper-plane"></i> إرسال الطلب للأدمن للموافقة</button>
+      
+      <div style="text-align:center; margin-top:12px;">
+        <a href="javascript:void(0)" onclick="closeRequestResetView()" style="color: var(--dim-color); font-size: 12.5px;"><i class="fas fa-arrow-right"></i> إلغاء والعودة لتسجيل الدخول</a>
+      </div>
+    </div>
   </div>
 
   <!-- ========================================================
@@ -279,7 +465,7 @@
         تم استلام طلب تسجيل حسابك بنجاح! وفقاً لسياسة <b>وكالة صدى العطاء</b>، تخضع جميع الحسابات الجديدة لتدقيق وموافقة الإدارة قبل تفعيلها.
       </p>
       <p style="margin-top: 10px; font-size: 13px; color: var(--dim-color);">
-        ستتمكن من تسجيل الدخول والتفاعل والتعليق ورفع صورتك الشخصية فور اعتماد حسابك من قبل الإدارة.
+        ستتمكن من تسجيل الدخول والتفاعل ونشر مقالاتك ورفع صورتك فور اعتماد الحساب من قبل الإدارة.
       </p>
     </div>
     <div style="display: flex; justify-content: center; gap: 12px; margin-top: 20px;">
@@ -289,36 +475,151 @@
   </div>
 
   <!-- ========================================================
-       3. صفحة البروفايل الشخصي الكاملة (بعد قبول وتفعيل الحساب)
+       3. صفحة البروفايل الشخصي الكاملة
        ======================================================== -->
-  <div id="profileSection" class="card-box" style="display: none;">
+  <div id="profileSection" style="display: none;">
     
-    <div class="profile-header-card">
-      <div class="avatar-container">
-        <img id="userAvatarImg" src="https://via.placeholder.com/150/111A2E/D4AF37?text=USER" alt="الصورة الشخصية" class="avatar-img" onerror="this.src='https://via.placeholder.com/150/111A2E/D4AF37?text=USER'">
-      </div>
-      <div style="flex: 1;">
-        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px;">
-          <h2 id="profFullNameDisplay" style="color: var(--gold-light); font-size: 24px; margin: 0;"></h2>
-          <span class="badge-status badge-approved" id="profStatusBadge"><i class="fas fa-check-circle"></i> حساب مفعّل ومقبول</span>
+    <!-- بطاقة معلومات المستخدم الأساسية -->
+    <div class="card-box">
+      <div class="profile-header-card">
+        <div class="avatar-container">
+          <img id="userAvatarImg" src="https://via.placeholder.com/150/111A2E/D4AF37?text=USER" alt="الصورة الشخصية" class="avatar-img" onerror="this.src='https://via.placeholder.com/150/111A2E/D4AF37?text=USER'">
         </div>
-        <p style="color: var(--dim-color); font-size: 14px; margin-bottom: 12px;">@<span id="profUsernameDisplay"></span></p>
-        
-        <!-- إدارة الصورة الشخصية بأمان -->
-        <div class="avatar-actions">
-          <label class="btn-outline" style="cursor: pointer;">
-            <i class="fas fa-camera"></i> تغيير / رفع صورة شخصية
-            <input type="file" id="avatarFileInput" accept="image/jpeg,image/png,image/webp" style="display: none;" onchange="handleAvatarUpload(event)">
-          </label>
-          <button type="button" onclick="handleRemoveAvatar()" class="btn-outline" style="border-color: var(--danger); color: #ff9b9b;" title="حذف الصورة والعودة للافتراضية">
-            <i class="fas fa-trash"></i> حذف الصورة
-          </button>
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px;">
+            <h2 id="profFullNameDisplay" style="color: var(--gold-light); font-size: 24px; margin: 0;"></h2>
+            <span class="badge-status badge-approved" id="profStatusBadge"><i class="fas fa-check-circle"></i> حساب مفعّل ومقبول</span>
+            <span class="badge-status" id="profMembershipBadge" style="display: none;"></span>
+          </div>
+          <p style="color: var(--dim-color); font-size: 14px; margin-bottom: 12px;">@<span id="profUsernameDisplay"></span></p>
+          
+          <!-- إدارة الصورة الشخصية -->
+          <div class="avatar-actions">
+            <label class="btn-outline" style="cursor: pointer;">
+              <i class="fas fa-camera"></i> تغيير / رفع صورة شخصية
+              <input type="file" id="avatarFileInput" accept="image/jpeg,image/png,image/webp" style="display: none;" onchange="handleAvatarUpload(event)">
+            </label>
+            <button type="button" onclick="handleRemoveAvatar()" class="btn-outline" style="border-color: var(--danger); color: #ff9b9b;" title="حذف الصورة والعودة للافتراضية">
+              <i class="fas fa-trash"></i> حذف الصورة
+            </button>
+            <a href="#" id="viewPublicSpaceLink" target="_blank" class="btn-outline" style="display: none; border-color: var(--gold-primary); color: var(--gold-light);">
+              <i class="fas fa-external-link-alt"></i> زيارة مساحتي الشخصية العامة
+            </a>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- نموذج تعديل البيانات الشخصية للمستخدم -->
-    <div>
+    <!-- ========================================================
+         قسم «عضويتي» (Membership Management)
+         ======================================================== -->
+    <div class="card-box" id="membershipSectionBox">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+        <h3 style="color: var(--gold-light); font-size: 20px; display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-id-card" style="color: var(--gold-primary);"></i> عضويتي في وكالة صدى العطاء
+        </h3>
+        <button type="button" onclick="loadUserMembership()" class="btn-outline" style="padding: 4px 12px; font-size: 12px;">
+          <i class="fas fa-sync-alt"></i> تحديث
+        </button>
+      </div>
+
+      <!-- بطاقة انتظار تحميل العضوية -->
+      <div id="membershipSkeleton" class="skeleton-card" style="display: none;">
+        <div class="skeleton-box" style="height: 24px; width: 50%; margin-bottom: 12px;"></div>
+        <div class="skeleton-box" style="height: 16px; width: 80%; margin-bottom: 8px;"></div>
+        <div class="skeleton-box" style="height: 40px; width: 100%;"></div>
+      </div>
+
+      <!-- محتوى العضوية الديناميكي -->
+      <div id="membershipDynamicContainer"></div>
+    </div>
+
+    <!-- ========================================================
+         قسم «مقالاتي ومساحة النشر» (Member Posts Management)
+         ======================================================== -->
+    <div class="card-box" id="memberPostsSectionBox">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+        <div>
+          <h3 style="color: var(--gold-light); font-size: 20px; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-feather-alt" style="color: var(--gold-primary);"></i> مساحة ومقالات العضو
+          </h3>
+          <p style="font-size: 13px; color: var(--dim-color); margin-top: 4px;">
+            انشر مقالاتك وتغطياتك الميدانية في مساحتك الخاصة لتصل للجمهور بعد موافقة إدارة الوكالة.
+          </p>
+        </div>
+      </div>
+
+      <!-- نموذج إضافة / تعديل مقال (يظهر فقط للأعضاء المشتركين) -->
+      <div id="postCreateFormBox">
+        <h4 id="postFormHeaderTitle" style="color: var(--gold-primary); font-size: 16px; margin-bottom: 14px;">
+          <i class="fas fa-plus-circle"></i> نشر مقال أو تغطية جديدة
+        </h4>
+
+        <form id="memberArticleForm" onsubmit="event.preventDefault(); submitMemberPostAction();">
+          <input type="hidden" id="memberEditPostId">
+
+          <div class="form-group">
+            <label>عنوان المقال أو التغطية *</label>
+            <input type="text" id="memberPostTitle" class="form-control" placeholder="اكتب عنواناً جذاباً لمقالك..." required>
+          </div>
+
+          <div class="form-group">
+            <label>تفاصيل ومحتوى المقال *</label>
+            <textarea id="memberPostContent" rows="5" class="form-control" placeholder="اكتب نص المقال والتفاصيل الكاملة هنا..." required></textarea>
+          </div>
+
+          <!-- رفع الصور من جهاز المستخدم مع إطار ذهبي -->
+          <div class="form-group">
+            <label style="display: flex; justify-content: space-between; align-items: center;">
+              <span><i class="fas fa-images" style="color: var(--gold-primary);"></i> صور المقال من جهازك (يمكنك اختيار أكثر من 5 صور)</span>
+              <span style="font-size: 11.5px; color: var(--gold-light);">إطار ذهبي تلقائي + ضغط فوري</span>
+            </label>
+            <input type="file" id="memberPostImagesInput" class="form-control" accept="image/*" multiple onchange="handlePostImagesPreview(event)">
+            <p style="font-size: 12px; color: var(--dim-color); margin-top: 6px;">
+              يتم حفظ الصور وعرضها للعامة بإطار ذهبي فخم، مع معالجة وضغط الصور تلقائياً لسرعة التصفح.
+            </p>
+
+            <!-- حاوية المعاينة المباشرة للصور قبل الإرسال -->
+            <div id="postImagesPreviewContainer" class="images-preview-grid"></div>
+          </div>
+
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 15px;">
+            <button type="submit" id="saveMemberPostBtn" class="submit-btn" style="width: auto; padding: 11px 32px; margin-top: 0;">
+              <i class="fas fa-paper-plane"></i> إرسال المقال للمراجعة والتدقيق
+            </button>
+            <button type="button" id="cancelMemberEditBtn" onclick="resetMemberPostForm()" class="btn-outline" style="display: none; padding: 10px 20px;">
+              إلغاء التعديل
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- إشعار في حال كان المستخدم غير مشترك بعد -->
+      <div id="notSubscribedPostingNotice" style="display: none; background: rgba(212, 175, 55, 0.08); border: 1px dashed var(--gold-primary); border-radius: 8px; padding: 20px; text-align: center; margin-top: 15px;">
+        <i class="fas fa-lock" style="font-size: 32px; color: var(--gold-primary); margin-bottom: 10px;"></i>
+        <h4 style="color: var(--gold-light); font-size: 17px; margin-bottom: 6px;">خاصية النشر تتطلب عضوية فعالة</h4>
+        <p style="font-size: 13.5px; color: var(--dim-color);">
+          يرجى تفعيل كارت العضوية الشهري أو السنوي من الأعلى لتتمكن من إضافة مقالاتك والحصول على مساحة كاتب معتمدة.
+        </p>
+      </div>
+
+      <!-- قائمة المنشورات السابقة للكاتب -->
+      <div style="margin-top: 35px; border-top: 1px solid var(--border-subtle); padding-top: 25px;">
+        <h4 style="color: var(--gold-light); font-size: 17px; margin-bottom: 15px;">
+          <i class="fas fa-list-ul"></i> مقالاتي المنشورة وقيد المراجعة (<span id="myPostsCount">0</span>)
+        </h4>
+
+        <div id="myPostsListContainer">
+          <!-- بطاقات الانتظار -->
+          <div class="skeleton-card"><div class="skeleton-box" style="height: 20px; width: 60%; margin-bottom: 10px;"></div><div class="skeleton-box" style="height: 14px; width: 40%;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         قسم تعديل البيانات الشخصية للمستخدم
+         ======================================================== -->
+    <div class="card-box">
       <h3 style="color: var(--gold-light); font-size: 18px; margin-bottom: 18px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
         <i class="fas fa-user-edit"></i> تعديل بيانات الحساب
       </h3>
@@ -380,7 +681,13 @@
 <script>
 const API_URL = 'https://sada-backend-mm3p.onrender.com/api';
 let currentUser = null;
+let currentMembership = null;
+let myPostsList = [];
+let pendingUploadedImages = [];
 
+/* ========================================================
+   نظام الإشعارات Toast
+   ======================================================== */
 function showToast(msg, type = 'info') {
   const c = document.getElementById('toastContainer');
   if(!c) return;
@@ -390,6 +697,52 @@ function showToast(msg, type = 'info') {
   c.appendChild(t);
   setTimeout(() => t.classList.add('show'), 20);
   setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 4000);
+}
+
+/* ========================================================
+   نظام تبديل الثيمات (متطابق 100% مع الصفحة الرئيسية)
+   ======================================================== */
+function cycleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  let nextTheme = 'dark';
+  if (currentTheme === 'dark') nextTheme = 'light';
+  else if (currentTheme === 'light') nextTheme = 'neon';
+  else nextTheme = 'dark';
+
+  document.documentElement.setAttribute('data-theme', nextTheme);
+  localStorage.setItem('sada_theme', nextTheme);
+  showToast(`تم التبديل إلى الثيم: ${nextTheme === 'dark' ? 'الداكن' : nextTheme === 'light' ? 'المضيء الملكي' : 'النيون'}`, 'info');
+}
+
+/* ========================================================
+   ضغط الصور محلياً قبل الرفع لتسريع النشر
+   ======================================================== */
+function compressImage(file, maxWidth = 1200, quality = 0.75) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = () => resolve(e.target.result);
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 function switchAuthTab(tab) {
@@ -412,7 +765,6 @@ function switchAuthTab(tab) {
 }
 
 // 1. تقديم طلب إنشاء حساب مستخدم جديد
-// 1. تقديم طلب إنشاء حساب مستخدم جديد
 async function processRegister() {
   const fullName = document.getElementById('regFullName').value.trim();
   const username = document.getElementById('regUsername').value.trim();
@@ -421,12 +773,11 @@ async function processRegister() {
   const password = document.getElementById('regPassword').value;
   const confirmPassword = document.getElementById('regConfirmPassword').value;
 
-  if (password !== confirmPassword) {
+  if(password !== confirmPassword) {
     showToast('كلمتا المرور غير متطابقتين!', 'danger');
     return;
   }
 
-  // قفل الزر وتغيير نصه لمنع تكرار النقر وإرسال أكثر من طلب
   const submitBtn = document.querySelector('#registerForm button[type="submit"]');
   if (submitBtn) {
     submitBtn.disabled = true;
@@ -441,21 +792,19 @@ async function processRegister() {
     });
     const data = await res.json();
 
-    if (res.ok) {
+    if(res.ok) {
       showToast('تم تقديم طلب إنشاء الحساب بنجاح!', 'success');
       localStorage.setItem('sada_pending_username', username);
       showPendingReviewScreen();
     } else {
       showToast(data.error || 'تعذر إكمال التسجيل', 'danger');
-      // إعادة تفعيل الزر في حال وجود خطأ في البيانات
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> تقديم طلب إنشاء الحساب';
       }
     }
-  } catch (e) {
+  } catch(e) {
     showToast('تعذر الاتصال بالسيرفر السحابي', 'danger');
-    // إعادة تفعيل الزر في حال انقطاع الاتصال
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> تقديم طلب إنشاء الحساب';
@@ -552,6 +901,17 @@ async function loadUserProfile() {
       document.getElementById('editPhone').value = user.phone || '';
       document.getElementById('editUsername').value = user.username;
       document.getElementById('editEmail').value = user.email;
+
+      // إعداد رابط المساحة الشخصية
+      const spaceLink = document.getElementById('viewPublicSpaceLink');
+      if (spaceLink) {
+        spaceLink.href = `member.html?user=${encodeURIComponent(user.username)}`;
+        spaceLink.style.display = 'inline-flex';
+      }
+
+      // جلب تفاصيل العضوية ومنشورات العضو
+      loadUserMembership();
+      loadMyMemberPosts();
     } else {
       handleLogout();
     }
@@ -560,7 +920,453 @@ async function loadUserProfile() {
   }
 }
 
-// 4. رفع وتحديث الصورة الشخصية بأمان
+/* ========================================================
+   4. جلب وإدارة بيانات «عضويتي» وتفعيل الكروت
+   ======================================================== */
+async function loadUserMembership() {
+  const token = localStorage.getItem('sada_user_token');
+  const skeleton = document.getElementById('membershipSkeleton');
+  const container = document.getElementById('membershipDynamicContainer');
+  const membershipBadge = document.getElementById('profMembershipBadge');
+  const postFormBox = document.getElementById('postCreateFormBox');
+  const noSubNotice = document.getElementById('notSubscribedPostingNotice');
+
+  if (!token || !container) return;
+
+  if (skeleton) skeleton.style.display = 'block';
+  container.innerHTML = '';
+
+  try {
+    const res = await fetch(`${API_URL}/user/membership`, {
+      headers: { 'Authorization': token }
+    });
+    const data = await res.json();
+    if (skeleton) skeleton.style.display = 'none';
+
+    if (res.ok) {
+      currentMembership = data;
+      renderMembershipUI(data);
+
+      if (data.isSubscribed && data.status === 'active') {
+        // عضو فعال
+        membershipBadge.style.display = 'inline-flex';
+        membershipBadge.className = 'badge-status badge-gold';
+        membershipBadge.innerHTML = `<i class="fas fa-crown"></i> ${data.type === 'annual' ? 'عضو سنوي مفعّل' : 'عضو شهري مفعّل'}`;
+        if (postFormBox) postFormBox.style.display = 'block';
+        if (noSubNotice) noSubNotice.style.display = 'none';
+      } else if (data.hasExpired) {
+        // عضوية منتهية
+        membershipBadge.style.display = 'inline-flex';
+        membershipBadge.className = 'badge-status badge-danger';
+        membershipBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> عضوية منتهية`;
+        if (postFormBox) postFormBox.style.display = 'none';
+        if (noSubNotice) noSubNotice.style.display = 'block';
+      } else {
+        // غير مشترك
+        membershipBadge.style.display = 'inline-flex';
+        membershipBadge.className = 'badge-status';
+        membershipBadge.style.background = 'rgba(255,255,255,0.08)';
+        membershipBadge.style.color = 'var(--dim-color)';
+        membershipBadge.innerHTML = `<i class="fas fa-user"></i> مستخدم غير مشترك`;
+        if (postFormBox) postFormBox.style.display = 'none';
+        if (noSubNotice) noSubNotice.style.display = 'block';
+      }
+    }
+  } catch (err) {
+    if (skeleton) skeleton.style.display = 'none';
+    container.innerHTML = '<p style="color:var(--danger); font-size:13.5px;">تعذر جلب تفاصيل العضوية حالياً.</p>';
+  }
+}
+
+function renderMembershipUI(data) {
+  const container = document.getElementById('membershipDynamicContainer');
+  if (!container) return;
+
+  // الحالة 1: عضوية فعالة ونشطة
+  if (data.isSubscribed && data.status === 'active') {
+    const typeLabel = data.type === 'annual' ? 'العضوية السنوية المعتمدة' : 'العضوية الشهرية المعتمدة';
+    const startDateStr = data.startDate ? new Date(data.startDate).toLocaleDateString('ar-IQ') : 'اليوم';
+    const endDateStr = data.endDate ? new Date(data.endDate).toLocaleDateString('ar-IQ') : 'قريباً';
+
+    container.innerHTML = `
+      <div class="membership-gold-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div>
+            <span class="badge-status badge-approved" style="margin-bottom:8px;"><i class="fas fa-check-circle"></i> عضوية فعالة ونشطة</span>
+            <h3 style="color:var(--gold-light); font-size:22px; font-weight:900;">${typeLabel}</h3>
+          </div>
+          <div style="text-align:left;">
+            <span style="font-size:12px; color:var(--dim-color); display:block;">الأيام المتبقية</span>
+            <span style="font-size:28px; font-weight:900; color:var(--gold-primary); line-height:1;">${data.daysRemaining} يوماً</span>
+          </div>
+        </div>
+
+        <div class="membership-details-grid">
+          <div class="membership-detail-item">
+            <div class="membership-detail-label"><i class="fas fa-barcode" style="color:var(--gold-primary);"></i> الرقم التسلسلي للكارت</div>
+            <div class="membership-detail-val" style="letter-spacing:1px;">${data.serialNumber || '---'}</div>
+          </div>
+          <div class="membership-detail-item">
+            <div class="membership-detail-label"><i class="fas fa-calendar-check" style="color:#2ecc71;"></i> تاريخ البداية</div>
+            <div class="membership-detail-val">${startDateStr}</div>
+          </div>
+          <div class="membership-detail-item">
+            <div class="membership-detail-label"><i class="fas fa-hourglass-end" style="color:#f1c40f;"></i> تاريخ الانتهاء</div>
+            <div class="membership-detail-val">${endDateStr}</div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+          <a href="member.html?user=${encodeURIComponent(currentUser.username)}" target="_blank" class="submit-btn" style="width:auto; padding:8px 22px; font-size:14px; margin-top:0;">
+            <i class="fas fa-external-link-alt"></i> فتح مساحتي الشخصية العامة
+          </a>
+          <button type="button" onclick="toggleCardActivationForm()" class="btn-outline" style="padding:8px 20px; font-size:13px;">
+            <i class="fas fa-plus"></i> تفعيل كارت تمديد إضافي
+          </button>
+        </div>
+      </div>
+
+      <!-- نموذج تفعيل كود التمديد التراكمي -->
+      <div id="extraActivationBox" style="display:none; margin-top:20px; background:var(--surface-light); border:1px dashed var(--border-gold); padding:20px; border-radius:8px;">
+        <h4 style="color:var(--gold-light); font-size:15px; margin-bottom:8px;"><i class="fas fa-key"></i> تمديد العضوية دون ضياع الأيام المتبقية</h4>
+        <p style="font-size:13px; color:var(--dim-color); margin-bottom:12px;">سيتم ربط الكارت الجديد ليبدأ تلقائياً فور نهاية اشتراكك الحالي.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <input type="text" id="extraActivationCodeInput" class="form-control" placeholder="أدخل رمز تفعيل الكارت (مثال: SDA-X7K4-92MP-8Q5W)" style="flex:1; min-width:220px;">
+          <button type="button" onclick="submitActivateMembership('extraActivationCodeInput')" class="submit-btn" style="width:auto; padding:10px 24px; margin:0;">
+            <i class="fas fa-check"></i> تفعيل التمديد
+          </button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // الحالة 2: عضوية منتهية
+  if (data.hasExpired) {
+    const expiredDateStr = data.expiredAt ? new Date(data.expiredAt).toLocaleDateString('ar-IQ') : 'سابقاً';
+    container.innerHTML = `
+      <div style="background:rgba(231,76,60,0.1); border:1px solid var(--danger); border-radius:10px; padding:22px; margin-bottom:20px;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+          <i class="fas fa-exclamation-circle" style="font-size:30px; color:var(--danger);"></i>
+          <div>
+            <h4 style="color:#ff9b9b; font-size:18px;">انتهت صلاحية عضويتك السابقة</h4>
+            <p style="font-size:13px; color:var(--dim-color);">تاريخ الانتهاء: ${expiredDateStr} ${data.lastSerialNumber ? `(الكارت السابق: ${data.lastSerialNumber})` : ''}</p>
+          </div>
+        </div>
+        <p style="font-size:13.5px; color:var(--text-color); line-height:1.7;">
+          حسابك ومساحتك ومقالاتك السابقة المقبولة ما زالت محفوظة ومتاحة للعامة، ولكن تتطلب إضافة مقالات جديدة تجديد العضوية.
+        </p>
+      </div>
+
+      <div style="background:var(--surface-light); border:1px solid var(--border-gold); border-radius:10px; padding:22px;">
+        <h4 style="color:var(--gold-light); font-size:16px; margin-bottom:10px;"><i class="fas fa-sync-alt"></i> تجديد وتفعيل كارت العضوية الجديد</h4>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <input type="text" id="renewActivationCodeInput" class="form-control" placeholder="أدخل رمز التفعيل السري (مثال: SDA-X7K4-92MP-8Q5W)" style="flex:1; min-width:220px;">
+          <button type="button" onclick="submitActivateMembership('renewActivationCodeInput')" class="submit-btn" style="width:auto; padding:10px 24px; margin:0;">
+            <i class="fas fa-unlock-alt"></i> تفعيل الاشتراك الآن
+          </button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // الحالة 3: مستخدم غير مشترك
+  container.innerHTML = `
+    <div style="background:var(--surface-light); border:1px solid var(--border-subtle); border-radius:10px; padding:24px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+        <i class="fas fa-gem" style="font-size:32px; color:var(--gold-primary);"></i>
+        <div>
+          <h4 style="color:var(--gold-light); font-size:18px;">انضم لعضوية صدى العطاء ككاتب ومساهم</h4>
+          <p style="font-size:13px; color:var(--dim-color);">امتلك مساحتك الخاصة لنشر مقالاتك وتغطياتك الميدانية للجمهور العام</p>
+        </div>
+      </div>
+
+      <!-- باقات العضوية المعتمدة -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">
+        <div style="background:var(--surface-color); border:1px solid var(--border-gold); padding:14px; border-radius:8px; text-align:center;">
+          <span style="font-size:13px; color:var(--dim-color); display:block;">العضوية الشهرية</span>
+          <b style="font-size:20px; color:var(--gold-primary);">2,000 د.ع فقط</b>
+        </div>
+        <div style="background:var(--surface-color); border:1px solid var(--border-gold); padding:14px; border-radius:8px; text-align:center;">
+          <span style="font-size:13px; color:var(--dim-color); display:block;">العضوية السنوية</span>
+          <b style="font-size:20px; color:var(--gold-primary);">15,000 د.ع فقط</b>
+        </div>
+      </div>
+
+      <p style="font-size:13px; color:var(--dim-color); line-height:1.7; margin-bottom:18px;">
+        <i class="fas fa-map-marker-alt" style="color:var(--gold-primary);"></i> يتم شراء كارت العضوية مباشرة من مقر وكالة ومؤسسة صدى العطاء (محافظة بابل - الحلة - شارع 80). يتضمن كل كارت رقماً تسلسلياً ورمز تفعيل سري لمرة واحدة.
+      </p>
+
+      <div style="border-top:1px dashed var(--border-subtle); padding-top:18px;">
+        <h5 style="color:var(--gold-light); font-size:15px; margin-bottom:10px;"><i class="fas fa-key"></i> تفعيل كارت العضوية:</h5>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <input type="text" id="initialActivationCodeInput" class="form-control" placeholder="أدخل رمز التفعيل المدون على الكارت (مثال: SDA-X7K4-92MP-8Q5W)" style="flex:1; min-width:240px;">
+          <button type="button" onclick="submitActivateMembership('initialActivationCodeInput')" class="submit-btn" style="width:auto; padding:10px 26px; margin:0;">
+            <i class="fas fa-check-circle"></i> تفعيل العضوية
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleCardActivationForm() {
+  const box = document.getElementById('extraActivationBox');
+  if (box) box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
+// تفعيل كارت العضوية
+async function submitActivateMembership(inputId) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const code = input.value.trim();
+
+  if (!code || code.length < 8) {
+    showToast('يرجى إدخال رمز تفعيل صحيح ومكتمل', 'danger');
+    return;
+  }
+
+  const token = localStorage.getItem('sada_user_token');
+  showToast('جاري التحقق من صحة الكارت وتفعيله...', 'info');
+
+  try {
+    const res = await fetch(`${API_URL}/user/membership/activate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ activationCode: code })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      showToast(data.message || 'تم تفعيل العضوية بنجاح!', 'success');
+      loadUserMembership();
+    } else {
+      showToast(data.error || 'تعذر تفعيل الكارت', 'danger');
+    }
+  } catch (err) {
+    showToast('تعذر الاتصال بالسيرفر لتفعيل الكارت', 'danger');
+  }
+}
+
+/* ========================================================
+   5. مساحة ومنشورات العضو (إضافة / تعديل / حذف)
+   ======================================================== */
+async function handlePostImagesPreview(event) {
+  const files = Array.from(event.target.files);
+  const container = document.getElementById('postImagesPreviewContainer');
+  if (!container) return;
+
+  if (files.length === 0) return;
+
+  showToast(`جاري معالجة وضغط ${files.length} صورة من جهازك...`, 'info');
+  pendingUploadedImages = await Promise.all(files.map(f => compressImage(f, 1200, 0.75)));
+
+  container.innerHTML = '';
+  pendingUploadedImages.forEach((imgBase64, idx) => {
+    const thumb = document.createElement('div');
+    thumb.className = 'preview-thumb-box';
+    thumb.innerHTML = `
+      <img src="${imgBase64}" class="gold-framed-image" alt="معاينة ${idx+1}">
+    `;
+    container.appendChild(thumb);
+  });
+  showToast(`تم تجهيز ${files.length} صورة بإطار ذهبي أنيق!`, 'success');
+}
+
+async function submitMemberPostAction() {
+  const editId = document.getElementById('memberEditPostId').value;
+  const title = document.getElementById('memberPostTitle').value.trim();
+  const content = document.getElementById('memberPostContent').value.trim();
+  const token = localStorage.getItem('sada_user_token');
+
+  if (!title || !content) {
+    showToast('يرجى ملء العنوان والمحتوى بالكامل', 'danger');
+    return;
+  }
+
+  const submitBtn = document.getElementById('saveMemberPostBtn');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+  }
+
+  try {
+    let res;
+    if (editId) {
+      // تعديل مقال (يعود لمراجعة الإدارة)
+      res = await fetch(`${API_URL}/member/posts/${editId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({
+          title,
+          content,
+          mediaUrls: pendingUploadedImages.length > 0 ? pendingUploadedImages : undefined
+        })
+      });
+    } else {
+      // إضافة مقال جديد
+      res = await fetch(`${API_URL}/member/posts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({
+          title,
+          content,
+          mediaUrls: pendingUploadedImages
+        })
+      });
+    }
+
+    const data = await res.json();
+    if (res.ok) {
+      showToast(data.message || 'تم إرسال المقال للمراجعة والتدقيق بنجاح!', 'success');
+      resetMemberPostForm();
+      loadMyMemberPosts();
+    } else {
+      showToast(data.error || 'تعذر حفظ المقال', 'danger');
+    }
+  } catch (err) {
+    showToast('تعذر الاتصال بالسيرفر', 'danger');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال المقال للمراجعة والتدقيق';
+    }
+  }
+}
+
+function resetMemberPostForm() {
+  document.getElementById('memberArticleForm').reset();
+  document.getElementById('memberEditPostId').value = '';
+  document.getElementById('postImagesPreviewContainer').innerHTML = '';
+  pendingUploadedImages = [];
+  document.getElementById('postFormHeaderTitle').innerHTML = '<i class="fas fa-plus-circle"></i> نشر مقال أو تغطية جديدة';
+  document.getElementById('saveMemberPostBtn').innerHTML = '<i class="fas fa-paper-plane"></i> إرسال المقال للمراجعة والتدقيق';
+  document.getElementById('cancelMemberEditBtn').style.display = 'none';
+}
+
+async function loadMyMemberPosts() {
+  const token = localStorage.getItem('sada_user_token');
+  const container = document.getElementById('myPostsListContainer');
+  const countSpan = document.getElementById('myPostsCount');
+  if (!token || !container) return;
+
+  try {
+    const res = await fetch(`${API_URL}/member/my-posts`, {
+      headers: { 'Authorization': token }
+    });
+    const posts = await res.json();
+
+    if (res.ok && Array.isArray(posts)) {
+      myPostsList = posts;
+      if (countSpan) countSpan.innerText = posts.length;
+
+      if (posts.length === 0) {
+        container.innerHTML = '<p style="color:var(--dim-color); font-size:13.5px; padding:15px 0;">لم تقم بنشر أي مقالات حتى الآن.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      posts.forEach(p => {
+        let statusBadge = '<span class="badge-status badge-pending"><i class="fas fa-hourglass-half"></i> قيد مراجعة وتدقيق الإدارة</span>';
+        if (p.status === 'approved') statusBadge = '<span class="badge-status badge-approved"><i class="fas fa-check-circle"></i> منشور ومعتمد للعامة</span>';
+        if (p.status === 'rejected') statusBadge = `<span class="badge-status badge-danger"><i class="fas fa-times-circle"></i> مرفوض: ${p.rejectReason || 'لم يستوفِ الشروط'}</span>`;
+
+        let imagesGallery = '';
+        if (Array.isArray(p.mediaUrls) && p.mediaUrls.length > 0) {
+          imagesGallery = `<div style="display:flex; gap:8px; margin-top:12px; overflow-x:auto; padding-bottom:6px;">`;
+          p.mediaUrls.forEach(url => {
+            imagesGallery += `<img src="${url}" class="gold-framed-image" style="width:75px; height:75px; flex-shrink:0;" alt="صورة">`;
+          });
+          imagesGallery += `</div>`;
+        }
+
+        const dateStr = p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-IQ') : 'مؤخراً';
+
+        const card = document.createElement('div');
+        card.className = 'member-post-card';
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+            <h4 style="color:var(--gold-light); font-size:16.5px; font-weight:700;">${escapeText(p.title)}</h4>
+            ${statusBadge}
+          </div>
+          <p style="font-size:13.5px; color:var(--text-color); line-height:1.7; white-space:pre-line; max-height:120px; overflow:hidden;">
+            ${escapeText(p.content)}
+          </p>
+          ${imagesGallery}
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; border-top:1px solid var(--border-subtle); padding-top:10px; font-size:12px; color:var(--dim-color);">
+            <span><i class="fas fa-calendar-alt"></i> ${dateStr}</span>
+            <div style="display:flex; gap:8px;">
+              <button type="button" onclick="startEditMemberPost('${p._id}')" class="btn-outline" style="padding:4px 12px; font-size:11.5px;"><i class="fas fa-edit"></i> تعديل</button>
+              <button type="button" onclick="deleteMemberPostAction('${p._id}')" class="btn-outline" style="padding:4px 10px; font-size:11.5px; border-color:var(--danger); color:#ff9b9b;"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+  } catch (err) {
+    container.innerHTML = '<p style="color:var(--danger); font-size:13px;">تعذر جلب مقالاتك حالياً.</p>';
+  }
+}
+
+function startEditMemberPost(postId) {
+  const post = myPostsList.find(p => p._id === postId);
+  if (!post) return;
+
+  document.getElementById('memberEditPostId').value = post._id;
+  document.getElementById('memberPostTitle').value = post.title || '';
+  document.getElementById('memberPostContent').value = post.content || '';
+  
+  const container = document.getElementById('postImagesPreviewContainer');
+  container.innerHTML = '';
+  pendingUploadedImages = post.mediaUrls || [];
+  pendingUploadedImages.forEach(img => {
+    const thumb = document.createElement('div');
+    thumb.className = 'preview-thumb-box';
+    thumb.innerHTML = `<img src="${img}" class="gold-framed-image" alt="صورة">`;
+    container.appendChild(thumb);
+  });
+
+  document.getElementById('postFormHeaderTitle').innerHTML = '<i class="fas fa-edit"></i> تعديل المقال (سيعاد تلقائياً لمراجعة الإدارة)';
+  document.getElementById('saveMemberPostBtn').innerHTML = '<i class="fas fa-save"></i> حفظ التعديلات وإرسالها للمراجعة';
+  document.getElementById('cancelMemberEditBtn').style.display = 'inline-block';
+
+  document.getElementById('memberPostsSectionBox').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function deleteMemberPostAction(postId) {
+  if (!confirm('هل تريد بالتأكيد حذف هذا المنشور؟')) return;
+  const token = localStorage.getItem('sada_user_token');
+
+  try {
+    const res = await fetch(`${API_URL}/member/posts/${postId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': token }
+    });
+    if (res.ok) {
+      showToast('تم حذف المقال بنجاح', 'info');
+      loadMyMemberPosts();
+    } else {
+      showToast('تعذر حذف المقال', 'danger');
+    }
+  } catch (err) {
+    showToast('تعذر الاتصال بالسيرفر', 'danger');
+  }
+}
+
+/* ========================================================
+   6. تعديل البيانات الشخصية ورفع الصورة
+   ======================================================== */
 async function handleAvatarUpload(event) {
   const file = event.target.files[0];
   if(!file) return;
@@ -576,37 +1382,31 @@ async function handleAvatarUpload(event) {
   }
 
   showToast('جاري ضغط ومعالجة الصورة...', 'info');
+  const base64Img = await compressImage(file, 400, 0.8);
+  const token = localStorage.getItem('sada_user_token');
 
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    const base64Img = e.target.result;
-    const token = localStorage.getItem('sada_user_token');
+  try {
+    const res = await fetch(`${API_URL}/user/avatar`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ avatar: base64Img })
+    });
+    const data = await res.json();
 
-    try {
-      const res = await fetch(`${API_URL}/user/avatar`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
-        },
-        body: JSON.stringify({ avatar: base64Img })
-      });
-      const data = await res.json();
-
-      if(res.ok) {
-        document.getElementById('userAvatarImg').src = base64Img;
-        showToast('تم تحديث الصورة الشخصية بنجاح!', 'success');
-      } else {
-        showToast(data.error || 'فشل تحديث الصورة', 'danger');
-      }
-    } catch(err) {
-      showToast('تعذر الاتصال بالسيرفر لحفظ الصورة', 'danger');
+    if(res.ok) {
+      document.getElementById('userAvatarImg').src = base64Img;
+      showToast('تم تحديث الصورة الشخصية بنجاح!', 'success');
+    } else {
+      showToast(data.error || 'فشل تحديث الصورة', 'danger');
     }
-  };
-  reader.readAsDataURL(file);
+  } catch(err) {
+    showToast('تعذر الاتصال بالسيرفر لحفظ الصورة', 'danger');
+  }
 }
 
-// 5. حذف الصورة الشخصية والعودة للافتراضية
 async function handleRemoveAvatar() {
   if(!confirm('هل تريد حذف صورتك الشخصية والعودة للصورة الافتراضية؟')) return;
 
@@ -626,7 +1426,6 @@ async function handleRemoveAvatar() {
   }
 }
 
-// 6. تعديل البيانات الشخصية
 async function updateProfileData() {
   const fullName = document.getElementById('editFullName').value.trim();
   const phone = document.getElementById('editPhone').value.trim();
@@ -658,7 +1457,51 @@ async function updateProfileData() {
   }
 }
 
-// 7. تسجيل الخروج
+function openRequestResetView() {
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('requestResetBox').style.display = 'block';
+}
+
+function closeRequestResetView() {
+  document.getElementById('requestResetBox').style.display = 'none';
+  document.getElementById('loginForm').style.display = 'block';
+}
+
+async function submitRequestAccountUpdate() {
+  const identifier = document.getElementById('reqResetIdentifier').value.trim();
+  const newPassword = document.getElementById('reqResetNewPassword').value;
+  const newName = document.getElementById('reqResetNewName').value.trim();
+  const newUsername = document.getElementById('reqResetNewUsername').value.trim();
+
+  if (!identifier) {
+    showToast('يرجى كتابة اسم المستخدم أو البريد الإلكتروني الحالي', 'danger');
+    return;
+  }
+  if (!newPassword && !newName && !newUsername) {
+    showToast('يرجى كتابة بيان واحد على الأقل لتعديله', 'danger');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/user/request-account-update`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier, newPassword, newName, newUsername })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      showToast(data.message || 'تم إرسال طلب التعديل للإدارة بنجاح!', 'success');
+      closeRequestResetView();
+      document.getElementById('loginUserOrEmail').value = identifier;
+    } else {
+      showToast(data.error || 'تعذر إرسال الطلب', 'danger');
+    }
+  } catch(e) {
+    showToast('تعذر الاتصال بالسيرفر', 'danger');
+  }
+}
+
 function handleLogout() {
   localStorage.removeItem('sada_user_token');
   localStorage.removeItem('sada_user_data');
@@ -670,7 +1513,13 @@ function handleLogout() {
   switchAuthTab('login');
 }
 
+function escapeText(str) {
+  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('sada_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
   loadUserProfile();
 });
 </script>

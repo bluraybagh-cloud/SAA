@@ -4,6 +4,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
+
 let bcrypt = null;
 try {
     bcrypt = require('bcrypt');
@@ -15,7 +16,9 @@ try {
     }
 }
 
+
 const app = express();
+
 
 app.use(cors({
     origin: '*',
@@ -24,12 +27,14 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '30mb' }));
 
+
 const PORT = process.env.PORT || 5000;
 const SECRET_KEY = process.env.JWT_SECRET || "Sada@Agency_Secret_Key_2026_Secure_Token";
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sada_admin:Sada%402026%23Secure_Pass99!@cluster0.hrvqt9v.mongodb.net/sada_agency?appName=Cluster0';
 
+
 // ==========================================
-// 1. تشفير كلمات المرور
+// 1. تشفير كلمات المرور والرموز السرية
 // ==========================================
 async function hashPassword(plainPassword) {
     if (bcrypt) {
@@ -39,6 +44,7 @@ async function hashPassword(plainPassword) {
     const hash = crypto.pbkdf2Sync(plainPassword, salt, 1000, 64, 'sha512').toString('hex');
     return `pbkdf2:${salt}:${hash}`;
 }
+
 
 async function verifyPassword(plainPassword, storedPassword) {
     if (!storedPassword || !plainPassword) return false;
@@ -55,6 +61,29 @@ async function verifyPassword(plainPassword, storedPassword) {
     return plainPassword === storedPassword;
 }
 
+
+function hashActivationCode(code) {
+    if (!code || typeof code !== 'string') return '';
+    return crypto.createHash('sha256').update(code.trim().toUpperCase()).digest('hex');
+}
+
+
+function generateRandomCodeSegment(length = 4) {
+    const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+    let result = '';
+    const bytes = crypto.randomBytes(length);
+    for (let i = 0; i < length; i++) {
+        result += chars[bytes[i] % chars.length];
+    }
+    return result;
+}
+
+
+function generateActivationCode() {
+    return `SDA-${generateRandomCodeSegment(4)}-${generateRandomCodeSegment(4)}-${generateRandomCodeSegment(4)}`;
+}
+
+
 // ==========================================
 // 2. الحماية من التخمين والتكرار (Rate Limiter)
 // ==========================================
@@ -65,10 +94,12 @@ const rateLimitLogin = (maxAttempts = 6, windowMs = 15 * 60 * 1000) => {
         const now = Date.now();
         const record = loginAttemptsMap.get(ip) || { count: 0, resetTime: now + windowMs };
 
+
         if (now > record.resetTime) {
             record.count = 0;
             record.resetTime = now + windowMs;
         }
+
 
         if (record.count >= maxAttempts) {
             const waitMinutes = Math.ceil((record.resetTime - now) / 60000);
@@ -77,21 +108,25 @@ const rateLimitLogin = (maxAttempts = 6, windowMs = 15 * 60 * 1000) => {
             });
         }
 
+
         record.count += 1;
         loginAttemptsMap.set(ip, record);
         next();
     };
 };
 
+
 function clearLoginAttempts(req) {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown-ip';
     loginAttemptsMap.delete(ip);
 }
 
+
 function sanitizeInput(val) {
     if (typeof val !== 'string') return '';
     return val.trim().replace(/[$]/g, '');
 }
+
 
 function isValidImageString(str) {
     if (!str || typeof str !== 'string') return false;
@@ -104,9 +139,11 @@ function isValidImageString(str) {
     return isUrl || isBase64Image;
 }
 
+
 // ==========================================
-// 3. جداول قاعدة البيانات (Schemas & Models)
+// 3. جداول ونماذج قاعدة البيانات (Mongoose Models)
 // ==========================================
+
 
 const UserSchema = new mongoose.Schema({
     fullName: { type: String, default: '' },
@@ -116,8 +153,14 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true },
     avatar: { type: String, default: '' },
     status: { type: String, enum: ['pending', 'approved', 'rejected', 'suspended'], default: 'pending', index: true },
-    role: { type: String, enum: ['ADMIN', 'ADVERTISER', 'USER'], default: 'USER' }
+    role: { type: String, enum: ['ADMIN', 'ADVERTISER', 'USER'], default: 'USER' },
+    requestedPassword: { type: String, default: '' },
+    requestedName: { type: String, default: '' },
+    requestedUsername: { type: String, default: '' },
+    updateRequestStatus: { type: String, enum: ['none', 'pending', 'approved', 'rejected'], default: 'none' },
+    updateRequestDate: { type: String, default: '' }
 }, { timestamps: true });
+
 
 UserSchema.set('toJSON', {
     transform: (doc, ret) => {
@@ -126,6 +169,7 @@ UserSchema.set('toJSON', {
     }
 });
 const User = mongoose.model('User', UserSchema);
+
 
 const PostSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -144,6 +188,7 @@ const PostSchema = new mongoose.Schema({
 }, { timestamps: true });
 const Post = mongoose.model('Post', PostSchema);
 
+
 const ReactionSchema = new mongoose.Schema({
     postId: { type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true, index: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
@@ -151,6 +196,7 @@ const ReactionSchema = new mongoose.Schema({
 }, { timestamps: true });
 ReactionSchema.index({ postId: 1, userId: 1 }, { unique: true });
 const Reaction = mongoose.model('Reaction', ReactionSchema);
+
 
 const CommentSchema = new mongoose.Schema({
     postId: { type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true, index: true },
@@ -163,11 +209,13 @@ const CommentSchema = new mongoose.Schema({
 }, { timestamps: true });
 const Comment = mongoose.model('Comment', CommentSchema);
 
+
 const StatSchema = new mongoose.Schema({
     key: { type: String, default: 'global_visits', unique: true },
     visits: { type: Number, default: 0 }
 });
 const Stat = mongoose.model('Stat', StatSchema);
+
 
 const AdBookingSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
@@ -188,8 +236,49 @@ const AdBookingSchema = new mongoose.Schema({
 }, { timestamps: true });
 const AdBooking = mongoose.model('AdBooking', AdBookingSchema);
 
+
+// نماذج كروت واشتراكات العضوية ومقالات الأعضاء
+const MembershipCardSchema = new mongoose.Schema({
+    serialNumber: { type: String, required: true, unique: true, index: true },
+    activationCodeHash: { type: String, required: true, unique: true, index: true },
+    type: { type: String, enum: ['monthly', 'annual'], required: true, index: true },
+    status: { type: String, enum: ['unused', 'used', 'cancelled'], default: 'unused', index: true },
+    usedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+    usedAt: { type: Date, default: null },
+    cancelledAt: { type: Date, default: null }
+}, { timestamps: true });
+const MembershipCard = mongoose.model('MembershipCard', MembershipCardSchema);
+
+
+const SubscriptionSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    type: { type: String, enum: ['monthly', 'annual'], required: true },
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true, index: true },
+    status: { type: String, enum: ['active', 'expired'], default: 'active', index: true },
+    cardId: { type: mongoose.Schema.Types.ObjectId, ref: 'MembershipCard', required: true },
+    serialNumber: { type: String, required: true }
+}, { timestamps: true });
+const Subscription = mongoose.model('Subscription', SubscriptionSchema);
+
+
+const MemberPostSchema = new mongoose.Schema({
+    authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    authorName: { type: String, required: true },
+    authorUsername: { type: String, required: true, index: true },
+    authorAvatar: { type: String, default: '' },
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+    mediaUrls: [String],
+    status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending', index: true },
+    rejectReason: { type: String, default: '' },
+    publishedAt: { type: Date, default: null }
+}, { timestamps: true });
+const MemberPost = mongoose.model('MemberPost', MemberPostSchema);
+
+
 // ==========================================
-// 4. الاتصال والتهيئة
+// 4. الاتصال بقاعدة البيانات والتهيئة
 // ==========================================
 mongoose.connect(MONGODB_URI)
   .then(async () => {
@@ -198,6 +287,7 @@ mongoose.connect(MONGODB_URI)
           const adminUsername = "sada_admin";
           const adminPasswordRaw = "Sada@2026#Secure_Pass99!";
           const existingAdmin = await User.findOne({ username: adminUsername });
+
 
           if (!existingAdmin) {
               const secureHashedPassword = await hashPassword(adminPasswordRaw);
@@ -212,10 +302,12 @@ mongoose.connect(MONGODB_URI)
               }).save();
           }
 
+
           const existingStat = await Stat.findOne({ key: 'global_visits' });
           if (!existingStat) {
               await new Stat({ key: 'global_visits', visits: 0 }).save();
           }
+
 
           await Post.updateMany(
               { views: { $exists: false } },
@@ -227,15 +319,17 @@ mongoose.connect(MONGODB_URI)
   })
   .catch(err => console.error("خطأ اتصال مونغو:", err.message));
 
-// ==========================================
-// 5. الصلاحيات والـ Middlewares
-// ==========================================
 
+// ==========================================
+// 5. طبقات الصلاحيات والـ Middlewares
+// ==========================================
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     if (!authHeader) return res.status(401).json({ error: "جلسة غير مصرح بها. يرجى تسجيل الدخول" });
 
+
     const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
+
 
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
         if (err) return res.status(401).json({ error: "انتهت صلاحية الجلسة، يرجى تسجيل الدخول مجدداً" });
@@ -244,17 +338,19 @@ const verifyToken = (req, res, next) => {
     });
 };
 
+
 const verifyActiveUser = (req, res, next) => {
     verifyToken(req, res, () => {
         if (req.user && req.user.status === 'approved') {
             next();
         } else {
             return res.status(403).json({ 
-                error: "يتطلب التفاعل أو التعليق حساباً نشطاً ومقبولاً من قبل إدارة الموقع." 
+                error: "يتطلب هذا الإجراء حساباً نشطاً ومقبولاً من قبل إدارة الموقع." 
             });
         }
     });
 };
+
 
 const verifyAdmin = (req, res, next) => {
     verifyToken(req, res, () => {
@@ -266,10 +362,43 @@ const verifyAdmin = (req, res, next) => {
     });
 };
 
+
+const verifyActiveMembership = (req, res, next) => {
+    verifyActiveUser(req, res, async () => {
+        try {
+            const now = new Date();
+            await Subscription.updateMany(
+                { userId: req.user.id, status: 'active', endDate: { $lte: now } },
+                { $set: { status: 'expired' } }
+            );
+
+
+            const activeSub = await Subscription.findOne({
+                userId: req.user.id,
+                status: 'active',
+                endDate: { $gt: now }
+            }).sort({ endDate: -1 });
+
+
+            if (!activeSub) {
+                return res.status(403).json({
+                    error: "يتطلب هذا الإجراء اشتراكاً فعالاً في عضوية وكالة صدى العطاء."
+                });
+            }
+
+
+            req.subscription = activeSub;
+            next();
+        } catch (err) {
+            return res.status(500).json({ error: "تعذر التحقق من صلاحية العضوية" });
+        }
+    });
+};
+
+
 // ==========================================
 // 6. مسارات حسابات المستخدمين والبروفايل
 // ==========================================
-
 app.post('/api/user/register', rateLimitLogin(5, 10 * 60 * 1000), async (req, res) => {
     try {
         const fullName = sanitizeInput(req.body.fullName);
@@ -278,6 +407,7 @@ app.post('/api/user/register', rateLimitLogin(5, 10 * 60 * 1000), async (req, re
         const phone = sanitizeInput(req.body.phone);
         const password = typeof req.body.password === 'string' ? req.body.password : '';
         const confirmPassword = typeof req.body.confirmPassword === 'string' ? req.body.confirmPassword : '';
+
 
         if (!fullName || !username || !email || !password) {
             return res.status(400).json({ error: "يرجى تعبئة جميع الحقول المطلوبة" });
@@ -289,12 +419,14 @@ app.post('/api/user/register', rateLimitLogin(5, 10 * 60 * 1000), async (req, re
             return res.status(400).json({ error: "كلمتا المرور غير متطابقتين" });
         }
 
+
         const existing = await User.findOne({ 
             $or: [{ username }, { email }] 
         });
         if (existing) {
             return res.status(400).json({ error: "اسم المستخدم أو البريد الإلكتروني مسجل مسبقاً" });
         }
+
 
         const securePassword = await hashPassword(password);
         const newUser = new User({
@@ -308,6 +440,7 @@ app.post('/api/user/register', rateLimitLogin(5, 10 * 60 * 1000), async (req, re
         });
         await newUser.save();
 
+
         clearLoginAttempts(req);
         res.json({ 
             message: "تم تسجيل الحساب بنجاح! حسابك الآن قيد مراجعة وتدقيق الإدارة وسيتم تفعيله قريباً.",
@@ -318,27 +451,33 @@ app.post('/api/user/register', rateLimitLogin(5, 10 * 60 * 1000), async (req, re
     }
 });
 
+
 app.post('/api/user/login', rateLimitLogin(6, 15 * 60 * 1000), async (req, res) => {
     try {
         const searchKey = sanitizeInput(req.body.usernameOrEmail).toLowerCase();
         const password = typeof req.body.password === 'string' ? req.body.password : '';
 
+
         if (!searchKey || !password) {
             return res.status(400).json({ error: "يرجى إدخال اسم المستخدم وكلمة المرور" });
         }
+
 
         const user = await User.findOne({
             $or: [{ username: searchKey }, { email: searchKey }]
         });
 
+
         if (!user) {
             return res.status(400).json({ error: "بيانات الدخول غير صحيحة" });
         }
+
 
         const isPasswordCorrect = await verifyPassword(password, user.password);
         if (!isPasswordCorrect) {
             return res.status(400).json({ error: "بيانات الدخول غير صحيحة" });
         }
+
 
         if (user.status === 'pending') {
             return res.status(403).json({ 
@@ -359,12 +498,14 @@ app.post('/api/user/login', rateLimitLogin(6, 15 * 60 * 1000), async (req, res) 
             });
         }
 
+
         clearLoginAttempts(req);
         const token = jwt.sign(
             { id: user._id, username: user.username, email: user.email, role: user.role, status: user.status }, 
             SECRET_KEY, 
             { expiresIn: '15d' }
         );
+
 
         res.json({ 
             token, 
@@ -384,6 +525,7 @@ app.post('/api/user/login', rateLimitLogin(6, 15 * 60 * 1000), async (req, res) 
     }
 });
 
+
 app.get('/api/user/profile', verifyToken, async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password -__v');
@@ -394,14 +536,17 @@ app.get('/api/user/profile', verifyToken, async (req, res) => {
     }
 });
 
+
 app.put('/api/user/profile', verifyToken, async (req, res) => {
     try {
         const { fullName, phone, currentPassword, newPassword } = req.body;
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ error: "المستخدم غير موجود" });
 
+
         if (fullName) user.fullName = sanitizeInput(fullName);
         if (phone) user.phone = sanitizeInput(phone);
+
 
         if (newPassword && newPassword.length >= 6) {
             if (!currentPassword) {
@@ -414,12 +559,14 @@ app.put('/api/user/profile', verifyToken, async (req, res) => {
             user.password = await hashPassword(newPassword);
         }
 
+
         await user.save();
         res.json({ message: "تم تحديث البيانات بنجاح", user });
     } catch (err) {
         res.status(500).json({ error: "تعذر تعديل البيانات" });
     }
 });
+
 
 app.post('/api/user/avatar', verifyToken, async (req, res) => {
     try {
@@ -428,17 +575,20 @@ app.post('/api/user/avatar', verifyToken, async (req, res) => {
             return res.status(400).json({ error: "صيغة الصورة غير صالحة" });
         }
 
+
         const user = await User.findByIdAndUpdate(
             req.user.id, 
             { avatar }, 
             { new: true }
         ).select('-password');
 
+
         res.json({ message: "تم تحديث الصورة الشخصية بنجاح", avatar: user.avatar });
     } catch (err) {
         res.status(500).json({ error: "تعذر حفظ الصورة الشخصية" });
     }
 });
+
 
 app.delete('/api/user/avatar', verifyToken, async (req, res) => {
     try {
@@ -449,10 +599,540 @@ app.delete('/api/user/avatar', verifyToken, async (req, res) => {
     }
 });
 
-// ==========================================
-// 7. مسارات المعلنين وحجز الإعلانات
-// ==========================================
 
+app.post('/api/user/request-account-update', rateLimitLogin(5, 15 * 60 * 1000), async (req, res) => {
+    try {
+        const identifier = sanitizeInput(req.body.identifier).toLowerCase();
+        const { newPassword, newName, newUsername } = req.body;
+
+
+        const user = await User.findOne({
+            $or: [{ username: identifier }, { email: identifier }, { phone: identifier }]
+        });
+
+
+        if (!user) {
+            return res.status(404).json({ error: "لم يتم العثور على حساب مطابق لهذه البيانات" });
+        }
+
+
+        let hasChange = false;
+        if (newPassword && newPassword.length >= 6) {
+            user.requestedPassword = newPassword;
+            hasChange = true;
+        }
+        if (newName && newName.trim().length >= 2) {
+            user.requestedName = sanitizeInput(newName);
+            hasChange = true;
+        }
+        if (newUsername && newUsername.trim().length >= 3) {
+            const cleanUname = sanitizeInput(newUsername).toLowerCase();
+            const existingUname = await User.findOne({ username: cleanUname, _id: { $ne: user._id } });
+            if (existingUname) {
+                return res.status(400).json({ error: "اسم المعرف الجديد محجوز لمستخدم آخر" });
+            }
+            user.requestedUsername = cleanUname;
+            hasChange = true;
+        }
+
+
+        if (!hasChange) {
+            return res.status(400).json({ error: "يرجى إدخال بيان واحد على الأقل لتعديله" });
+        }
+
+
+        user.updateRequestStatus = 'pending';
+        user.updateRequestDate = new Date().toISOString();
+        await user.save();
+
+
+        res.json({ 
+            message: "تم إرسال طلب التعديل إلى إدارة الموقع بنجاح! سيتم تطبيق التغييرات فور مراجعة وموافقة الأدمن." 
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إرسال الطلب، يرجى المحاولة لاحقاً" });
+    }
+});
+
+
+// ==========================================
+// 7. مسارات العضوية وتفعيل الكروت للمستخدمين
+// ==========================================
+app.get('/api/user/membership', verifyToken, async (req, res) => {
+    try {
+        const now = new Date();
+        await Subscription.updateMany(
+            { userId: req.user.id, status: 'active', endDate: { $lte: now } },
+            { $set: { status: 'expired' } }
+        );
+
+
+        const activeSub = await Subscription.findOne({
+            userId: req.user.id,
+            status: 'active',
+            endDate: { $gt: now }
+        }).sort({ endDate: -1 });
+
+
+        if (activeSub) {
+            const diffMs = new Date(activeSub.endDate).getTime() - now.getTime();
+            const daysRemaining = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+            return res.json({
+                isSubscribed: true,
+                type: activeSub.type,
+                serialNumber: activeSub.serialNumber,
+                startDate: activeSub.startDate,
+                endDate: activeSub.endDate,
+                daysRemaining,
+                status: 'active'
+            });
+        }
+
+
+        const lastExpired = await Subscription.findOne({ userId: req.user.id }).sort({ endDate: -1 });
+        return res.json({
+            isSubscribed: false,
+            hasExpired: Boolean(lastExpired),
+            lastSerialNumber: lastExpired ? lastExpired.serialNumber : null,
+            expiredAt: lastExpired ? lastExpired.endDate : null,
+            status: lastExpired ? 'expired' : 'none'
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر جلب بيانات العضوية" });
+    }
+});
+
+
+app.post('/api/user/membership/activate', rateLimitLogin(6, 15 * 60 * 1000), verifyActiveUser, async (req, res) => {
+    try {
+        const rawCode = typeof req.body.activationCode === 'string' ? req.body.activationCode : '';
+        const cleanCode = sanitizeInput(rawCode).toUpperCase().replace(/\s+/g, '');
+
+
+        if (!cleanCode || cleanCode.length < 8) {
+            return res.status(400).json({ error: "يرجى إدخال رمز تفعيل صحيح" });
+        }
+
+
+        const codeHash = hashActivationCode(cleanCode);
+        const card = await MembershipCard.findOne({ activationCodeHash: codeHash });
+
+
+        if (!card) {
+            return res.status(400).json({ error: "رمز التفعيل غير صحيح أو غير مسجل بالنظام" });
+        }
+        if (card.status === 'used') {
+            return res.status(400).json({ error: "هذا الكارت تم استخدامه وتفعيله مسبقاً" });
+        }
+        if (card.status === 'cancelled') {
+            return res.status(400).json({ error: "هذا الكارت تم إلغاؤه من قبل الإدارة ولا يمكن استخدامه" });
+        }
+
+
+        const now = new Date();
+        const currentActive = await Subscription.findOne({
+            userId: req.user.id,
+            status: 'active',
+            endDate: { $gt: now }
+        }).sort({ endDate: -1 });
+
+
+        const startDate = currentActive ? new Date(currentActive.endDate) : now;
+        const durationDays = card.type === 'annual' ? 365 : 30;
+        const durationMs = durationDays * 24 * 60 * 60 * 1000;
+        const endDate = new Date(startDate.getTime() + durationMs);
+
+
+        card.status = 'used';
+        card.usedBy = req.user.id;
+        card.usedAt = now;
+        await card.save();
+
+
+        const subscription = new Subscription({
+            userId: req.user.id,
+            type: card.type,
+            startDate,
+            endDate,
+            status: 'active',
+            cardId: card._id,
+            serialNumber: card.serialNumber
+        });
+        await subscription.save();
+
+
+        const diffMs = endDate.getTime() - now.getTime();
+        const daysRemaining = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+
+
+        res.json({
+            message: `تم تفعيل العضوية (${card.type === 'annual' ? 'السنوية' : 'الشهرية'}) بنجاح!`,
+            subscription: {
+                type: card.type,
+                serialNumber: card.serialNumber,
+                startDate,
+                endDate,
+                daysRemaining,
+                status: 'active'
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر تفعيل كارت العضوية، يرجى المحاولة لاحقاً" });
+    }
+});
+
+
+// ==========================================
+// 8. مسارات مقالات الأعضاء والمساحة العامة
+// ==========================================
+app.post('/api/member/posts', verifyActiveMembership, async (req, res) => {
+    try {
+        const title = sanitizeInput(req.body.title);
+        const content = sanitizeInput(req.body.content);
+        const { mediaUrls } = req.body;
+
+
+        if (!title || !content) {
+            return res.status(400).json({ error: "عنوان المنشور والمحتوى حقول إجبارية" });
+        }
+
+
+        const safeUrls = Array.isArray(mediaUrls)
+            ? mediaUrls.filter(u => isValidImageString(u))
+            : [];
+
+
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: "المستخدم غير موجود" });
+
+
+        const newPost = new MemberPost({
+            authorId: user._id,
+            authorName: user.fullName || user.username,
+            authorUsername: user.username,
+            authorAvatar: user.avatar || '',
+            title,
+            content,
+            mediaUrls: safeUrls,
+            status: 'pending'
+        });
+
+
+        await newPost.save();
+
+
+        res.json({
+            message: "تم إرسال مقالك للمراجعة والتدقيق بنجاح، وسيظهر للعامة فور اعتماده من الإدارة.",
+            post: newPost
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إرسال المنشور" });
+    }
+});
+
+
+app.put('/api/member/posts/:id', verifyActiveMembership, async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "معرف المنشور غير صالح" });
+        }
+        const post = await MemberPost.findOne({ _id: req.params.id, authorId: req.user.id });
+        if (!post) {
+            return res.status(404).json({ error: "المنشور غير موجود أو لا تملك صلاحية تعديله" });
+        }
+
+
+        const title = sanitizeInput(req.body.title);
+        const content = sanitizeInput(req.body.content);
+        const { mediaUrls } = req.body;
+
+
+        if (title) post.title = title;
+        if (content) post.content = content;
+        if (Array.isArray(mediaUrls) && mediaUrls.length > 0) {
+            const safeUrls = mediaUrls.filter(u => isValidImageString(u));
+            if (safeUrls.length > 0) post.mediaUrls = safeUrls;
+        }
+
+
+        post.status = 'pending';
+        post.rejectReason = '';
+        await post.save();
+
+
+        res.json({
+            message: "تم تحديث المنشور بنجاح وأعيد إلى قائمة المراجعة لموافقة الإدارة.",
+            post
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر تعديل المنشور" });
+    }
+});
+
+
+app.delete('/api/member/posts/:id', verifyToken, async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "معرف المنشور غير صالح" });
+        }
+        const post = await MemberPost.findOneAndDelete({ _id: req.params.id, authorId: req.user.id });
+        if (!post) {
+            return res.status(404).json({ error: "المنشور غير موجود أو لا تملك صلاحية حذفه" });
+        }
+        res.json({ message: "تم حذف المنشور بنجاح" });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر حذف المنشور" });
+    }
+});
+
+
+app.get('/api/member/my-posts', verifyToken, async (req, res) => {
+    try {
+        const posts = await MemberPost.find({ authorId: req.user.id })
+            .sort({ _id: -1 })
+            .select('-__v');
+        res.json(posts);
+    } catch (err) {
+        res.status(500).json({ error: "تعذر جلب منشوراتك" });
+    }
+});
+
+
+app.get('/api/members/:username', async (req, res) => {
+    try {
+        const username = sanitizeInput(req.params.username).toLowerCase();
+        const user = await User.findOne({ username }).select('fullName username avatar role status createdAt');
+        if (!user) {
+            return res.status(404).json({ error: "لم يتم العثور على هذا العضو" });
+        }
+
+
+        const posts = await MemberPost.find({
+            authorId: user._id,
+            status: 'approved'
+        }).sort({ publishedAt: -1, _id: -1 }).select('-__v');
+
+
+        const activeSub = await Subscription.findOne({
+            userId: user._id,
+            status: 'active',
+            endDate: { $gt: new Date() }
+        }).sort({ endDate: -1 });
+
+
+        res.json({
+            member: {
+                fullName: user.fullName || user.username,
+                username: user.username,
+                avatar: user.avatar,
+                membershipType: activeSub ? activeSub.type : 'عضو سابق / غير نشط',
+                isCurrentlyActive: Boolean(activeSub),
+                joinedDate: user.createdAt
+            },
+            posts
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر جلب مساحة العضو" });
+    }
+});
+
+
+// ==========================================
+// 9. مسارات لوحة تحكم الإدارة لكروت العضوية والمنشورات
+// ==========================================
+app.post('/api/admin/membership-cards/generate', verifyAdmin, async (req, res) => {
+    try {
+        let count = parseInt(req.body.count, 10);
+        const type = req.body.type;
+
+
+        if (!['monthly', 'annual'].includes(type)) {
+            return res.status(400).json({ error: "نوع العضوية يجب أن يكون إما monthly أو annual" });
+        }
+        if (isNaN(count) || count < 1 || count > 500) {
+            return res.status(400).json({ error: "عدد الكروت المطلوب توليدها يجب أن يكون بين 1 و 500 كارت" });
+        }
+
+
+        const year = new Date().getFullYear();
+        const prefix = `SDA-${year}-`;
+
+
+        const lastCard = await MembershipCard.findOne({
+            serialNumber: new RegExp(`^${prefix}\\d+`)
+        }).sort({ serialNumber: -1 });
+
+
+        let nextSeq = 1;
+        if (lastCard && lastCard.serialNumber) {
+            const parts = lastCard.serialNumber.split('-');
+            if (parts.length >= 3) {
+                const parsed = parseInt(parts[2], 10);
+                if (!isNaN(parsed)) nextSeq = parsed + 1;
+            }
+        }
+
+
+        const generatedCardsToReturn = [];
+        const cardsToInsert = [];
+
+
+        for (let i = 0; i < count; i++) {
+            const serialNumber = `${prefix}${String(nextSeq++).padStart(6, '0')}`;
+            const activationCode = generateActivationCode();
+            const activationCodeHash = hashActivationCode(activationCode);
+
+
+            cardsToInsert.push({
+                serialNumber,
+                activationCodeHash,
+                type,
+                status: 'unused'
+            });
+
+
+            generatedCardsToReturn.push({
+                serialNumber,
+                activationCode,
+                type
+            });
+        }
+
+
+        await MembershipCard.insertMany(cardsToInsert);
+
+
+        res.json({
+            message: `تم توليد ${count} كارت عضوية (${type === 'annual' ? 'سنوية' : 'شهرية'}) بنجاح!`,
+            count,
+            type,
+            cards: generatedCardsToReturn
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر توليد كروت العضوية" });
+    }
+});
+
+
+app.get('/api/admin/membership-cards', verifyAdmin, async (req, res) => {
+    try {
+        const { status, type } = req.query;
+        const filter = {};
+        if (status && ['unused', 'used', 'cancelled'].includes(status)) filter.status = status;
+        if (type && ['monthly', 'annual'].includes(type)) filter.type = type;
+
+
+        const cards = await MembershipCard.find(filter)
+            .sort({ _id: -1 })
+            .select('-activationCodeHash -__v')
+            .populate('usedBy', 'fullName username phone email');
+
+
+        const totalCount = await MembershipCard.countDocuments();
+        const unusedCount = await MembershipCard.countDocuments({ status: 'unused' });
+        const usedCount = await MembershipCard.countDocuments({ status: 'used' });
+        const cancelledCount = await MembershipCard.countDocuments({ status: 'cancelled' });
+
+
+        res.json({
+            stats: { total: totalCount, unused: unusedCount, used: usedCount, cancelled: cancelledCount },
+            cards
+        });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر جلب كروت العضوية" });
+    }
+});
+
+
+app.put('/api/admin/membership-cards/:id/cancel', verifyAdmin, async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "معرف الكارت غير صالح" });
+        }
+        const card = await MembershipCard.findById(req.params.id);
+        if (!card) return res.status(404).json({ error: "الكارت غير موجود" });
+
+
+        if (card.status === 'used') {
+            return res.status(400).json({ error: "لا يمكن إلغاء كارت تم استخدامه وتفعيله مسبقاً" });
+        }
+
+
+        card.status = 'cancelled';
+        card.cancelledAt = new Date();
+        await card.save();
+
+
+        res.json({ message: `تم إلغاء الكارت (${card.serialNumber}) بنجاح`, card });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إلغاء الكارت" });
+    }
+});
+
+
+app.get('/api/admin/member-posts', verifyAdmin, async (req, res) => {
+    try {
+        const { status } = req.query;
+        const filter = {};
+        if (status && ['pending', 'approved', 'rejected'].includes(status)) filter.status = status;
+
+
+        const posts = await MemberPost.find(filter)
+            .sort({ _id: -1 })
+            .populate('authorId', 'fullName username phone email');
+
+
+        res.json(posts);
+    } catch (err) {
+        res.status(500).json({ error: "تعذر جلب منشورات الأعضاء للإدارة" });
+    }
+});
+
+
+app.put('/api/admin/member-posts/:id/approve', verifyAdmin, async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "معرف المنشور غير صالح" });
+        }
+        const post = await MemberPost.findByIdAndUpdate(
+            req.params.id,
+            { status: 'approved', publishedAt: new Date(), rejectReason: '' },
+            { new: true }
+        );
+        if (!post) return res.status(404).json({ error: "المنشور غير موجود" });
+
+
+        res.json({ message: "تمت الموافقة على المنشور ونشره بنجاح!", post });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر اعتماد المنشور" });
+    }
+});
+
+
+app.put('/api/admin/member-posts/:id/reject', verifyAdmin, async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "معرف المنشور غير صالح" });
+        }
+        const rejectReason = sanitizeInput(req.body.rejectReason) || 'لم يستوفِ المنشور ضوابط وسياسة النشر المعتمدة في الوكالة';
+        const post = await MemberPost.findByIdAndUpdate(
+            req.params.id,
+            { status: 'rejected', rejectReason },
+            { new: true }
+        );
+        if (!post) return res.status(404).json({ error: "المنشور غير موجود" });
+
+
+        res.json({ message: "تم رفض المنشور وإشعار الكاتب بالسبب.", post });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إتمام رفض المنشور" });
+    }
+});
+
+
+// ==========================================
+// 10. مسارات المعلنين وحجز الإعلانات
+// ==========================================
 app.post('/api/register', rateLimitLogin(5, 10 * 60 * 1000), async (req, res) => {
     try {
         const username = sanitizeInput(req.body.username).toLowerCase();
@@ -460,9 +1140,11 @@ app.post('/api/register', rateLimitLogin(5, 10 * 60 * 1000), async (req, res) =>
         const phone = sanitizeInput(req.body.phone);
         const password = typeof req.body.password === 'string' ? req.body.password : '';
 
+
         if (!username || !email || !password || password.length < 6) {
             return res.status(400).json({ error: "يرجى ملء جميع الحقول المطلوبة" });
         }
+
 
         const existing = await User.findOne({ 
             $or: [{ username }, { email }] 
@@ -470,6 +1152,7 @@ app.post('/api/register', rateLimitLogin(5, 10 * 60 * 1000), async (req, res) =>
         if (existing) {
             return res.status(400).json({ error: "اسم المستخدم أو البريد مسجل مسبقاً" });
         }
+
 
         const securePassword = await hashPassword(password);
         const newUser = new User({
@@ -482,12 +1165,14 @@ app.post('/api/register', rateLimitLogin(5, 10 * 60 * 1000), async (req, res) =>
         });
         await newUser.save();
 
+
         clearLoginAttempts(req);
         const token = jwt.sign(
             { id: newUser._id, username: newUser.username, email: newUser.email, role: newUser.role, status: newUser.status }, 
             SECRET_KEY, 
             { expiresIn: '15d' }
         );
+
 
         res.json({ 
             token, 
@@ -498,19 +1183,24 @@ app.post('/api/register', rateLimitLogin(5, 10 * 60 * 1000), async (req, res) =>
     }
 });
 
+
 app.post('/api/advertiser/login', rateLimitLogin(6, 15 * 60 * 1000), async (req, res) => {
     try {
         const searchKey = sanitizeInput(req.body.usernameOrEmail).toLowerCase();
         const password = typeof req.body.password === 'string' ? req.body.password : '';
 
+
         const user = await User.findOne({
             $or: [{ username: searchKey }, { email: searchKey }]
         });
 
+
         if (!user) return res.status(400).json({ error: "بيانات الدخول غير صحيحة" });
+
 
         const isPasswordCorrect = await verifyPassword(password, user.password);
         if (!isPasswordCorrect) return res.status(400).json({ error: "بيانات الدخول غير صحيحة" });
+
 
         clearLoginAttempts(req);
         const token = jwt.sign(
@@ -518,6 +1208,7 @@ app.post('/api/advertiser/login', rateLimitLogin(6, 15 * 60 * 1000), async (req,
             SECRET_KEY, 
             { expiresIn: '15d' }
         );
+
 
         res.json({ 
             token, 
@@ -527,6 +1218,7 @@ app.post('/api/advertiser/login', rateLimitLogin(6, 15 * 60 * 1000), async (req,
         res.status(500).json({ error: "تعذر تسجيل الدخول" });
     }
 });
+
 
 app.get('/api/my-ads', verifyToken, async (req, res) => {
     try {
@@ -543,6 +1235,7 @@ app.get('/api/my-ads', verifyToken, async (req, res) => {
     }
 });
 
+
 app.post('/api/ads', async (req, res) => {
     try {
         const adData = req.body;
@@ -553,6 +1246,7 @@ app.post('/api/ads', async (req, res) => {
             adData.imageUrl = '';
         }
 
+
         const token = req.headers['authorization'];
         if (token) {
             try {
@@ -562,11 +1256,13 @@ app.post('/api/ads', async (req, res) => {
             } catch (e) {}
         }
 
+
         adData.title = sanitizeInput(adData.title);
         adData.content = sanitizeInput(adData.content);
         adData.name = sanitizeInput(adData.name);
         adData.status = 'pending';
         adData.rejectReason = '';
+
 
         const ad = new AdBooking(adData);
         await ad.save();
@@ -576,6 +1272,7 @@ app.post('/api/ads', async (req, res) => {
     }
 });
 
+
 app.get('/api/ads', verifyAdmin, async (req, res) => {
     try {
         const ads = await AdBooking.find().sort({ _id: -1 }).select('-__v');
@@ -584,6 +1281,7 @@ app.get('/api/ads', verifyAdmin, async (req, res) => {
         res.status(500).json({ error: "تعذر جلب طلبات الإعلانات" });
     }
 });
+
 
 app.put('/api/ads/:id/approve', verifyAdmin, async (req, res) => {
     try {
@@ -608,6 +1306,7 @@ app.put('/api/ads/:id/approve', verifyAdmin, async (req, res) => {
     }
 });
 
+
 app.put('/api/ads/:id/reject', verifyAdmin, async (req, res) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -625,20 +1324,23 @@ app.put('/api/ads/:id/reject', verifyAdmin, async (req, res) => {
     }
 });
 
-// ==========================================
-// 8. مسارات دخول المشرف والتحقق
-// ==========================================
 
+// ==========================================
+// 11. مسارات دخول المشرف والتحقق
+// ==========================================
 app.post('/api/login', rateLimitLogin(5, 15 * 60 * 1000), async (req, res) => {
     try {
         const username = sanitizeInput(req.body.username).toLowerCase();
         const password = typeof req.body.password === 'string' ? req.body.password : '';
 
+
         const user = await User.findOne({ username, role: 'ADMIN' });
         if (!user) return res.status(400).json({ error: "الاسم أو كلمة المرور غير صحيحة" });
 
+
         const isMatch = await verifyPassword(password, user.password);
         if (!isMatch) return res.status(400).json({ error: "الاسم أو كلمة المرور غير صحيحة" });
+
 
         clearLoginAttempts(req);
         const token = jwt.sign(
@@ -647,20 +1349,22 @@ app.post('/api/login', rateLimitLogin(5, 15 * 60 * 1000), async (req, res) => {
             { expiresIn: '7d' }
         );
 
+
         res.json({ token, username: user.username });
     } catch (err) {
         res.status(500).json({ error: "حدث خطأ غير متوقع في الخادم" });
     }
 });
 
+
 app.get('/api/verify-auth', verifyAdmin, (req, res) => {
     res.json({ valid: true, username: req.user.username, role: req.user.role });
 });
 
-// ==========================================
-// 9. مسارات الزيارات والمشاهدات والمشاركات
-// ==========================================
 
+// ==========================================
+// 12. مسارات الزيارات والمشاهدات والمشاركات
+// ==========================================
 app.post('/api/visit', async (req, res) => {
     try {
         const stat = await Stat.findOneAndUpdate(
@@ -674,6 +1378,7 @@ app.post('/api/visit', async (req, res) => {
     }
 });
 
+
 app.get('/api/visits', verifyAdmin, async (req, res) => {
     try {
         const stat = await Stat.findOne({ key: 'global_visits' });
@@ -682,6 +1387,7 @@ app.get('/api/visits', verifyAdmin, async (req, res) => {
         res.status(500).json({ error: "تعذر جلب الزيارات" });
     }
 });
+
 
 app.post('/api/posts/:id/view', async (req, res) => {
     try {
@@ -698,6 +1404,7 @@ app.post('/api/posts/:id/view', async (req, res) => {
     }
 });
 
+
 app.post('/api/posts/:id/share', async (req, res) => {
     try {
         const postId = req.params.id;
@@ -713,22 +1420,25 @@ app.post('/api/posts/:id/share', async (req, res) => {
     }
 });
 
-// ==========================================
-// 10. مسارات التفاعل والتعليقات على الأخبار
-// ==========================================
 
+// ==========================================
+// 13. مسارات التفاعل والتعليقات على الأخبار
+// ==========================================
 app.post('/api/posts/:id/react', verifyActiveUser, async (req, res) => {
     try {
         const postId = req.params.id;
         const userId = req.user.id;
         const { type } = req.body;
 
+
         if (!['like', 'dislike'].includes(type)) {
             return res.status(400).json({ error: "نوع التفاعل غير صالح" });
         }
 
+
         const existing = await Reaction.findOne({ postId, userId });
         let userReaction = null;
+
 
         if (existing) {
             if (existing.type === type) {
@@ -744,16 +1454,20 @@ app.post('/api/posts/:id/react', verifyActiveUser, async (req, res) => {
             userReaction = type;
         }
 
+
         const likesCount = await Reaction.countDocuments({ postId, type: 'like' });
         const dislikesCount = await Reaction.countDocuments({ postId, type: 'dislike' });
 
+
         await Post.findByIdAndUpdate(postId, { likesCount, dislikesCount });
+
 
         res.json({ userReaction, likesCount, dislikesCount });
     } catch (err) {
         res.status(500).json({ error: "تعذر تسجيل التفاعل" });
     }
 });
+
 
 app.get('/api/posts/:id/comments', async (req, res) => {
     try {
@@ -767,14 +1481,17 @@ app.get('/api/posts/:id/comments', async (req, res) => {
     }
 });
 
+
 app.post('/api/posts/:id/comments', verifyActiveUser, async (req, res) => {
     try {
         const postId = req.params.id;
         const content = sanitizeInput(req.body.content);
 
+
         if (!content || content.length < 2) {
             return res.status(400).json({ error: "يرجى كتابة نص التعليق" });
         }
+
 
         const user = await User.findById(req.user.id);
         const newComment = new Comment({
@@ -787,6 +1504,7 @@ app.post('/api/posts/:id/comments', verifyActiveUser, async (req, res) => {
         });
         await newComment.save();
 
+
         res.json({ 
             message: "تم إرسال تعليقك بنجاح وهو الآن قيد مراجعة الإدارة قبل النشر.",
             comment: newComment 
@@ -796,10 +1514,10 @@ app.post('/api/posts/:id/comments', verifyActiveUser, async (req, res) => {
     }
 });
 
-// ==========================================
-// 11. مسارات لوحة تحكم الأدمن للمستخدمين والتعليقات والأخبار
-// ==========================================
 
+// ==========================================
+// 14. مسارات لوحة تحكم الأدمن للمستخدمين والتعليقات والأخبار
+// ==========================================
 app.get('/api/posts', async (req, res) => {
     try {
         const posts = await Post.find().sort({ _id: -1 }).select('-__v');
@@ -809,14 +1527,17 @@ app.get('/api/posts', async (req, res) => {
     }
 });
 
+
 app.post('/api/posts', verifyAdmin, async (req, res) => {
     try {
         const { title, category, mediaUrls, content, isPinned, status, date } = req.body;
         if (!title || !content) return res.status(400).json({ error: "العنوان والمحتوى حقول إجبارية" });
 
+
         const safeUrls = Array.isArray(mediaUrls) 
             ? mediaUrls.filter(u => isValidImageString(u))
             : ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"];
+
 
         const newPost = new Post({
             title: sanitizeInput(title),
@@ -828,12 +1549,14 @@ app.post('/api/posts', verifyAdmin, async (req, res) => {
             date: date || new Date().toISOString().split('T')[0]
         });
 
+
         await newPost.save();
         res.json({ message: "تم نشر الخبر بنجاح", post: newPost });
     } catch (err) {
         res.status(500).json({ error: "تعذر نشر الخبر" });
     }
 });
+
 
 app.put('/api/posts/:id', verifyAdmin, async (req, res) => {
     try {
@@ -842,12 +1565,14 @@ app.put('/api/posts/:id', verifyAdmin, async (req, res) => {
         if (updateData.title) updateData.title = sanitizeInput(updateData.title);
         if (updateData.content) updateData.content = sanitizeInput(updateData.content);
 
+
         await Post.findByIdAndUpdate(req.params.id, updateData);
         res.json({ message: "تم التعديل بنجاح" });
     } catch (err) {
         res.status(500).json({ error: "تعذر تعديل الخبر" });
     }
 });
+
 
 app.delete('/api/posts/:id', verifyAdmin, async (req, res) => {
     try {
@@ -859,6 +1584,7 @@ app.delete('/api/posts/:id', verifyAdmin, async (req, res) => {
     }
 });
 
+
 app.get('/api/admin/users', verifyAdmin, async (req, res) => {
     try {
         const users = await User.find().sort({ _id: -1 }).select('-password -__v');
@@ -867,6 +1593,7 @@ app.get('/api/admin/users', verifyAdmin, async (req, res) => {
         res.status(500).json({ error: "تعذر جلب قائمة المستخدمين" });
     }
 });
+
 
 app.put('/api/admin/users/:id/status', verifyAdmin, async (req, res) => {
     try {
@@ -881,6 +1608,7 @@ app.put('/api/admin/users/:id/status', verifyAdmin, async (req, res) => {
     }
 });
 
+
 app.get('/api/admin/comments', verifyAdmin, async (req, res) => {
     try {
         const comments = await Comment.find().sort({ _id: -1 }).populate('postId', 'title');
@@ -889,6 +1617,7 @@ app.get('/api/admin/comments', verifyAdmin, async (req, res) => {
         res.status(500).json({ error: "تعذر جلب التعليقات للإدارة" });
     }
 });
+
 
 app.put('/api/admin/comments/:id/status', verifyAdmin, async (req, res) => {
     try {
@@ -907,6 +1636,7 @@ app.put('/api/admin/comments/:id/status', verifyAdmin, async (req, res) => {
     }
 });
 
+
 app.delete('/api/admin/comments/:id', verifyAdmin, async (req, res) => {
     try {
         const comment = await Comment.findByIdAndDelete(req.params.id);
@@ -919,7 +1649,8 @@ app.delete('/api/admin/comments/:id', verifyAdmin, async (req, res) => {
         res.status(500).json({ error: "تعذر حذف التعليق" });
     }
 });
-// حذف مستخدم نهائياً من قبل الأدمن
+
+
 app.delete('/api/admin/users/:id', verifyAdmin, async (req, res) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -935,66 +1666,21 @@ app.delete('/api/admin/users/:id', verifyAdmin, async (req, res) => {
         res.status(500).json({ error: "تعذر حذف المستخدم" });
     }
 });
-// 1. استقبال طلب المستخدم لتعديل (كلمة المرور / الاسم / المعرف)
-app.post('/api/user/request-account-update', rateLimitLogin(5, 15 * 60 * 1000), async (req, res) => {
-    try {
-        const identifier = sanitizeInput(req.body.identifier).toLowerCase();
-        const { newPassword, newName, newUsername } = req.body;
 
-        const user = await User.findOne({
-            $or: [{ username: identifier }, { email: identifier }, { phone: identifier }]
-        });
 
-        if (!user) {
-            return res.status(404).json({ error: "لم يتم العثور على حساب مطابق لهذه البيانات" });
-        }
-
-        let hasChange = false;
-        if (newPassword && newPassword.length >= 6) {
-            user.requestedPassword = newPassword;
-            hasChange = true;
-        }
-        if (newName && newName.trim().length >= 2) {
-            user.requestedName = sanitizeInput(newName);
-            hasChange = true;
-        }
-        if (newUsername && newUsername.trim().length >= 3) {
-            const cleanUname = sanitizeInput(newUsername).toLowerCase();
-            const existingUname = await User.findOne({ username: cleanUname, _id: { $ne: user._id } });
-            if (existingUname) {
-                return res.status(400).json({ error: "اسم المعرف الجديد محجوز لمستخدم آخر" });
-            }
-            user.requestedUsername = cleanUname;
-            hasChange = true;
-        }
-
-        if (!hasChange) {
-            return res.status(400).json({ error: "يرجى إدخال بيان واحد على الأقل لتعديله" });
-        }
-
-        user.updateRequestStatus = 'pending';
-        user.updateRequestDate = new Date().toISOString();
-        await user.save();
-
-        res.json({ 
-            message: "تم إرسال طلب التعديل إلى إدارة الموقع بنجاح! سيتم تطبيق التغييرات فور مراجعة وموافقة الأدمن." 
-        });
-    } catch (err) {
-        res.status(500).json({ error: "تعذر إرسال الطلب، يرجى المحاولة لاحقاً" });
-    }
-});
-
-// 2. موافقة الأدمن على تعديل بيانات المستخدم (كلمة المرور / الاسم / المعرف)
 app.put('/api/admin/users/:id/approve-update', verifyAdmin, async (req, res) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ error: "معرف المستخدم غير صالح" });
         }
 
+
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ error: "المستخدم غير موجود" });
 
+
         let updatedFields = [];
+
 
         if (user.requestedPassword) {
             user.password = await hashPassword(user.requestedPassword);
@@ -1012,12 +1698,15 @@ app.put('/api/admin/users/:id/approve-update', verifyAdmin, async (req, res) => 
             updatedFields.push("اسم المعرف");
         }
 
+
         if (updatedFields.length === 0) {
             return res.status(400).json({ error: "لا توجد طلبات تعديل معلقة لهذا الحساب" });
         }
 
+
         user.updateRequestStatus = 'approved';
         await user.save();
+
 
         res.json({ message: `تمت الموافقة وتحديث (${updatedFields.join(' و ')}) لحساب (${user.username}) بنجاح!` });
     } catch (err) {
@@ -1025,15 +1714,17 @@ app.put('/api/admin/users/:id/approve-update', verifyAdmin, async (req, res) => 
     }
 });
 
-// 3. رفض الأدمن لطلب تعديل بيانات المستخدم
+
 app.put('/api/admin/users/:id/reject-update', verifyAdmin, async (req, res) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ error: "معرف المستخدم غير صالح" });
         }
 
+
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ error: "المستخدم غير موجود" });
+
 
         user.requestedPassword = '';
         user.requestedName = '';
@@ -1041,11 +1732,13 @@ app.put('/api/admin/users/:id/reject-update', verifyAdmin, async (req, res) => {
         user.updateRequestStatus = 'rejected';
         await user.save();
 
+
         res.json({ message: `تم رفض طلب التعديل لحساب (${user.username}).` });
     } catch (err) {
         res.status(500).json({ error: "تعذر إتمام عملية الرفض" });
     }
 });
+
 
 // تشغيل السيرفر
 app.listen(PORT, () => {

@@ -947,6 +947,7 @@
     </div>
   </div>
 </section>
+  
 
 <div id="main-page" class="page-view">
 
@@ -984,7 +985,35 @@
 
     </div>
   </section>
+<!-- قسم البحث الشامل عن المعرف أو الاسم أو عنوان المقال -->
+      <div class="site-search-wrapper">
+        <div class="search-input-box">
+          <i class="fas fa-search search-input-icon"></i>
+          <input type="text" id="globalSearchInput" class="search-input-control" placeholder="ابحث بالمعرف @username، أو اسم الكاتب، أو عنوان المقال والخبر..." oninput="handleGlobalSearchInput(this.value)" onkeydown="if(event.key==='Enter') executeGlobalSearch();">
+          <button type="button" id="clearSearchBtn" onclick="clearGlobalSearch()" class="search-clear-btn" style="display:none;" title="مسح البحث">
+            <i class="fas fa-times"></i>
+          </button>
+          <button type="button" onclick="executeGlobalSearch()" class="search-action-btn">
+            <i class="fas fa-search"></i> بحث
+          </button>
+        </div>
 
+        <!-- صندوق نتائج البحث المنسدل الفوري -->
+        <div id="globalSearchResultsBox" class="search-results-container" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px;">
+            <span style="font-weight: 800; color: var(--gold-light); font-size: 15px;">
+              <i class="fas fa-list-ul" style="color: var(--gold-primary);"></i> نتائج البحث: "<span id="searchKeywordLabel" style="color: var(--gold-primary);"></span>"
+            </span>
+            <button type="button" onclick="clearGlobalSearch()" class="action-btn" style="background: var(--surface-light); color: var(--text-color); padding: 4px 10px; font-size: 12px;">
+              <i class="fas fa-times"></i> إغلاق
+            </button>
+          </div>
+
+          <div id="searchResultsContent">
+            <!-- النتائج المصنفة ستظهر هنا -->
+          </div>
+        </div>
+      </div>
   <!-- ABOUT DETAILED SECTION -->
   <section id="about" class="section-alt">
     <div class="wrap">
@@ -1750,7 +1779,66 @@ async function trackShare(postId) {
     }
   } catch(e) {}
 }
+// تحميل وعرض ناشري المقالات المتميزين لهذا الشهر
+async function loadFeaturedAuthors() {
+  const container = document.getElementById('featuredAuthorsGrid');
+  if (!container) return;
 
+  try {
+    const res = await fetch(`${API_URL}/members/featured`);
+    const authors = await res.json();
+
+    if (Array.isArray(authors) && authors.length > 0) {
+      let html = '';
+      authors.forEach(a => {
+        const postsCount = a.monthPosts >= 10 ? a.monthPosts : a.totalPosts;
+        const defaultAvatar = `https://via.placeholder.com/120/111A2E/D4AF37?text=${encodeURIComponent((a.username || 'U').slice(0, 2).toUpperCase())}`;
+        const avatarUrl = a.avatar || defaultAvatar;
+        const profileUrl = `member.html?user=${encodeURIComponent(a.username)}`;
+
+        html += `
+          <div class="featured-author-card">
+            <span class="featured-badge-crown"><i class="fas fa-crown"></i> كاتب متميز</span>
+            <div class="author-avatar-wrapper">
+              <img src="${avatarUrl}" alt="${escapeText(a.fullName || a.username)}" class="featured-author-avatar" onerror="this.src='${defaultAvatar}'">
+            </div>
+            <h3 style="font-size:18px; color:var(--gold-light); margin-bottom:4px; font-weight:800;">${escapeText(a.fullName || a.username)}</h3>
+            <p style="font-size:13px; color:var(--dim-color); margin-bottom:12px;">@${escapeText(a.username)}</p>
+            
+            <div class="author-posts-counter">
+              <i class="fas fa-feather-alt"></i> ${postsCount} مقالاً معتمداً
+            </div>
+
+            <div class="author-card-actions">
+              <a href="${profileUrl}" class="btn-author-profile">
+                <i class="fas fa-id-badge"></i> عرض الملف
+              </a>
+              <a href="${profileUrl}" class="btn-author-articles">
+                <i class="fas fa-newspaper"></i> عرض المقالات
+              </a>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    } else {
+      container.innerHTML = `
+        <div style="grid-column: 1/-1; background: var(--surface-color); border: 1px dashed var(--border-gold); border-radius: 12px; padding: 40px 20px; text-align: center;">
+          <i class="fas fa-medal" style="font-size: 44px; color: var(--gold-primary); margin-bottom: 15px; display: inline-block;"></i>
+          <h3 style="color: var(--gold-light); font-size: 20px; margin-bottom: 8px;">لوحة شرف كتاب الشهر المتميزين</h3>
+          <p style="color: var(--dim-color); font-size: 14.5px; max-width: 600px; margin: 0 auto 20px;">
+            تُمنح شارة "كاتب الشهر المتميز" تلقائياً لكل عضو معتمد يتجاوز 10 مقالات وتغطيات مقبولة من الإدارة.
+          </p>
+          <a href="profile.html" class="btn-outline" style="border-color: var(--gold-primary); color: var(--gold-light);">
+            <i class="fas fa-pen-nib"></i> انشر مقالاتك وتصدر القائمة
+          </a>
+        </div>
+      `;
+    }
+  } catch (err) {
+    container.innerHTML = '<p style="color:var(--dim-color); text-align:center; grid-column:1/-1;">جاري تحديث قائمة المتميزين...</p>';
+  }
+}
 /* ========================================================
    إدارة شريط الأخبار العاجلة (News Ticker)
    ======================================================== */

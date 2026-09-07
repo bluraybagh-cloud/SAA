@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مساحة العضو | وكالة صدى العطاء</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --gold-primary: #D4AF37;
+    --gold-light: #F3E5AB;
+    --gold-deep: #9A7B1C;
+    --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #AA7C11 100%);
+    --danger: #e74c3c;
+    --success: #2ecc71;
+    --warning: #f1c40f;
+    --bg-color: #070B12;
+    --main-bg: #0B1220;
+    --text-color: #F4F6F8;
+    --surface-color: #111A2E;
+    --surface-light: #18243D;
+    --dim-color: #A3B1C2;
+    --border-gold: rgba(212, 175, 55, 0.25);
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* الثيم المضيء مع نصوص نيلي ملكي */
+  [data-theme="light"] {
+    --bg-color: #F8F9FA;
+    --main-bg: #FFFFFF;
+    --text-color: #0B1220;
+    --surface-color: #FFFFFF;
+    --surface-light: #EDF2F7;
+    --dim-color: #4A5568;
+    --gold-primary: #0D2B52;
+    --gold-light: #081C36;
+    --gold-deep: #1A3E72;
+    --gold-gradient: linear-gradient(135deg, #0D2B52 0%, #1A3E72 100%);
+    --border-gold: rgba(13, 43, 82, 0.22);
+    --border-subtle: rgba(0, 0, 0, 0.08);
+  }
+
+  [data-theme="neon"] {
+    --bg-color: #030712;
+    --main-bg: #0b0f19;
+    --text-color: #e0f2fe;
+    --surface-color: #1e1b4b;
+    --surface-light: #312e81;
+    --dim-color: #93c5fd;
+    --border-gold: rgba(56, 189, 248, 0.4);
+    --border-subtle: rgba(56, 189, 248, 0.15);
+    --gold-primary: #38bdf8;
+    --gold-light: #bae6fd;
+    --gold-gradient: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Tajawal', sans-serif;
+    line-height: 1.8;
+    min-height: 100vh;
+    padding-bottom: 60px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+  a { text-decoration: none; color: inherit; }
+
+  header {
+    background: var(--surface-color);
+    border-bottom: 1px solid var(--border-gold);
+    padding: 16px 0;
+    margin-bottom: 35px;
+    backdrop-filter: blur(10px);
+    position: sticky; top: 0; z-index: 1000;
+  }
+  .header-inner {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  }
+  .brand-logo-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .brand-logo-img { height: 46px; border-radius: 6px; border: 1px solid var(--gold-primary); }
+  .brand-name { font-size: 18px; font-weight: 900; color: var(--gold-light); }
+
+  .btn-outline {
+    border: 1px solid var(--border-gold); color: var(--gold-light);
+    padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 700;
+    cursor: pointer; background: transparent; transition: var(--transition);
+    display: inline-flex; align-items: center; gap: 6px; font-family: 'Tajawal', sans-serif;
+  }
+  .btn-outline:hover { background: var(--gold-primary); color: #fff; }
+
+  .card-box {
+    background: var(--surface-color);
+    border: 1px solid var(--border-gold);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    margin-bottom: 25px;
+  }
+
+  /* بطاقة العضو البارزة */
+  .member-hero-card {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    flex-wrap: wrap;
+  }
+  .member-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--gold-primary);
+    object-fit: cover;
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+    background: var(--surface-light);
+    flex-shrink: 0;
+  }
+
+  .badge-status {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 700;
+  }
+  .badge-gold { background: rgba(212, 175, 55, 0.15); color: var(--gold-light); border: 1px solid var(--gold-primary); }
+
+  /* مقالات العضو */
+  .public-article-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-gold);
+    border-radius: 10px;
+    padding: 26px;
+    margin-bottom: 24px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+  .article-title {
+    font-size: 22px;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+    font-weight: 800;
+  }
+  .article-meta {
+    font-size: 13px;
+    color: var(--dim-color);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 10px;
+  }
+  .article-body {
+    font-size: 15.5px;
+    line-height: 1.9;
+    color: var(--text-color);
+    white-space: pre-line;
+    margin-bottom: 20px;
+  }
+
+  /* صور بإطار ذهبي أنيق */
+  .gold-framed-image {
+    border: 2px solid var(--gold-primary) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25) !important;
+    object-fit: cover;
+    width: 100%;
+    max-height: 420px;
+    margin-bottom: 12px;
+  }
+  .images-grid-multi {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .images-grid-multi img {
+    height: 180px;
+    width: 100%;
+  }
+
+  /* كروت الانتظار */
+  .skeleton-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .skeleton-box {
+    background: linear-gradient(90deg, var(--surface-light) 25%, rgba(212, 175, 55, 0.15) 50%, var(--surface-light) 75%);
+    background-size: 200% 100%;
+    animation: skeletonGlow 1.4s infinite linear;
+    border-radius: 6px;
+  }
+  @keyframes skeletonGlow {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* أزرار المشاركة الاجتماعية */
+  .share-btn {
+    padding: 6px 14px; border-radius: 6px; font-size: 12.5px; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 6px; color: #ffffff;
+    cursor: pointer; border: none; font-family: 'Tajawal', sans-serif; transition: var(--transition);
+  }
+  .share-btn:hover { transform: translateY(-2px); }
+  .share-wa { background: #25D366; }
+  .share-tg { background: #0088cc; }
+  .share-copy { background: rgba(212,175,55,0.15); color: var(--gold-light); border: 1px solid var(--gold-primary); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand-logo-container">
+      <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo-img">
+      <span class="brand-name">وكالة صدى العطاء</span>
+    </a>
+
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <a href="index.html" class="btn-outline"><i class="fas fa-home"></i> الرئيسية</a>
+      <a href="profile.html" class="btn-outline" style="border-color: var(--gold-primary); color: var(--gold-light);"><i class="fas fa-user"></i> حسابي</a>
+      <button type="button" onclick="cycleTheme()" title="تغيير الثيم" class="btn-outline" style="padding: 7px 12px; border-radius: 50%;">
+        <i class="fas fa-palette"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- بطاقة معلومات العضو الشخصية -->
+  <div id="memberHeaderBox" class="card-box">
+    <div id="memberHeaderSkeleton" class="skeleton-card" style="border:none; padding:0;">
+      <div style="display:flex; gap:20px; align-items:center;">
+        <div class="skeleton-box" style="width:100px; height:100px; border-radius:50%;"></div>
+        <div style="flex:1;">
+          <div class="skeleton-box" style="height:24px; width:40%; margin-bottom:10px;"></div>
+          <div class="skeleton-box" style="height:16px; width:25%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="memberHeaderContent" style="display:none;" class="member-hero-card">
+      <img id="mAvatar" src="" alt="صورة العضو" class="member-avatar">
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px;">
+          <h2 id="mFullName" style="color:var(--gold-light); font-size:26px; font-weight:900;"></h2>
+          <span id="mBadge" class="badge-status badge-gold"></span>
+        </div>
+        <p style="color:var(--dim-color); font-size:14px; margin-bottom:10px;">@<span id="mUsername"></span></p>
+        <p style="font-size:13.5px; color:var(--text-color); line-height:1.7;">
+          <i class="fas fa-feather" style="color:var(--gold-primary);"></i> كاتب ومساهم معتمد في وكالة صدى العطاء الإخبارية.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- مقالات العضو المعتمدة للعامة -->
+  <div>
+    <h3 style="color:var(--gold-light); font-size:20px; margin-bottom:18px; display:flex; align-items:center; gap:10px;">
+      <i class="fas fa-newspaper" style="color:var(--gold-primary);"></i> المقالات والتغطيات المعتمدة (<span id="postsTotalCount">0</span>)
+    </h3>
+
+    <div id="memberPostsContainer">
+      <div class="skeleton-card"><div class="skeleton-box" style="height:22px; width:70%; margin-bottom:12px;"></div><div class="skeleton-box" style="height:140px; margin-bottom:12px;"></div><div class="skeleton-box" style="height:16px; width:90%;"></div></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+const API_URL = 'https://sada-backend-mm3p.onrender.com/api';
+
+function showToast(msg, type = 'info') {
+  const c = document.getElementById('toastContainer');
+  if(!c) return;
+  const t = document.createElement('div');
+  t.className = `toast-item ${type}`;
+  t.innerText = msg;
+  c.appendChild(t);
+  setTimeout(() => t.classList.add('show'), 20);
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 4000);
+}
+
+function cycleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  let nextTheme = 'dark';
+  if (currentTheme === 'dark') nextTheme = 'light';
+  else if (currentTheme === 'light') nextTheme = 'neon';
+  else nextTheme = 'dark';
+
+  document.documentElement.setAttribute('data-theme', nextTheme);
+  localStorage.setItem('sada_theme', nextTheme);
+  showToast(`تم التبديل إلى الثيم: ${nextTheme === 'dark' ? 'الداكن' : nextTheme === 'light' ? 'المضيء' : 'النيون'}`, 'info');
+}
+
+async function loadMemberSpace() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const username = urlParams.get('user');
+
+  if (!username) {
+    document.getElementById('memberHeaderBox').innerHTML = `
+      <div style="text-align:center; padding:30px;">
+        <i class="fas fa-user-slash" style="font-size:45px; color:var(--danger); margin-bottom:12px;"></i>
+        <h3 style="color:var(--gold-light);">لم يتم تحديد العضو المطلوب</h3>
+        <p style="color:var(--dim-color); font-size:14px; margin-top:8px;">يرجى اختيار عضو من الرابط أو العودة للصفحة الرئيسية.</p>
+        <a href="index.html" class="btn-outline" style="margin-top:15px;"><i class="fas fa-home"></i> الرئيسية</a>
+      </div>
+    `;
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/members/${encodeURIComponent(username)}`);
+    const data = await res.json();
+
+    document.getElementById('memberHeaderSkeleton').style.display = 'none';
+
+    if (res.ok && data.member) {
+      const m = data.member;
+      document.title = `مساحة الكاتب ${m.fullName} | وكالة صدى العطاء`;
+      document.getElementById('memberHeaderContent').style.display = 'flex';
+
+      document.getElementById('mFullName').innerText = m.fullName || m.username;
+      document.getElementById('mUsername').innerText = m.username;
+      
+      const defaultAvatar = `https://via.placeholder.com/150/111A2E/D4AF37?text=${encodeURIComponent(m.username.slice(0, 2).toUpperCase())}`;
+      document.getElementById('mAvatar').src = m.avatar || defaultAvatar;
+
+      const badge = document.getElementById('mBadge');
+      if (m.membershipType === 'annual') {
+        badge.innerHTML = '<i class="fas fa-crown"></i> عضو سنوي معتمد';
+      } else if (m.membershipType === 'monthly') {
+        badge.innerHTML = '<i class="fas fa-award"></i> عضو شهري معتمد';
+      } else {
+        badge.innerHTML = '<i class="fas fa-user-edit"></i> كاتب في الوكالة';
+      }
+
+      renderMemberPosts(data.posts || []);
+    } else {
+      document.getElementById('memberHeaderBox').innerHTML = `
+        <div style="text-align:center; padding:30px;">
+          <i class="fas fa-exclamation-circle" style="font-size:40px; color:var(--warning); margin-bottom:12px;"></i>
+          <h3 style="color:var(--gold-light);">لم يتم العثور على مساحة هذا العضو</h3>
+          <p style="color:var(--dim-color); font-size:14px;">قد يكون الحساب غير مفعّل أو اسم المستخدم غير صحيح.</p>
+          <a href="index.html" class="btn-outline" style="margin-top:15px;">العودة للرئيسية</a>
+        </div>
+      `;
+    }
+  } catch (err) {
+    document.getElementById('memberHeaderBox').innerHTML = '<p style="color:var(--danger); text-align:center;">تعذر جلب بيانات العضو حالياً.</p>';
+  }
+}
+
+function renderMemberPosts(posts) {
+  const container = document.getElementById('memberPostsContainer');
+  const countSpan = document.getElementById('postsTotalCount');
+  if (!container) return;
+
+  if (countSpan) countSpan.innerText = posts.length;
+
+  if (posts.length === 0) {
+    container.innerHTML = `
+      <div class="card-box" style="text-align:center; padding:35px;">
+        <i class="fas fa-feather" style="font-size:35px; color:var(--dim-color); margin-bottom:12px;"></i>
+        <h4 style="color:var(--gold-light);">لا توجد مقالات منشورة بعد</h4>
+        <p style="color:var(--dim-color); font-size:13.5px;">سيتم عرض مقالات الكاتب هنا فور نشرها واعتمادها من الإدارة.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = '';
+  posts.forEach(p => {
+    const dateStr = p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('ar-IQ') : (p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-IQ') : 'مؤخراً');
+
+    let imagesHtml = '';
+    if (Array.isArray(p.mediaUrls) && p.mediaUrls.length === 1) {
+      imagesHtml = `<img src="${p.mediaUrls[0]}" class="gold-framed-image" alt="${escapeText(p.title)}">`;
+    } else if (Array.isArray(p.mediaUrls) && p.mediaUrls.length > 1) {
+      imagesHtml = `<div class="images-grid-multi">`;
+      p.mediaUrls.forEach(url => {
+        imagesHtml += `<img src="${url}" class="gold-framed-image" alt="صورة المقال">`;
+      });
+      imagesHtml += `</div>`;
+    }
+
+    const cleanShareUrl = window.location.href;
+    const encTitle = encodeURIComponent(p.title);
+    const encUrl = encodeURIComponent(cleanShareUrl);
+
+    const card = document.createElement('div');
+    card.className = 'public-article-card';
+    card.innerHTML = `
+      <h3 class="article-title">${escapeText(p.title)}</h3>
+      <div class="article-meta">
+        <span><i class="fas fa-calendar-alt" style="color:var(--gold-primary);"></i> ${dateStr}</span>
+        <span><i class="fas fa-check-double" style="color:#2ecc71;"></i> منشور معتمد رسمياً</span>
+      </div>
+      ${imagesHtml}
+      <div class="article-body">${escapeText(p.content)}</div>
+      
+      <!-- مشاركة المقال -->
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; border-top:1px solid var(--border-subtle); padding-top:14px;">
+        <span style="font-size:12.5px; color:var(--dim-color); margin-left:6px;">مشاركة:</span>
+        <a href="https://api.whatsapp.com/send?text=${encTitle}%20${encUrl}" target="_blank" class="share-btn share-wa"><i class="fab fa-whatsapp"></i> واتساب</a>
+        <a href="https://t.me/share/url?url=${encUrl}&text=${encTitle}" target="_blank" class="share-btn share-tg"><i class="fab fa-telegram-plane"></i> تيليجرام</a>
+        <button type="button" onclick="copyArticleLink()" class="share-btn share-copy"><i class="fas fa-link"></i> نسخ الرابط</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function copyArticleLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    showToast('تم نسخ رابط مساحة العضو بنجاح!', 'success');
+  });
+}
+
+function escapeText(str) {
+  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('sada_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  loadMemberSpace();
+});
+</script>
+</body>
+</html>

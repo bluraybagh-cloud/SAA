@@ -1780,63 +1780,157 @@ async function trackShare(postId) {
   } catch(e) {}
 }
 // تحميل وعرض ناشري المقالات المتميزين لهذا الشهر
+/* ========================================================
+   تحميل وعرض ناشري المقالات المتميزين لهذا الشهر
+   (يختفي القسم كلياً وتلقائياً إذا لم يتجاوز أحد 10 منشورات)
+   ======================================================== */
 async function loadFeaturedAuthors() {
+  const section = document.getElementById('featured-authors-section');
   const container = document.getElementById('featuredAuthorsGrid');
-  if (!container) return;
+  if (!section || !container) return;
 
   try {
     const res = await fetch(`${API_URL}/members/featured`);
     const authors = await res.json();
 
-    if (Array.isArray(authors) && authors.length > 0) {
-      let html = '';
+    // إخفاء القسم كلياً إن لم يكن هناك ناشر مؤهل
+    if (!Array.isArray(authors) || authors.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = 'block';
+    let html = '';
+    authors.forEach(a => {
+      const defaultAvatar = `https://via.placeholder.com/120/111A2E/D4AF37?text=${encodeURIComponent((a.username || 'U').slice(0, 2).toUpperCase())}`;
+      const avatarUrl = a.avatar || defaultAvatar;
+      const profileUrl = `member.html?user=${encodeURIComponent(a.username)}`;
+
+      html += `
+        <div class="featured-author-card">
+          <span class="featured-badge-crown"><i class="fas fa-crown"></i> كاتب الشهر المتميز</span>
+          <div class="author-avatar-wrapper">
+            <img src="${avatarUrl}" alt="${escapeText(a.fullName || a.username)}" class="featured-author-avatar" onerror="this.src='${defaultAvatar}'">
+          </div>
+          <h3 style="font-size:18px; color:var(--gold-light); margin-bottom:4px; font-weight:800;">${escapeText(a.fullName || a.username)}</h3>
+          <p style="font-size:13px; color:var(--dim-color); margin-bottom:12px;">@${escapeText(a.username)}</p>
+          <div class="author-posts-counter">
+            <i class="fas fa-feather-alt"></i> ${a.monthPosts} مقالاً معتمداً هذا الشهر
+          </div>
+          <div class="author-card-actions">
+            <a href="${profileUrl}" class="btn-author-profile"><i class="fas fa-id-badge"></i> عرض الملف</a>
+            <a href="${profileUrl}" class="btn-author-articles"><i class="fas fa-newspaper"></i> عرض المقالات</a>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  } catch (err) {
+    section.style.display = 'none';
+  }
+}
+
+/* ========================================================
+   محرك البحث الفوري الشامل
+   ======================================================== */
+let searchDebounceTimer = null;
+function handleGlobalSearchInput(val) {
+  const clearBtn = document.getElementById('clearSearchBtn');
+  if (clearBtn) clearBtn.style.display = val.trim() ? 'block' : 'none';
+
+  clearTimeout(searchDebounceTimer);
+  if (!val || val.trim().length < 2) {
+    document.getElementById('globalSearchResultsBox').style.display = 'none';
+    return;
+  }
+  searchDebounceTimer = setTimeout(() => executeGlobalSearch(), 350);
+}
+
+function clearGlobalSearch() {
+  const input = document.getElementById('globalSearchInput');
+  const clearBtn = document.getElementById('clearSearchBtn');
+  if (input) input.value = '';
+  if (clearBtn) clearBtn.style.display = 'none';
+  document.getElementById('globalSearchResultsBox').style.display = 'none';
+}
+
+async function executeGlobalSearch() {
+  const input = document.getElementById('globalSearchInput');
+  const box = document.getElementById('globalSearchResultsBox');
+  const content = document.getElementById('searchResultsContent');
+  const label = document.getElementById('searchKeywordLabel');
+
+  if (!input || !box || !content) return;
+  const q = input.value.trim();
+  if (q.length < 2) return;
+
+  if (label) label.innerText = q;
+  content.innerHTML = '<p style="text-align:center; color:var(--dim-color); padding:15px;"><i class="fas fa-spinner fa-spin"></i> جاري البحث في الموقع...</p>';
+  box.style.display = 'block';
+
+  try {
+    const res = await fetch(`${API_URL}/search?q=${encodeURIComponent(q)}`);
+    const data = await res.json();
+    const authors = data.authors || [];
+    const memberPosts = data.memberPosts || [];
+    const posts = data.posts || [];
+
+    if (authors.length + memberPosts.length + posts.length === 0) {
+      content.innerHTML = `
+        <div style="text-align:center; padding:25px 15px;">
+          <i class="fas fa-search-minus" style="font-size:36px; color:var(--dim-color); margin-bottom:10px;"></i>
+          <p style="color:var(--gold-light); font-size:15px; font-weight:700;">لا توجد نتائج مطابقة لبحثك عن "${escapeText(q)}"</p>
+        </div>
+      `;
+      return;
+    }
+
+    let resultsHtml = '';
+    if (authors.length > 0) {
+      resultsHtml += `<div style="margin-bottom: 20px;"><div class="search-group-title"><i class="fas fa-user-edit" style="color:var(--gold-primary);"></i> كتاب وأعضاء الموقع (${authors.length})</div>`;
       authors.forEach(a => {
-        const postsCount = a.monthPosts >= 10 ? a.monthPosts : a.totalPosts;
-        const defaultAvatar = `https://via.placeholder.com/120/111A2E/D4AF37?text=${encodeURIComponent((a.username || 'U').slice(0, 2).toUpperCase())}`;
-        const avatarUrl = a.avatar || defaultAvatar;
-        const profileUrl = `member.html?user=${encodeURIComponent(a.username)}`;
-
-        html += `
-          <div class="featured-author-card">
-            <span class="featured-badge-crown"><i class="fas fa-crown"></i> كاتب متميز</span>
-            <div class="author-avatar-wrapper">
-              <img src="${avatarUrl}" alt="${escapeText(a.fullName || a.username)}" class="featured-author-avatar" onerror="this.src='${defaultAvatar}'">
+        const defaultAvatar = `https://via.placeholder.com/80/111A2E/D4AF37?text=${encodeURIComponent((a.username || 'U').slice(0, 2).toUpperCase())}`;
+        resultsHtml += `
+          <div class="search-author-row">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <img src="${a.avatar || defaultAvatar}" style="width:42px; height:42px; border-radius:50%; border:2px solid var(--gold-primary); object-fit:cover;">
+              <div><b style="color:var(--gold-light); font-size:14.5px;">${escapeText(a.fullName || a.username)}</b><span style="color:var(--dim-color); font-size:12.5px; display:block;">@${escapeText(a.username)}</span></div>
             </div>
-            <h3 style="font-size:18px; color:var(--gold-light); margin-bottom:4px; font-weight:800;">${escapeText(a.fullName || a.username)}</h3>
-            <p style="font-size:13px; color:var(--dim-color); margin-bottom:12px;">@${escapeText(a.username)}</p>
-            
-            <div class="author-posts-counter">
-              <i class="fas fa-feather-alt"></i> ${postsCount} مقالاً معتمداً
-            </div>
-
-            <div class="author-card-actions">
-              <a href="${profileUrl}" class="btn-author-profile">
-                <i class="fas fa-id-badge"></i> عرض الملف
-              </a>
-              <a href="${profileUrl}" class="btn-author-articles">
-                <i class="fas fa-newspaper"></i> عرض المقالات
-              </a>
-            </div>
+            <a href="member.html?user=${encodeURIComponent(a.username)}" class="btn-outline" style="padding:5px 14px; font-size:12px; border-color:var(--border-gold); color:var(--gold-light);"><i class="fas fa-user"></i> عرض الملف</a>
           </div>
         `;
       });
-      container.innerHTML = html;
-    } else {
-      container.innerHTML = `
-        <div style="grid-column: 1/-1; background: var(--surface-color); border: 1px dashed var(--border-gold); border-radius: 12px; padding: 40px 20px; text-align: center;">
-          <i class="fas fa-medal" style="font-size: 44px; color: var(--gold-primary); margin-bottom: 15px; display: inline-block;"></i>
-          <h3 style="color: var(--gold-light); font-size: 20px; margin-bottom: 8px;">لوحة شرف كتاب الشهر المتميزين</h3>
-          <p style="color: var(--dim-color); font-size: 14.5px; max-width: 600px; margin: 0 auto 20px;">
-            تُمنح شارة "كاتب الشهر المتميز" تلقائياً لكل عضو معتمد يتجاوز 10 مقالات وتغطيات مقبولة من الإدارة.
-          </p>
-          <a href="profile.html" class="btn-outline" style="border-color: var(--gold-primary); color: var(--gold-light);">
-            <i class="fas fa-pen-nib"></i> انشر مقالاتك وتصدر القائمة
-          </a>
-        </div>
-      `;
+      resultsHtml += `</div>`;
     }
+
+    if (memberPosts.length > 0) {
+      resultsHtml += `<div style="margin-bottom: 20px;"><div class="search-group-title"><i class="fas fa-feather-alt" style="color:#2ecc71;"></i> مقالات الأعضاء المعتمدة (${memberPosts.length})</div>`;
+      memberPosts.forEach(mp => {
+        resultsHtml += `
+          <div class="search-post-row" onclick="window.location.href='member.html?user=${encodeURIComponent(mp.authorUsername)}'">
+            <div><b style="color:var(--text-color); font-size:14.5px; display:block; margin-bottom:4px;">${escapeText(mp.title)}</b><span style="color:var(--dim-color); font-size:12px;">الكاتب: ${escapeText(mp.authorName || mp.authorUsername)}</span></div>
+            <span style="color:var(--gold-primary); font-size:13px;"><i class="fas fa-arrow-left"></i></span>
+          </div>
+        `;
+      });
+      resultsHtml += `</div>`;
+    }
+
+    if (posts.length > 0) {
+      resultsHtml += `<div><div class="search-group-title"><i class="fas fa-newspaper" style="color:#3498db;"></i> أخبار وتغطيات الوكالة (${posts.length})</div>`;
+      posts.forEach(p => {
+        resultsHtml += `
+          <div class="search-post-row" onclick="clearGlobalSearch(); openPublicSingleNews('${p._id}', true);">
+            <div><b style="color:var(--text-color); font-size:14.5px; display:block; margin-bottom:4px;">${escapeText(p.title)}</b><span style="color:var(--dim-color); font-size:12px;"><span class="news-badge" style="padding:1px 6px; font-size:11px; margin-left:6px;">${escapeText(p.category || 'عام')}</span><span>${p.views || 0} مشاهدة</span></span></div>
+            <span style="color:var(--gold-primary); font-size:13px;"><i class="fas fa-arrow-left"></i></span>
+          </div>
+        `;
+      });
+      resultsHtml += `</div>`;
+    }
+    content.innerHTML = resultsHtml;
   } catch (err) {
-    container.innerHTML = '<p style="color:var(--dim-color); text-align:center; grid-column:1/-1;">جاري تحديث قائمة المتميزين...</p>';
+    content.innerHTML = '<p style="text-align:center; color:var(--danger); padding:15px;">تعذر إتمام البحث حالياً.</p>';
   }
 }
 /* ========================================================
@@ -3138,6 +3232,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initTicker();
   renderLiveNews();
   checkUrlHashForAdmin();
+  loadFeaturedAuthors(); // <--- تمت الإضافة هنا لتشغيل فحص المتميزين تلقائياً
 });
   /* ========================================================
    لوحة تحكم الإدارة: إدارة كروت العضوية (جديد مضاف)

@@ -179,6 +179,8 @@ const PostSchema = new mongoose.Schema({
     content: { type: String, required: true },
     status: { type: String, enum: ['published', 'draft'], default: 'published' },
     isPinned: { type: Boolean, default: false },
+    showInBreaking: { type: Boolean, default: false }, // إظهاره في شريط الأخبار العاجلة
+    showInLatest: { type: Boolean, default: true },    // إظهاره في شبكة أحدث الأخبار
     views: { type: Number, default: 0 },
     shares: { type: Number, default: 0 },
     likesCount: { type: Number, default: 0 },
@@ -186,7 +188,6 @@ const PostSchema = new mongoose.Schema({
     commentsCount: { type: Number, default: 0 },
     date: { type: String, default: () => new Date().toISOString().split('T')[0] }
 }, { timestamps: true });
-const Post = mongoose.model('Post', PostSchema);
 
 
 const ReactionSchema = new mongoose.Schema({
@@ -1530,14 +1531,28 @@ app.get('/api/posts', async (req, res) => {
 
 app.post('/api/posts', verifyAdmin, async (req, res) => {
     try {
-        const { title, category, mediaUrls, content, isPinned, status, date } = req.body;
+        const { title, category, mediaUrls, content, isPinned, status, date, displayTarget, showInBreaking, showInLatest } = req.body;
         if (!title || !content) return res.status(400).json({ error: "العنوان والمحتوى حقول إجبارية" });
-
 
         const safeUrls = Array.isArray(mediaUrls) 
             ? mediaUrls.filter(u => isValidImageString(u))
             : ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"];
 
+        let inBreaking = false;
+        let inLatest = true;
+        if (displayTarget === 'both') {
+            inBreaking = true;
+            inLatest = true;
+        } else if (displayTarget === 'breaking') {
+            inBreaking = true;
+            inLatest = false;
+        } else if (displayTarget === 'latest') {
+            inBreaking = false;
+            inLatest = true;
+        } else {
+            inBreaking = showInBreaking !== undefined ? Boolean(showInBreaking) : Boolean(isPinned);
+            inLatest = showInLatest !== undefined ? Boolean(showInLatest) : true;
+        }
 
         const newPost = new Post({
             title: sanitizeInput(title),
@@ -1545,10 +1560,11 @@ app.post('/api/posts', verifyAdmin, async (req, res) => {
             mediaUrls: safeUrls.length > 0 ? safeUrls : ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"],
             content: sanitizeInput(content),
             isPinned: Boolean(isPinned),
+            showInBreaking: inBreaking,
+            showInLatest: inLatest,
             status: status === 'draft' ? 'draft' : 'published',
             date: date || new Date().toISOString().split('T')[0]
         });
-
 
         await newPost.save();
         res.json({ message: "تم نشر الخبر بنجاح", post: newPost });
@@ -1558,6 +1574,7 @@ app.post('/api/posts', verifyAdmin, async (req, res) => {
 });
 
 
+
 app.put('/api/posts/:id', verifyAdmin, async (req, res) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ error: "معرف غير صالح" });
@@ -1565,6 +1582,16 @@ app.put('/api/posts/:id', verifyAdmin, async (req, res) => {
         if (updateData.title) updateData.title = sanitizeInput(updateData.title);
         if (updateData.content) updateData.content = sanitizeInput(updateData.content);
 
+        if (updateData.displayTarget === 'both') {
+            updateData.showInBreaking = true;
+            updateData.showInLatest = true;
+        } else if (updateData.displayTarget === 'breaking') {
+            updateData.showInBreaking = true;
+            updateData.showInLatest = false;
+        } else if (updateData.displayTarget === 'latest') {
+            updateData.showInBreaking = false;
+            updateData.showInLatest = true;
+        }
 
         await Post.findByIdAndUpdate(req.params.id, updateData);
         res.json({ message: "تم التعديل بنجاح" });
@@ -1577,14 +1604,36 @@ app.put('/api/posts/:id', verifyAdmin, async (req, res) => {
 app.delete('/api/posts/:id', verifyAdmin, async (req, res) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ error: "معرف غير صالح" });
-        await Post.findByIdAndDelete(req.params.id);
-        res.json({ message: "تم الحذف بنجاح" });
+        const target = req.query.target || 'both';
+
+        if (target === 'breaking') {
+            const post = await Post.findById(req.params.id);
+            if (!post) return res.status(404).json({ error: "الخبر غير موجود" });
+            if (!post.showInLatest) {
+                await Post.findByIdAndDelete(req.params.id);
+                return res.json({ message: "تم حذف الخبر نهائياً لعدم ظهوره في أحدث الأخبار" });
+            }
+            post.showInBreaking = false;
+            await post.save();
+            return res.json({ message: "تمت إزالة الخبر من الأخبار العاجلة بنجاح", post });
+        } else if (target === 'latest') {
+            const post = await Post.findById(req.params.id);
+            if (!post) return res.status(404).json({ error: "الخبر غير موجود" });
+            if (!post.showInBreaking) {
+                await Post.findByIdAndDelete(req.params.id);
+                return res.json({ message: "تم حذف الخبر نهائياً لعدم ظهوره في الأخبار العاجلة" });
+            }
+            post.showInLatest = false;
+            await post.save();
+            return res.json({ message: "تمت إزالة الخبر من أحدث الأخبار بنجاح", post });
+        } else {
+            await Post.findByIdAndDelete(req.params.id);
+            res.json({ message: "تم حذف الخبر بالكامل بنجاح" });
+        }
     } catch (err) {
         res.status(500).json({ error: "تعذر حذف الخبر" });
     }
 });
-
-
 app.get('/api/admin/users', verifyAdmin, async (req, res) => {
     try {
         const users = await User.find().sort({ _id: -1 }).select('-password -__v');
@@ -1739,7 +1788,77 @@ app.put('/api/admin/users/:id/reject-update', verifyAdmin, async (req, res) => {
     }
 });
 
+// استعلام كتاب وناشري الشهر المتميزين (الذين لديهم أكثر من 10 منشورات معتمدة هذا الشهر حصراً)
+app.get('/api/members/featured', async (req, res) => {
+    try {
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
+        const featuredAuthors = await MemberPost.aggregate([
+            { 
+                $match: { 
+                    status: 'approved',
+                    publishedAt: { $gte: startOfMonth }
+                } 
+            },
+            {
+                $group: {
+                    _id: '$authorId',
+                    username: { $first: '$authorUsername' },
+                    fullName: { $first: '$authorName' },
+                    avatar: { $first: '$authorAvatar' },
+                    monthPosts: { $sum: 1 }
+                }
+            },
+            {
+                $match: {
+                    monthPosts: { $gt: 10 } // شرط التميز: أكثر من 10 منشورات هذا الشهر
+                }
+            },
+            { $sort: { monthPosts: -1 } }
+        ]);
+
+        res.json(featuredAuthors);
+    } catch (err) {
+        res.status(500).json({ error: "تعذر جلب قائمة الناشرين المتميزين" });
+    }
+});
+
+// محرك البحث الشامل عن المعرف أو الاسم أو عنوان المقال
+app.get('/api/search', async (req, res) => {
+    try {
+        const rawQ = req.query.q || '';
+        const q = sanitizeInput(rawQ).replace(/^@/, '');
+        if (!q || q.length < 2) {
+            return res.json({ posts: [], memberPosts: [], authors: [] });
+        }
+
+        const safeRegexStr = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(safeRegexStr, 'i');
+
+        // 1. البحث في كتاب وأعضاء الموقع بالاسم أو المعرف
+        const authors = await User.find({
+            status: 'approved',
+            $or: [{ username: regex }, { fullName: regex }]
+        }).limit(8).select('fullName username avatar role createdAt');
+
+        // 2. البحث في مقالات الأعضاء المعتمدة بالعنوان أو اسم الكاتب
+        const memberPosts = await MemberPost.find({
+            status: 'approved',
+            $or: [{ title: regex }, { content: regex }, { authorName: regex }, { authorUsername: regex }]
+        }).sort({ publishedAt: -1 }).limit(10).select('title authorName authorUsername publishedAt mediaUrls');
+
+        // 3. البحث في الأخبار الرسمية للوكالة بالعنوان والمحتوى والتصنيف
+        const posts = await Post.find({
+            status: 'published',
+            $or: [{ title: regex }, { content: regex }, { category: regex }]
+        }).sort({ _id: -1 }).limit(10).select('title category date views mediaUrls');
+
+        res.json({ authors, memberPosts, posts });
+    } catch (err) {
+        res.status(500).json({ error: "تعذر إجراء عملية البحث" });
+    }
+});
 // تشغيل السيرفر
 app.listen(PORT, () => {
     console.log(`السيرفر يعمل الآن بأمان كامل على المنفذ ${PORT}`);

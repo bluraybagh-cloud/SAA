@@ -985,35 +985,7 @@
 
     </div>
   </section>
-<!-- قسم البحث الشامل عن المعرف أو الاسم أو عنوان المقال -->
-      <div class="site-search-wrapper">
-        <div class="search-input-box">
-          <i class="fas fa-search search-input-icon"></i>
-          <input type="text" id="globalSearchInput" class="search-input-control" placeholder="ابحث بالمعرف @username، أو اسم الكاتب، أو عنوان المقال والخبر..." oninput="handleGlobalSearchInput(this.value)" onkeydown="if(event.key==='Enter') executeGlobalSearch();">
-          <button type="button" id="clearSearchBtn" onclick="clearGlobalSearch()" class="search-clear-btn" style="display:none;" title="مسح البحث">
-            <i class="fas fa-times"></i>
-          </button>
-          <button type="button" onclick="executeGlobalSearch()" class="search-action-btn">
-            <i class="fas fa-search"></i> بحث
-          </button>
-        </div>
 
-        <!-- صندوق نتائج البحث المنسدل الفوري -->
-        <div id="globalSearchResultsBox" class="search-results-container" style="display: none;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px;">
-            <span style="font-weight: 800; color: var(--gold-light); font-size: 15px;">
-              <i class="fas fa-list-ul" style="color: var(--gold-primary);"></i> نتائج البحث: "<span id="searchKeywordLabel" style="color: var(--gold-primary);"></span>"
-            </span>
-            <button type="button" onclick="clearGlobalSearch()" class="action-btn" style="background: var(--surface-light); color: var(--text-color); padding: 4px 10px; font-size: 12px;">
-              <i class="fas fa-times"></i> إغلاق
-            </button>
-          </div>
-
-          <div id="searchResultsContent">
-            <!-- النتائج المصنفة ستظهر هنا -->
-          </div>
-        </div>
-      </div>
   <!-- ABOUT DETAILED SECTION -->
   <section id="about" class="section-alt">
     <div class="wrap">

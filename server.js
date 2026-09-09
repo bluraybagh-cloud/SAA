@@ -188,7 +188,7 @@ const PostSchema = new mongoose.Schema({
     commentsCount: { type: Number, default: 0 },
     date: { type: String, default: () => new Date().toISOString().split('T')[0] }
 }, { timestamps: true });
-
+const Post = mongoose.model('Post', PostSchema);
 
 const ReactionSchema = new mongoose.Schema({
     postId: { type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true, index: true },

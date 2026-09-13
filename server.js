@@ -52,9 +52,9 @@ async function verifyPassword(plainPassword, storedPassword) {
         if (bcrypt) return await bcrypt.compare(plainPassword, storedPassword);
     }
     if (storedPassword.startsWith('pbkdf2:')) {
-        const parts = storedPassword.split(':');
-        const salt = parts[1];
-        const originalHash = parts[2];
+      const parts = storedPassword.split(':');
+const salt = parts;
+const originalHash = parts;
         const hash = crypto.pbkdf2Sync(plainPassword, salt, 1000, 64, 'sha512').toString('hex');
         return hash === originalHash;
     }
@@ -1521,10 +1521,28 @@ app.post('/api/posts/:id/comments', verifyActiveUser, async (req, res) => {
 // ==========================================
 app.get('/api/posts', async (req, res) => {
     try {
-        const posts = await Post.find().sort({ _id: -1 }).select('-__v');
+        const limit = parseInt(req.query.limit) || 20;
+        const posts = await Post.find()
+            .sort({ _id: -1 })
+            .limit(limit)
+            .select('-__v')
+            .lean();
         res.json(posts || []);
     } catch (err) {
         res.status(500).json({ error: "تعذر جلب الأخبار" });
+    }
+});
+
+app.get('/api/posts/:id', async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "معرف غير صالح" });
+        }
+        const post = await Post.findById(req.params.id).select('-__v').lean();
+        if (!post) return res.status(404).json({ error: "الخبر غير موجود" });
+        res.json(post);
+    } catch (err) {
+        res.status(500).json({ error: "تعذر جلب تفاصيل الخبر" });
     }
 });
 

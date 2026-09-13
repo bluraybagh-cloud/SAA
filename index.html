@@ -221,7 +221,7 @@
     width: 7px; height: 7px; background: #ffffff; border-radius: 50%;
     display: inline-block; animation: blinkDot 1s infinite alternate;
   }
-  @keyframes blinkDot { from { opacity: 0.3; transform: scale(0.8); } to { opacity: 1; transform: scale(1.2); } }
+  @keyframes blinkDot { from { opacity: 0.3; transform: scale(0.8); } to { opacity: 1; } }
   .ticker-marquee-box { flex: 1; overflow: hidden; position: relative; height: 100%; display: flex; align-items: center; }
   .ticker-track { display: inline-flex; white-space: nowrap; gap: 50px; animation: tickerSeamless 20s linear infinite; will-change: transform; }
   .ticker-track:hover { animation-play-state: paused; }
@@ -730,189 +730,190 @@
       height: 34px !important;
     }
   }
+
   /* ========================================================
-    تنسيق شريط المنشورات العاجلة الأفقي (واضح ومتناسق مع الثيمات)
+    تنسيق شريط المنشورات العاجلة الأفقي
     ======================================================== */
-.breaking-news-horizontal-section {
-  padding: 40px 0 25px;
-  background: var(--surface-color);
-  border-top: 1.5px solid var(--border-gold);
-  border-bottom: 1.5px solid var(--border-gold);
-  position: relative;
-  overflow: hidden;
-  display: block;
-}
-[data-theme="light"] .breaking-news-horizontal-section {
-  background: #F4F7FA;
-  border-color: rgba(13, 43, 82, 0.22);
-}
-[data-theme="neon"] .breaking-news-horizontal-section {
-  background: #0b0f19;
-  border-color: rgba(56, 189, 248, 0.4);
-}
+  .breaking-news-horizontal-section {
+    padding: 40px 0 25px;
+    background: var(--surface-color);
+    border-top: 1.5px solid var(--border-gold);
+    border-bottom: 1.5px solid var(--border-gold);
+    position: relative;
+    overflow: hidden;
+    display: block;
+  }
+  [data-theme="light"] .breaking-news-horizontal-section {
+    background: #F4F7FA;
+    border-color: rgba(13, 43, 82, 0.22);
+  }
+  [data-theme="neon"] .breaking-news-horizontal-section {
+    background: #0b0f19;
+    border-color: rgba(56, 189, 248, 0.4);
+  }
 
-.breaking-news-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-.breaking-live-badge {
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-  color: #ffffff;
-  font-size: 13.5px;
-  font-weight: 900;
-  padding: 6px 18px;
-  border-radius: 6px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 0 16px rgba(231, 76, 60, 0.6);
-}
-.breaking-title-text {
-  font-size: clamp(20px, 3.5vw, 26px);
-  font-weight: 900;
-  color: var(--gold-light);
-  margin: 0;
-}
-[data-theme="light"] .breaking-title-text {
-  color: #0D2B52;
-}
-.breaking-hint-text {
-  font-size: 13px;
-  color: var(--dim-color);
-  font-weight: 600;
-}
+  .breaking-news-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  .breaking-live-badge {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: #ffffff;
+    font-size: 13.5px;
+    font-weight: 900;
+    padding: 6px 18px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 16px rgba(231, 76, 60, 0.6);
+  }
+  .breaking-title-text {
+    font-size: clamp(20px, 3.5vw, 26px);
+    font-weight: 900;
+    color: var(--gold-light);
+    margin: 0;
+  }
+  [data-theme="light"] .breaking-title-text {
+    color: #0D2B52;
+  }
+  .breaking-hint-text {
+    font-size: 13px;
+    color: var(--dim-color);
+    font-weight: 600;
+  }
 
-.breaking-cards-marquee {
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-  padding: 10px 0 15px;
-}
-.breaking-cards-marquee::before,
-.breaking-cards-marquee::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 60px;
-  z-index: 5;
-  pointer-events: none;
-}
-.breaking-cards-marquee::before {
-  right: 0;
-  background: linear-gradient(to left, var(--surface-color), transparent);
-}
-.breaking-cards-marquee::after {
-  left: 0;
-  background: linear-gradient(to right, var(--surface-color), transparent);
-}
-[data-theme="light"] .breaking-cards-marquee::before {
-  background: linear-gradient(to left, #F4F7FA, transparent);
-}
-[data-theme="light"] .breaking-cards-marquee::after {
-  background: linear-gradient(to right, #F4F7FA, transparent);
-}
+  .breaking-cards-marquee {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    padding: 10px 0 15px;
+  }
+  .breaking-cards-marquee::before,
+  .breaking-cards-marquee::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .breaking-cards-marquee::before {
+    right: 0;
+    background: linear-gradient(to left, var(--surface-color), transparent);
+  }
+  .breaking-cards-marquee::after {
+    left: 0;
+    background: linear-gradient(to right, var(--surface-color), transparent);
+  }
+  [data-theme="light"] .breaking-cards-marquee::before {
+    background: linear-gradient(to left, #F4F7FA, transparent);
+  }
+  [data-theme="light"] .breaking-cards-marquee::after {
+    background: linear-gradient(to right, #F4F7FA, transparent);
+  }
 
-.breaking-cards-stream {
-  display: inline-flex;
-  white-space: nowrap;
-  gap: 20px;
-  animation: breakingStreamAnim 35s linear infinite;
-  will-change: transform;
-  padding: 0 15px;
-}
-.breaking-cards-stream:hover {
-  animation-play-state: paused;
-}
-@keyframes breakingStreamAnim {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(50%); }
-}
+  .breaking-cards-stream {
+    display: inline-flex;
+    white-space: nowrap;
+    gap: 20px;
+    animation: breakingStreamAnim 35s linear infinite;
+    will-change: transform;
+    padding: 0 15px;
+  }
+  .breaking-cards-stream:hover {
+    animation-play-state: paused;
+  }
+  @keyframes breakingStreamAnim {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(50%); }
+  }
 
-/* كارت المنشور العاجل المرتب والأنيق */
-.breaking-stream-card {
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 300px;
-  background: var(--surface-light);
-  border: 1.5px solid var(--border-gold);
-  border-radius: 8px;
-  overflow: hidden;
-  padding: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
-  transition: var(--transition);
-  text-align: right;
-  flex-shrink: 0;
-  white-space: normal;
-  user-select: none;
-  cursor: pointer;
-}
-.breaking-stream-card:hover {
-  transform: translateY(-5px);
-  border-color: #e74c3c;
-  box-shadow: 0 10px 30px rgba(231,76,60,0.35);
-}
-[data-theme="light"] .breaking-stream-card {
-  background: #FFFFFF;
-  border: 1.5px solid rgba(13, 43, 82, 0.25);
-  box-shadow: 0 6px 20px rgba(13, 43, 82, 0.08);
-}
-.breaking-stream-img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  background-color: var(--bg-color);
-  border: 1.5px solid var(--gold-primary);
-  border-radius: 6px;
-  margin-bottom: 12px;
-}
-[data-theme="light"] .breaking-stream-img {
-  border-color: #0D2B52;
-}
-.breaking-stream-title {
-  font-size: 15.5px;
-  font-weight: 800;
-  color: var(--gold-light);
-  margin-bottom: 8px;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-[data-theme="light"] .breaking-stream-title {
-  color: #0D2B52;
-}
-.breaking-stream-desc {
-  font-size: 13px;
-  color: var(--dim-color);
-  line-height: 1.6;
-  margin-bottom: 12px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-[data-theme="light"] .breaking-stream-desc {
-  color: #4A5568;
-}
-.breaking-card-tag {
-  background: rgba(231,76,60,0.18);
-  color: #e74c3c;
-  border: 1px solid #e74c3c;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 2px 7px;
-  border-radius: 4px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
+  /* كارت المنشور العاجل */
+  .breaking-stream-card {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 300px;
+    background: var(--surface-light);
+    border: 1.5px solid var(--border-gold);
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+    transition: var(--transition);
+    text-align: right;
+    flex-shrink: 0;
+    white-space: normal;
+    user-select: none;
+    cursor: pointer;
+  }
+  .breaking-stream-card:hover {
+    transform: translateY(-5px);
+    border-color: #e74c3c;
+    box-shadow: 0 10px 30px rgba(231,76,60,0.35);
+  }
+  [data-theme="light"] .breaking-stream-card {
+    background: #FFFFFF;
+    border: 1.5px solid rgba(13, 43, 82, 0.25);
+    box-shadow: 0 6px 20px rgba(13, 43, 82, 0.08);
+  }
+  .breaking-stream-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    background-color: var(--bg-color);
+    border: 1.5px solid var(--gold-primary);
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+  [data-theme="light"] .breaking-stream-img {
+    border-color: #0D2B52;
+  }
+  .breaking-stream-title {
+    font-size: 15.5px;
+    font-weight: 800;
+    color: var(--gold-light);
+    margin-bottom: 8px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  [data-theme="light"] .breaking-stream-title {
+    color: #0D2B52;
+  }
+  .breaking-stream-desc {
+    font-size: 13px;
+    color: var(--dim-color);
+    line-height: 1.6;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  [data-theme="light"] .breaking-stream-desc {
+    color: #4A5568;
+  }
+  .breaking-card-tag {
+    background: rgba(231,76,60,0.18);
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
 </style>
 </head>
 <body>
@@ -970,7 +971,7 @@
         <span>احجز إعلانك</span>
       </a>
 
-      <!-- زر حسابي (يتحول لأيقونة دائرية أنيقة في الشاشات الصغيرة) -->
+      <!-- زر حسابي -->
       <a href="profile.html" class="btn-outline btn-account-mobile" style="padding: 7px 13px; font-size: 13px; font-weight: 700; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; border-color: var(--border-gold); color: var(--gold-primary); background: rgba(13, 43, 82, 0.05);" title="حسابي">
         <i class="fas fa-user-circle" style="color: var(--gold-primary);"></i>
         <span class="btn-account-text">حسابي</span>
@@ -1127,11 +1128,10 @@
     </div>
   </div>
 </section>
-  
 
 <div id="main-page" class="page-view">
 <!-- ========================================================
-     شريط الأخبار العاجلة الأفقي المتحرك (فوق قسم أحدث الأخبار)
+     شريط الأخبار العاجلة الأفقي المتحرك
      ======================================================== -->
 <section id="breaking-news-horizontal-section" class="breaking-news-horizontal-section">
   <div class="wrap">
@@ -1153,6 +1153,7 @@
     </div>
   </div>
 </section>
+
   <!-- NEWS LIVE STREAM -->
   <section id="news-section" style="position: relative; padding: 140px 0 110px; overflow: hidden;">
     <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 30%, rgba(13, 43, 82, 0.08), transparent 60%); pointer-events: none;"></div>
@@ -1524,9 +1525,8 @@
         </button>
       </div>
     </div>
-<!-- ========================================================
-         1. قسم إدارة وتوليد كروت العضوية (مضاف جديد)
-         ======================================================== -->
+
+    <!-- قسم إدارة وتوليد كروت العضوية -->
     <div class="dash-panel" style="border-color: var(--gold-primary);">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 12px;">
         <h3 style="color: var(--gold-light); margin-bottom: 0; display: flex; align-items: center; gap: 10px;">
@@ -1637,9 +1637,7 @@
       </div>
     </div>
 
-    <!-- ========================================================
-         2. قسم مراجعة وتدقيق منشورات الأعضاء (مضاف جديد)
-         ======================================================== -->
+    <!-- قسم مراجعة وتدقيق منشورات الأعضاء -->
     <div class="dash-panel" style="border-color: #2ecc71;">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 12px;">
         <h3 style="color: #2ecc71; margin-bottom: 0; display: flex; align-items: center; gap: 10px;">
@@ -1679,6 +1677,7 @@
         </table>
       </div>
     </div>
+
     <!-- قسم إضافة ونشر خبر جديد -->
     <div class="dash-panel">
       <h3 id="panelFormTitle">إضافة ونشر خبر جديد</h3>
@@ -1703,16 +1702,16 @@
           </div>
         </div>
 
-      <div class="form-group" style="display: flex; gap: 20px; flex-wrap: wrap; background: var(--surface-light); padding: 12px 16px; border-radius: 6px; border: 1px solid var(--border-subtle); margin-bottom: 18px;">
-  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--gold-light); font-size: 14px; font-weight: 700;">
-    <input type="checkbox" id="newsIsPinned" style="width: 18px; height: 18px; accent-color: var(--gold-primary); cursor: pointer;">
-    <i class="fas fa-thumbtack" style="color: var(--gold-primary);"></i> تثبيت الخبر
-  </label>
-  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #ff7675; font-size: 14px; font-weight: 700;">
-    <input type="checkbox" id="newsIsTicker" style="width: 18px; height: 18px; accent-color: #e74c3c; cursor: pointer;">
-    <i class="fas fa-bolt" style="color: #e74c3c;"></i> خبر عاجل (إدراجه في شريط المنشورات العاجلة الأفقي)
-  </label>
-</div>
+        <div class="form-group" style="display: flex; gap: 20px; flex-wrap: wrap; background: var(--surface-light); padding: 12px 16px; border-radius: 6px; border: 1px solid var(--border-subtle); margin-bottom: 18px;">
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--gold-light); font-size: 14px; font-weight: 700;">
+            <input type="checkbox" id="newsIsPinned" style="width: 18px; height: 18px; accent-color: var(--gold-primary); cursor: pointer;">
+            <i class="fas fa-thumbtack" style="color: var(--gold-primary);"></i> تثبيت الخبر
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #ff7675; font-size: 14px; font-weight: 700;">
+            <input type="checkbox" id="newsIsTicker" style="width: 18px; height: 18px; accent-color: #e74c3c; cursor: pointer;">
+            <i class="fas fa-bolt" style="color: #e74c3c;"></i> خبر عاجل (إدراجه في شريط المنشورات العاجلة الأفقي)
+          </label>
+        </div>
 
         <div class="form-group">
           <label>تاريخ ووقت النشر (اختياري، اتركه فارغاً للنشر الحالي)</label>
@@ -1842,7 +1841,7 @@ function showToast(message, type = 'info') {
 /* ========================================================
    ضغط وتصغير حجم الصور تلقائياً قبل الرفع
    ======================================================== */
-function compressImage(file, maxWidth = 1200, quality = 0.75) {
+function compressImage(file, maxWidth = 800, quality = 0.65) {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -1922,9 +1921,8 @@ function getTotalPostViewsSum() {
   return total;
 }
 
+// احتساب المشاهدات في السيرفر دون إظهارها في واجهة القارئ
 async function incrementPostViews(postId) {
-  if (localStorage.getItem('sada_token')) return;
-
   try {
     const res = await fetch(`${API_URL}/posts/${postId}/view`, { method: 'POST' });
     if (res.ok) {
@@ -2129,10 +2127,7 @@ function processLogout() {
 }
 
 /* ========================================================
-   دالة عرض كروت الأخبار العاجلة الأفقية (كانت مفقودة تماماً وتسبب توقف الكود)
-   ======================================================== */
-/* ========================================================
-   1. دالة كروت الأخبار العاجلة (مهمة جداً لأن fetchPostsFromServer تستدعيها)
+   دالة كروت الأخبار العاجلة (مصححة وخاصة بالعاجل فقط)
    ======================================================== */
 function renderBreakingNewsCards() {
   const stream = document.getElementById('breakingCardsStream');
@@ -2141,7 +2136,7 @@ function renderBreakingNewsCards() {
 
   const breakingPosts = allPosts.filter(p => 
     p.status !== 'draft' && 
-    (p.showInBreaking === true || p.isBreaking === true || p.isPinned === true)
+    (p.showInBreaking === true || p.isBreaking === true)
   );
 
   if (breakingPosts.length === 0) {
@@ -2181,23 +2176,22 @@ function renderBreakingNewsCards() {
 }
 
 /* ========================================================
-   2. دالة جلب الأخبار الجديدة والسريعة
+   دالة جلب الأخبار (خفيفة وسريعة للموبايل)
    ======================================================== */
-async function fetchPostsFromServer(isRetry = false) {
+async function fetchPostsFromServer() {
   const newsGrid = document.getElementById('liveNewsGrid');
-  const breakingStream = document.getElementById('breakingCardsStream');
 
-  // 1. عرض الأخبار المخزنة مسبقاً فوراً بدون انتظار
-  const cached = localStorage.getItem('sada_cached_posts');
-  if (cached && !isRetry && (!allPosts || allPosts.length === 0)) {
-    try {
+  // 1. عرض الكاش فوراً إن وجد
+  try {
+    const cached = localStorage.getItem('sada_cached_posts');
+    if (cached && (!allPosts || allPosts.length === 0)) {
       allPosts = JSON.parse(cached);
       renderBreakingNewsCards();
       displayPostsGrid();
-    } catch(e) {}
-  }
+    }
+  } catch(e) {}
 
-  // 2. إذا لم تكن هناك أي أخبار، أظهر كروت الانتظار المتوهجة (Skeleton)
+  // 2. كروت الانتظار في أول تحميل فقط
   if (!allPosts || allPosts.length === 0) {
     if (newsGrid) {
       newsGrid.innerHTML = `
@@ -2206,22 +2200,10 @@ async function fetchPostsFromServer(isRetry = false) {
         <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
       `;
     }
-    if (breakingStream) {
-      breakingStream.innerHTML = `
-        <div class="skeleton-card" style="width: 280px; display:inline-block;"><div class="skeleton-box skeleton-img" style="height: 120px;"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc-short"></div></div>
-        <div class="skeleton-card" style="width: 280px; display:inline-block;"><div class="skeleton-box skeleton-img" style="height: 120px;"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc-short"></div></div>
-      `;
-    }
   }
 
-  // إعطاء مهلة 60 ثانية لسيرفر Render المجاني حتى يستيقظ
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 60000);
-
   try {
-    const res = await fetch(`${API_URL}/posts`, { signal: controller.signal });
-    clearTimeout(timeoutId);
-
+    const res = await fetch(`${API_URL}/posts?limit=20`);
     if (res.ok) {
       const fetched = await res.json();
       if (Array.isArray(fetched)) {
@@ -2233,32 +2215,22 @@ async function fetchPostsFromServer(isRetry = false) {
           return new Date(b.date || 0) - new Date(a.date || 0);
         });
 
-        localStorage.setItem('sada_cached_posts', JSON.stringify(allPosts));
-        
+        try {
+          localStorage.setItem('sada_cached_posts', JSON.stringify(allPosts));
+        } catch(quotaErr) {}
+
         renderBreakingNewsCards();
         displayPostsGrid();
-        return;
       }
     }
-    throw new Error("استجابة غير صحيحة من الخادم");
   } catch (err) {
-    clearTimeout(timeoutId);
     console.warn("تنبيه الاتصال:", err.message);
-
-    if (!allPosts || allPosts.length === 0) {
-      if (newsGrid) {
-        newsGrid.innerHTML = `
-          <div style="grid-column: 1/-1; text-align: center; padding: 40px 20px;">
-            <i class="fas fa-satellite-dish fa-spin" style="font-size: 32px; color: var(--gold-primary); margin-bottom: 15px; display: block;"></i>
-            <p style="color: var(--gold-light); font-size: 16px; font-weight: bold; margin-bottom: 8px;">جاري إيقاظ الخادم السحابي وجلب الأخبار...</p>
-            <p style="color: var(--dim-color); font-size: 13.5px;">الخادم المجاني يستغرق ثوانٍ للتشغيل، ستظهر الأخبار تلقائياً فور الاتصال.</p>
-          </div>
-        `;
-      }
-      setTimeout(() => fetchPostsFromServer(true), 4000);
-    }
   }
 }
+
+/* ========================================================
+   عرض شبكة الأخبار (المشاهدات محجوبة عن الجمهور)
+   ======================================================== */
 function displayPostsGrid() {
   const grid = document.getElementById('liveNewsGrid');
   const paginationDiv = document.getElementById('newsPagination');
@@ -2361,6 +2333,7 @@ function checkUrlHashForAdmin() {
     handleSecretAdminEntry();
   }
 }
+
 async function renderLiveNews() {
   const grid = document.getElementById('liveNewsGrid');
   const mainListView = document.getElementById('mainNewsListView');
@@ -2388,6 +2361,9 @@ async function renderLiveNews() {
   await fetchPostsFromServer();
 }
 
+/* ========================================================
+   فتح تفاصيل الخبر (المشاهدات محجوبة عن الجمهور)
+   ======================================================== */
 function openPublicSingleNews(postId, updateHash = true) {
   incrementPostViews(postId);
   
@@ -2457,7 +2433,7 @@ function openPublicSingleNews(postId, updateHash = true) {
       ${post.content || ''}
     </div>
     
-    <!-- شريط التفاعلات المباشرة (أعجبني / لم يعجبني) -->
+    <!-- شريط التفاعلات المباشرة -->
     <div class="reactions-interactive-box">
       <span style="font-size: 14px; font-weight: 700; color: var(--gold-light); margin-left: 10px;">التفاعل مع هذا الخبر:</span>
       <button id="likeBtn_${post._id}" onclick="submitReaction('${post._id}', 'like')" class="react-btn">
@@ -2532,7 +2508,6 @@ function backToNewsList() {
 
 function changeNewsPage(direction) {
   currentNewsPage += direction;
-  renderBreakingNewsTicker();
   renderBreakingNewsCards();
   displayPostsGrid();
   document.getElementById('news-section').scrollIntoView({ behavior: 'smooth' });
@@ -2726,7 +2701,7 @@ async function savePostAction() {
   let mediaUrls = [];
   if (fileInput.files && fileInput.files.length > 0) {
     showToast('جاري ضغط وتجهيز الصور للنشر...', 'info');
-    mediaUrls = await Promise.all(Array.from(fileInput.files).map(file => compressImage(file, 1200, 0.75)));
+    mediaUrls = await Promise.all(Array.from(fileInput.files).map(file => compressImage(file, 800, 0.65)));
   } else if (editId) {
     const p = allPosts.find(item => item._id === editId);
     if (p) mediaUrls = p.mediaUrls || [p.mediaUrl];
@@ -2734,7 +2709,6 @@ async function savePostAction() {
     mediaUrls = ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"];
   }
 
-  const displayTarget = document.getElementById('newsDisplayTarget') ? document.getElementById('newsDisplayTarget').value : 'both';
   const isBreaking = (document.getElementById('newsIsBreaking') && document.getElementById('newsIsBreaking').checked) || (document.getElementById('newsIsTicker') && document.getElementById('newsIsTicker').checked) || false;
   const postData = { title, category, status, isPinned, isBreaking, showInBreaking: isBreaking, showInLatest: true, mediaType: 'image', mediaUrls, content, date: postDate };
 
@@ -2803,59 +2777,20 @@ function resetNewsForm() {
   if (document.getElementById('newsIsBreaking')) {
     document.getElementById('newsIsBreaking').checked = false;
   }
-
-  document.getElementById('panelFormTitle').innerText = 'إضافة ونشر خبر جديد';
-
-  if (document.getElementById('newsDisplayTarget')) {
-    document.getElementById('newsDisplayTarget').value = 'both';
-  }
-
-  document.getElementById('saveSubmitBtn').innerText = 'حفظ ونشر الخبر';
-  document.getElementById('cancelEditBtn').style.display = 'none';
-
   if (document.getElementById('newsIsTicker')) {
     document.getElementById('newsIsTicker').checked = false;
   }
-}
 
-function renderBreakingNewsTicker() {
-  const track = document.getElementById('breakingTickerTrack');
-  const box = document.getElementById('breakingNewsTickerBox');
-  if (!track || !box) return;
-
-  const breakingPosts = allPosts.filter(p => 
-    p.status !== 'draft' && 
-    (p.showInBreaking === true || (p.showInBreaking === undefined && p.isPinned))
-  );
-
-  if (breakingPosts.length === 0) {
-    box.style.display = 'none';
-    return;
-  }
-
-  box.style.display = 'flex';
-  let html = '';
-  const loopCount = breakingPosts.length < 3 ? 4 : 2;
-  for (let i = 0; i < loopCount; i++) {
-    breakingPosts.forEach(p => {
-      const dateStr = p.date ? new Date(p.date).toLocaleDateString('ar-IQ') : '';
-      html += `
-        <span class="breaking-news-item" onclick="openPublicSingleNews('${p._id}', true)" title="اضغط لقراءة الخبر">
-          <i class="fas fa-bolt" style="color:var(--gold-primary); font-size:12px;"></i>
-          <span>${escapeText(p.title)}</span>
-          ${dateStr ? `<span style="font-size:11.5px; opacity:0.75; font-weight:normal;">(${dateStr})</span>` : ''}
-        </span>
-      `;
-    });
-  }
-  track.innerHTML = html;
+  document.getElementById('panelFormTitle').innerText = 'إضافة ونشر خبر جديد';
+  document.getElementById('saveSubmitBtn').innerText = 'حفظ ونشر الخبر';
+  document.getElementById('cancelEditBtn').style.display = 'none';
 }
 
 function deletePostAction(id) {
   const post = allPosts.find(p => String(p._id) === String(id));
   if (!post) return;
 
-  const inBreaking = (post.showInBreaking === true || (post.showInBreaking !== false && post.isPinned));
+  const inBreaking = Boolean(post.showInBreaking || post.isBreaking);
   const inLatest = (post.showInLatest !== false);
 
   if (inBreaking && inLatest) {
@@ -2925,7 +2860,6 @@ async function executeDeletePost(id, target = 'both') {
       renderDashboard();
       renderBreakingNewsCards();
       displayPostsGrid();
-      renderBreakingNewsTicker();
     } else {
       showToast(data.error || 'خطأ في عملية الحذف', 'danger');
     }
@@ -3324,7 +3258,6 @@ async function renderDashboardCards() {
     if (res.ok) {
       allAdminCards = data.cards || [];
       
-      // تحديث الأعداد في الواجهة بدقة
       if (data.stats) {
         const totalEl = document.getElementById('cardsStatTotal');
         const unusedEl = document.getElementById('cardsStatUnused');
@@ -3365,6 +3298,7 @@ async function renderDashboardCards() {
     tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--danger);">تعذر جلب كروت العضوية.</td></tr>';
   }
 }
+
 async function generateMembershipCardsAction() {
   const type = document.getElementById('genCardType').value;
   const count = parseInt(document.getElementById('genCardCount').value, 10);
@@ -3418,24 +3352,29 @@ async function loadFeaturedAuthors() {
     section.style.display = 'none';
   }
 }
+
 /* ========================================================
-   دوال إضافية للوحة التحكم (زر تفعيل كعاجل وإدارة الكروت)
+   تفعيل وإلغاء العاجل بدقة من لوحة التحكم
    ======================================================== */
 async function toggleBreakingNewsState(postId) {
   const token = localStorage.getItem('sada_token');
   const post = allPosts.find(p => String(p._id) === String(postId));
   if (!post) return;
 
-  const newState = !(post.isBreaking || post.showInBreaking);
+  const currentStatus = Boolean(post.isBreaking || post.showInBreaking);
+  const nextState = !currentStatus;
+
   try {
     const res = await fetch(`${API_URL}/posts/${postId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'Authorization': token },
-      body: JSON.stringify({ isBreaking: newState, showInBreaking: newState })
+      body: JSON.stringify({ isBreaking: nextState, showInBreaking: nextState })
     });
     if (res.ok) {
-      showToast(newState ? 'تم إدراج الخبر في الشريط العاجل!' : 'تمت إزالة الخبر من الشريط العاجل', 'info');
-      await fetchPostsFromServer();
+      post.isBreaking = nextState;
+      post.showInBreaking = nextState;
+      showToast(nextState ? 'تم إدراج الخبر في الشريط العاجل' : 'تمت إزالة الخبر من الشريط العاجل', 'info');
+      renderBreakingNewsCards();
       renderDashboard();
     }
   } catch(e) {
@@ -3481,6 +3420,7 @@ async function cancelMembershipCardAction(cardId, serial) {
     showToast('تعذر إلغاء الكارت', 'danger');
   }
 }
+
 /* التهيئة العامة عند التحميل */
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('sada_theme') || 'dark';

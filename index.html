@@ -2134,10 +2134,33 @@ function processLogout() {
 }
 
 async function fetchPostsFromServer(retry = 0) {
-  const grid = document.getElementById('liveNewsGrid');
-  
+  const newsGrid = document.getElementById('liveNewsGrid');
+  const breakingStream = document.getElementById('breakingCardsStream') || document.getElementById('breakingCardsTrack');
+
+  // 1. إظهار بطاقات الانتظار في شبكة أحدث الأخبار فوراً عند بدء التحميل
+  if (newsGrid) {
+    newsGrid.innerHTML = `
+      <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+      <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+      <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+    `;
+  }
+
+  // 2. إظهار بطاقات انتظار مصغرة في شريط الأخبار العاجلة أيضاً
+  if (breakingStream) {
+    breakingStream.innerHTML = `
+      <div class="skeleton-card" style="width: 280px; display:inline-block;"><div class="skeleton-box skeleton-img" style="height: 120px;"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc-short"></div></div>
+      <div class="skeleton-card" style="width: 280px; display:inline-block;"><div class="skeleton-box skeleton-img" style="height: 120px;"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc-short"></div></div>
+    `;
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+
   try {
-    const res = await fetch(`${API_URL}/posts`);
+    const res = await fetch(`${API_URL}/posts`, { signal: controller.signal });
+    clearTimeout(timeoutId);
+
     if (res.ok) {
       const fetched = await res.json();
       if (Array.isArray(fetched)) {
@@ -2149,15 +2172,19 @@ async function fetchPostsFromServer(retry = 0) {
           return new Date(b.date || 0) - new Date(a.date || 0);
         });
         localStorage.setItem('sada_cached_posts', JSON.stringify(allPosts));
+        
+        // بمجرد توفر البيانات، يتم بناء وتعبئة القسمين وإزالة بطاقات الانتظار تلقائياً
         renderBreakingNewsTicker();
         renderBreakingNewsCards();
         displayPostsGrid();
         return;
       }
     }
-    throw new Error("استجابة غير صالحة من السيرفر");
+    throw new Error("استجابة غير صالحة");
   } catch (err) {
-    console.log("استخدام الكاش المحلي للأخبار:", err.message);
+    clearTimeout(timeoutId);
+    console.log("التحول إلى التخزين المحلي:", err.message);
+
     const cached = localStorage.getItem('sada_cached_posts');
     if (cached) {
       try {
@@ -2168,12 +2195,13 @@ async function fetchPostsFromServer(retry = 0) {
         return;
       } catch (e) {}
     }
-    
-    // إعادة محاولة الاتصال تلقائياً 3 مرات في حال كان خادم Render يستيقظ
-    if (retry < 3) {
-      setTimeout(() => fetchPostsFromServer(retry + 1), 3500);
-    } else if (grid) {
-      grid.innerHTML = '<p style="color: var(--dim-color); text-align: center; grid-column: 1/-1; font-size: 15px; padding: 30px;">عذراً، تأخر استجابة الخادم السحابي. يرجى تحديث الصفحة بعد لحظات.</p>';
+
+    if (retry < 2) {
+      setTimeout(() => fetchPostsFromServer(retry + 1), 3000);
+    } else {
+      if (newsGrid) {
+        newsGrid.innerHTML = '<p style="color: var(--dim-color); text-align: center; grid-column: 1/-1; font-size: 15px; padding: 30px;">جاري تشغيل الخادم السحابي... يرجى تحديث الصفحة بعد ثوانٍ.</p>';
+      }
     }
   }
 }

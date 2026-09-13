@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>وكالة صدى العطاء - صوتٌ يصنع الأثر... و خبرٌ له صدى</title>
+<title> صدى العطاء - صوتٌ يصنع الأثر... و خبرٌ له صدى</title>
 <link rel="icon" type="image/png" href="https://i.ibb.co/4ZrWtpPN/logo.png">
 <!-- وسوم الميتا الموحدة والقوية للأرشفة ومحركات البحث (SEO) -->
 <meta name="robots" content="index, follow">
@@ -17,7 +17,7 @@
 <meta name="description" content="وكالة صدى العطاء - المنصة الإعلامية الرسمية لمؤسسة صدى العطاء في الحلة ومحافظة بابل. نغطي الأحداث والنشاطات الرسمية والمجتمعية بدقة، ونقدم خدمات التسويق الرقمي، حجز الإعلانات، التصوير والإنتاج المرئي، والتغطيات الميدانية باحترافية عالية في العراق." id="metaDesc">
   <!-- بطاقات الميتا الاجتماعية -->
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="وكالة صدى العطاء">
+<meta property="og:site_name" content=" صدى العطاء">
 <meta property="og:title" content="وكالة صدى العطاء - صوتٌ يصنع الأثر... و خبرٌ له صدى" id="ogTitle">
 <meta property="og:description" content="تغطيات إخبارية حية وتقارير ميدانية توثق كافة الأنشطة والمبادرات الرسمية والمجتمعية أولاً بأول." id="ogDesc">
 <meta property="og:image" content="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" id="ogImage">
@@ -730,6 +730,189 @@
       height: 34px !important;
     }
   }
+  /* ========================================================
+   تنسيق شريط المنشورات العاجلة الأفقي (واضح ومتناسق مع الثيمات)
+   ======================================================== */
+.breaking-news-horizontal-section {
+  padding: 40px 0 25px;
+  background: var(--surface-color);
+  border-top: 1.5px solid var(--border-gold);
+  border-bottom: 1.5px solid var(--border-gold);
+  position: relative;
+  overflow: hidden;
+  display: block;
+}
+[data-theme="light"] .breaking-news-horizontal-section {
+  background: #F4F7FA;
+  border-color: rgba(13, 43, 82, 0.22);
+}
+[data-theme="neon"] .breaking-news-horizontal-section {
+  background: #0b0f19;
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.breaking-news-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.breaking-live-badge {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 900;
+  padding: 6px 18px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 16px rgba(231, 76, 60, 0.6);
+}
+.breaking-title-text {
+  font-size: clamp(20px, 3.5vw, 26px);
+  font-weight: 900;
+  color: var(--gold-light);
+  margin: 0;
+}
+[data-theme="light"] .breaking-title-text {
+  color: #0D2B52;
+}
+.breaking-hint-text {
+  font-size: 13px;
+  color: var(--dim-color);
+  font-weight: 600;
+}
+
+.breaking-cards-marquee {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 10px 0 15px;
+}
+.breaking-cards-marquee::before,
+.breaking-cards-marquee::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  z-index: 5;
+  pointer-events: none;
+}
+.breaking-cards-marquee::before {
+  right: 0;
+  background: linear-gradient(to left, var(--surface-color), transparent);
+}
+.breaking-cards-marquee::after {
+  left: 0;
+  background: linear-gradient(to right, var(--surface-color), transparent);
+}
+[data-theme="light"] .breaking-cards-marquee::before {
+  background: linear-gradient(to left, #F4F7FA, transparent);
+}
+[data-theme="light"] .breaking-cards-marquee::after {
+  background: linear-gradient(to right, #F4F7FA, transparent);
+}
+
+.breaking-cards-stream {
+  display: inline-flex;
+  white-space: nowrap;
+  gap: 20px;
+  animation: breakingStreamAnim 35s linear infinite;
+  will-change: transform;
+  padding: 0 15px;
+}
+.breaking-cards-stream:hover {
+  animation-play-state: paused;
+}
+@keyframes breakingStreamAnim {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(50%); }
+}
+
+/* كارت المنشور العاجل المرتب والأنيق */
+.breaking-stream-card {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 300px;
+  background: var(--surface-light);
+  border: 1.5px solid var(--border-gold);
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+  transition: var(--transition);
+  text-align: right;
+  flex-shrink: 0;
+  white-space: normal;
+  user-select: none;
+  cursor: pointer;
+}
+.breaking-stream-card:hover {
+  transform: translateY(-5px);
+  border-color: #e74c3c;
+  box-shadow: 0 10px 30px rgba(231,76,60,0.35);
+}
+[data-theme="light"] .breaking-stream-card {
+  background: #FFFFFF;
+  border: 1.5px solid rgba(13, 43, 82, 0.25);
+  box-shadow: 0 6px 20px rgba(13, 43, 82, 0.08);
+}
+.breaking-stream-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background-color: var(--bg-color);
+  border: 1.5px solid var(--gold-primary);
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+[data-theme="light"] .breaking-stream-img {
+  border-color: #0D2B52;
+}
+.breaking-stream-title {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: var(--gold-light);
+  margin-bottom: 8px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+[data-theme="light"] .breaking-stream-title {
+  color: #0D2B52;
+}
+.breaking-stream-desc {
+  font-size: 13px;
+  color: var(--dim-color);
+  line-height: 1.6;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+[data-theme="light"] .breaking-stream-desc {
+  color: #4A5568;
+}
+.breaking-card-tag {
+  background: rgba(231,76,60,0.18);
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
 </style>
 </head>
 <body>
@@ -745,8 +928,8 @@
     </div>
     <div class="ticker-marquee-box">
       <div class="ticker-track">
-        <span class="ticker-item" id="liveTickerText">وكالة صدى العطاء - صوت يصنع الأثر وخبر له صدى</span>
-        <span class="ticker-item" id="liveTickerTextDup">وكالة صدى العطاء - صوت يصنع الأثر وخبر له صدى</span>
+        <span class="ticker-item" id="liveTickerText"> صدى العطاء - صوت يصنع الأثر وخبر له صدى</span>
+        <span class="ticker-item" id="liveTickerTextDup"> صدى العطاء - صوت يصنع الأثر وخبر له صدى</span>
       </div>
     </div>
   </div>
@@ -757,15 +940,15 @@
   <nav class="wrap">
     
     <!-- الشعار والاسم الرسمي -->
-    <div class="brand" onclick="navigateTo('main-page', '#home')" ondblclick="handleSecretAdminEntry()" title="وكالة صدى العطاء">
+    <div class="brand" onclick="navigateTo('main-page', '#home')" ondblclick="handleSecretAdminEntry()" title=" صدى العطاء">
       <div class="brand-logo-container">
         <img src="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" alt="شعار وكالة صدى العطاء" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('brandLogoFallback').style.display='flex';">
-        <div id="brandLogoFallback" class="brand-logo-fallback" style="display: none;">
+        <div id="liveTickerBar" class="ticker-container">
           <i class="fas fa-newspaper" style="color: var(--gold-primary); font-size: 20px;"></i>
         </div>
       </div>
       <div class="brand-name-group">
-        <span class="brand-title" style="letter-spacing: 0.3px;">وكالة صدى العطاء</span>
+        <span class="brand-title" style="letter-spacing: 0.3px;"> صدى العطاء</span>
       </div>
     </div>
 
@@ -950,7 +1133,29 @@
   
 
 <div id="main-page" class="page-view">
+<!-- ========================================================
+     شريط الأخبار العاجلة الأفقي المتحرك (فوق قسم أحدث الأخبار)
+     ======================================================== -->
+<section id="breaking-news-horizontal-section" class="breaking-news-horizontal-section">
+  <div class="wrap">
+    <div class="breaking-news-header">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span class="breaking-live-badge">
+          <span class="live-dot"></span>
+          <i class="fas fa-bolt"></i> عاجل
+        </span>
+        <h3 class="breaking-title-text">الأخبار العاجلة والتغطيات الميدانية</h3>
+      </div>
+      <span class="breaking-hint-text"><i class="fas fa-hand-pointer"></i> مرر الفأرة للتوقف المؤقت أو انقر لقراءة الخبر</span>
+    </div>
+  </div>
 
+  <div class="breaking-cards-marquee">
+    <div class="breaking-cards-stream" id="breakingCardsStream">
+      <!-- يتم توليد كروت المنشورات العاجلة تلقائياً -->
+    </div>
+  </div>
+</section>
   <!-- NEWS LIVE STREAM -->
   <section id="news-section" style="position: relative; padding: 140px 0 110px; overflow: hidden;">
     <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 30%, rgba(13, 43, 82, 0.08), transparent 60%); pointer-events: none;"></div>
@@ -1501,12 +1706,16 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--gold-light); font-size: 14px; font-weight: 700; margin-top: 5px;">
-            <input type="checkbox" id="newsIsPinned" style="width: 18px; height: 18px; accent-color: var(--gold-primary); cursor: pointer;">
-            <i class="fas fa-thumbtack" style="color: var(--gold-primary);"></i> تثبيت الخبر في أعلى الموقع (خبر مميز)
-          </label>
-        </div>
+      <div class="form-group" style="display: flex; gap: 20px; flex-wrap: wrap; background: var(--surface-light); padding: 12px 16px; border-radius: 6px; border: 1px solid var(--border-subtle); margin-bottom: 18px;">
+  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--gold-light); font-size: 14px; font-weight: 700;">
+    <input type="checkbox" id="newsIsPinned" style="width: 18px; height: 18px; accent-color: var(--gold-primary); cursor: pointer;">
+    <i class="fas fa-thumbtack" style="color: var(--gold-primary);"></i> تثبيت الخبر
+  </label>
+  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #ff7675; font-size: 14px; font-weight: 700;">
+    <input type="checkbox" id="newsIsTicker" style="width: 18px; height: 18px; accent-color: #e74c3c; cursor: pointer;">
+    <i class="fas fa-bolt" style="color: #e74c3c;"></i> خبر عاجل (إدراجه في شريط المنشورات العاجلة الأفقي)
+  </label>
+</div>
 
         <div class="form-group">
           <label>تاريخ ووقت النشر (اختياري، اتركه فارغاً للنشر الحالي)</label>
@@ -1594,7 +1803,7 @@
   </div>
 </footer>
 
-<script>
+<script>‎
 const API_URL = 'https://sada-backend-mm3p.onrender.com/api';
 let allPosts = [];
 let currentNewsPage = 1;
@@ -1631,17 +1840,6 @@ function showToast(message, type = 'info') {
       if (toast.parentNode) toast.parentNode.removeChild(toast);
     }, 400);
   }, 4000);
-}
-
-function toggleSubSocialMenu(menuId, arrowId) {
-  const menu = document.getElementById(menuId);
-  const arrow = document.getElementById(arrowId);
-  if (!menu) return;
-  const isOpen = menu.style.display === 'block';
-  menu.style.display = isOpen ? 'none' : 'block';
-  if (arrow) {
-    arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-  }
 }
 
 /* ========================================================
@@ -1717,6 +1915,7 @@ function getPostShares(postId) {
   return (post && post.shares) ? post.shares : 0;
 }
 
+// دالة حساب مجموع المشاهدات لجميع الأخبار
 function getTotalPostViewsSum() {
   let total = 0;
   if (Array.isArray(allPosts)) {
@@ -1727,6 +1926,7 @@ function getTotalPostViewsSum() {
   return total;
 }
 
+// زيادة المشاهدات فورياً عند فتح الخبر في المتصفح وقاعدة البيانات
 async function incrementPostViews(postId) {
   if (localStorage.getItem('sada_token')) return;
 
@@ -1742,6 +1942,7 @@ async function incrementPostViews(postId) {
   } catch(e) {}
 }
 
+// احتساب المشاركات عند الضغط على أزرار النشر
 async function trackShare(postId) {
   try {
     const res = await fetch(`${API_URL}/posts/${postId}/share`, { method: 'POST' });
@@ -1751,160 +1952,7 @@ async function trackShare(postId) {
     }
   } catch(e) {}
 }
-// تحميل وعرض ناشري المقالات المتميزين لهذا الشهر
-/* ========================================================
-   تحميل وعرض ناشري المقالات المتميزين لهذا الشهر
-   (يختفي القسم كلياً وتلقائياً إذا لم يتجاوز أحد 10 منشورات)
-   ======================================================== */
-async function loadFeaturedAuthors() {
-  const section = document.getElementById('featured-authors-section');
-  const container = document.getElementById('featuredAuthorsGrid');
-  if (!section || !container) return;
 
-  try {
-    const res = await fetch(`${API_URL}/members/featured`);
-    const authors = await res.json();
-
-    // إخفاء القسم كلياً إن لم يكن هناك ناشر مؤهل
-    if (!Array.isArray(authors) || authors.length === 0) {
-      section.style.display = 'none';
-      return;
-    }
-
-    section.style.display = 'block';
-    let html = '';
-    authors.forEach(a => {
-      const defaultAvatar = `https://via.placeholder.com/120/111A2E/D4AF37?text=${encodeURIComponent((a.username || 'U').slice(0, 2).toUpperCase())}`;
-      const avatarUrl = a.avatar || defaultAvatar;
-      const profileUrl = `member.html?user=${encodeURIComponent(a.username)}`;
-
-      html += `
-        <div class="featured-author-card">
-          <span class="featured-badge-crown"><i class="fas fa-crown"></i> كاتب الشهر المتميز</span>
-          <div class="author-avatar-wrapper">
-            <img src="${avatarUrl}" alt="${escapeText(a.fullName || a.username)}" class="featured-author-avatar" onerror="this.src='${defaultAvatar}'">
-          </div>
-          <h3 style="font-size:18px; color:var(--gold-light); margin-bottom:4px; font-weight:800;">${escapeText(a.fullName || a.username)}</h3>
-          <p style="font-size:13px; color:var(--dim-color); margin-bottom:12px;">@${escapeText(a.username)}</p>
-          <div class="author-posts-counter">
-            <i class="fas fa-feather-alt"></i> ${a.monthPosts} مقالاً معتمداً هذا الشهر
-          </div>
-          <div class="author-card-actions">
-            <a href="${profileUrl}" class="btn-author-profile"><i class="fas fa-id-badge"></i> عرض الملف</a>
-            <a href="${profileUrl}" class="btn-author-articles"><i class="fas fa-newspaper"></i> عرض المقالات</a>
-          </div>
-        </div>
-      `;
-    });
-    container.innerHTML = html;
-  } catch (err) {
-    section.style.display = 'none';
-  }
-}
-
-/* ========================================================
-   محرك البحث الفوري الشامل
-   ======================================================== */
-let searchDebounceTimer = null;
-function handleGlobalSearchInput(val) {
-  const clearBtn = document.getElementById('clearSearchBtn');
-  if (clearBtn) clearBtn.style.display = val.trim() ? 'block' : 'none';
-
-  clearTimeout(searchDebounceTimer);
-  if (!val || val.trim().length < 2) {
-    document.getElementById('globalSearchResultsBox').style.display = 'none';
-    return;
-  }
-  searchDebounceTimer = setTimeout(() => executeGlobalSearch(), 350);
-}
-
-function clearGlobalSearch() {
-  const input = document.getElementById('globalSearchInput');
-  const clearBtn = document.getElementById('clearSearchBtn');
-  if (input) input.value = '';
-  if (clearBtn) clearBtn.style.display = 'none';
-  document.getElementById('globalSearchResultsBox').style.display = 'none';
-}
-
-async function executeGlobalSearch() {
-  const input = document.getElementById('globalSearchInput');
-  const box = document.getElementById('globalSearchResultsBox');
-  const content = document.getElementById('searchResultsContent');
-  const label = document.getElementById('searchKeywordLabel');
-
-  if (!input || !box || !content) return;
-  const q = input.value.trim();
-  if (q.length < 2) return;
-
-  if (label) label.innerText = q;
-  content.innerHTML = '<p style="text-align:center; color:var(--dim-color); padding:15px;"><i class="fas fa-spinner fa-spin"></i> جاري البحث في الموقع...</p>';
-  box.style.display = 'block';
-
-  try {
-    const res = await fetch(`${API_URL}/search?q=${encodeURIComponent(q)}`);
-    const data = await res.json();
-    const authors = data.authors || [];
-    const memberPosts = data.memberPosts || [];
-    const posts = data.posts || [];
-
-    if (authors.length + memberPosts.length + posts.length === 0) {
-      content.innerHTML = `
-        <div style="text-align:center; padding:25px 15px;">
-          <i class="fas fa-search-minus" style="font-size:36px; color:var(--dim-color); margin-bottom:10px;"></i>
-          <p style="color:var(--gold-light); font-size:15px; font-weight:700;">لا توجد نتائج مطابقة لبحثك عن "${escapeText(q)}"</p>
-        </div>
-      `;
-      return;
-    }
-
-    let resultsHtml = '';
-    if (authors.length > 0) {
-      resultsHtml += `<div style="margin-bottom: 20px;"><div class="search-group-title"><i class="fas fa-user-edit" style="color:var(--gold-primary);"></i> كتاب وأعضاء الموقع (${authors.length})</div>`;
-      authors.forEach(a => {
-        const defaultAvatar = `https://via.placeholder.com/80/111A2E/D4AF37?text=${encodeURIComponent((a.username || 'U').slice(0, 2).toUpperCase())}`;
-        resultsHtml += `
-          <div class="search-author-row">
-            <div style="display:flex; align-items:center; gap:12px;">
-              <img src="${a.avatar || defaultAvatar}" style="width:42px; height:42px; border-radius:50%; border:2px solid var(--gold-primary); object-fit:cover;">
-              <div><b style="color:var(--gold-light); font-size:14.5px;">${escapeText(a.fullName || a.username)}</b><span style="color:var(--dim-color); font-size:12.5px; display:block;">@${escapeText(a.username)}</span></div>
-            </div>
-            <a href="member.html?user=${encodeURIComponent(a.username)}" class="btn-outline" style="padding:5px 14px; font-size:12px; border-color:var(--border-gold); color:var(--gold-light);"><i class="fas fa-user"></i> عرض الملف</a>
-          </div>
-        `;
-      });
-      resultsHtml += `</div>`;
-    }
-
-    if (memberPosts.length > 0) {
-      resultsHtml += `<div style="margin-bottom: 20px;"><div class="search-group-title"><i class="fas fa-feather-alt" style="color:#2ecc71;"></i> مقالات الأعضاء المعتمدة (${memberPosts.length})</div>`;
-      memberPosts.forEach(mp => {
-        resultsHtml += `
-          <div class="search-post-row" onclick="window.location.href='member.html?user=${encodeURIComponent(mp.authorUsername)}'">
-            <div><b style="color:var(--text-color); font-size:14.5px; display:block; margin-bottom:4px;">${escapeText(mp.title)}</b><span style="color:var(--dim-color); font-size:12px;">الكاتب: ${escapeText(mp.authorName || mp.authorUsername)}</span></div>
-            <span style="color:var(--gold-primary); font-size:13px;"><i class="fas fa-arrow-left"></i></span>
-          </div>
-        `;
-      });
-      resultsHtml += `</div>`;
-    }
-
-    if (posts.length > 0) {
-      resultsHtml += `<div><div class="search-group-title"><i class="fas fa-newspaper" style="color:#3498db;"></i> أخبار وتغطيات الوكالة (${posts.length})</div>`;
-      posts.forEach(p => {
-        resultsHtml += `
-          <div class="search-post-row" onclick="clearGlobalSearch(); openPublicSingleNews('${p._id}', true);">
-            <div><b style="color:var(--text-color); font-size:14.5px; display:block; margin-bottom:4px;">${escapeText(p.title)}</b><span style="color:var(--dim-color); font-size:12px;"><span class="news-badge" style="padding:1px 6px; font-size:11px; margin-left:6px;">${escapeText(p.category || 'عام')}</span><span>${p.views || 0} مشاهدة</span></span></div>
-            <span style="color:var(--gold-primary); font-size:13px;"><i class="fas fa-arrow-left"></i></span>
-          </div>
-        `;
-      });
-      resultsHtml += `</div>`;
-    }
-    content.innerHTML = resultsHtml;
-  } catch (err) {
-    content.innerHTML = '<p style="text-align:center; color:var(--danger); padding:15px;">تعذر إتمام البحث حالياً.</p>';
-  }
-}
 /* ========================================================
    إدارة شريط الأخبار العاجلة (News Ticker)
    ======================================================== */
@@ -1959,7 +2007,7 @@ function exportNewsToCSV() {
     return;
   }
 
-  let csvContent = "\uFEFF";
+  let csvContent = "﻿";
   csvContent += "المعرف,عنوان الخبر,القسم / التصنيف,الحالة,مثبت,عدد المشاهدات الحقيقية,المشاركات,تاريخ النشر,عدد الصور المرفقة,رابط الخبر المباشر\n";
 
   allPosts.forEach((post, index) => {
@@ -2081,26 +2129,43 @@ async function processLogin() {
 function processLogout() {
   localStorage.removeItem('sada_token');
   localStorage.removeItem('sada_admin_name');
-  showToast('تم تسجيل الخروج وإلغاء الجلسة بنجاح', 'info');
+  showToast('تم تسجيل الخروج بنجاح', 'info');
   navigateTo('main-page', '#home');
 }
 
-async function fetchPostsFromServer() {
+async function fetchPostsFromServer(retry = 0) {
   try {
     const res = await fetch(`${API_URL}/posts`);
     if (res.ok) {
       const fetched = await res.json();
-      allPosts = Array.isArray(fetched) ? fetched : [];
-      allPosts.sort((a, b) => {
-        const aPinned = a.isPinned ? 1 : 0;
-        const bPinned = b.isPinned ? 1 : 0;
-        if (bPinned !== aPinned) return bPinned - aPinned;
-        return new Date(b.date || 0) - new Date(a.date || 0);
-      });
-      localStorage.setItem('sada_cached_posts', JSON.stringify(allPosts));
+      if (Array.isArray(fetched) && fetched.length > 0) {
+        allPosts = fetched;
+        allPosts.sort((a, b) => {
+          const aPinned = a.isPinned ? 1 : 0;
+          const bPinned = b.isPinned ? 1 : 0;
+          if (bPinned !== aPinned) return bPinned - aPinned;
+          return new Date(b.date || 0) - new Date(a.date || 0);
+        });
+        localStorage.setItem('sada_cached_posts', JSON.stringify(allPosts));
+        renderBreakingNewsTicker();
+        renderBreakingNewsCards();
+  displayPostsGrid();
+      }
     }
   } catch (err) {
-    console.log("استخدام الكاش المحلي للأخبار");
+    console.log("استخدام الكاش المحلي للأخبار:", err.message);
+    const cached = localStorage.getItem('sada_cached_posts');
+    if (cached) {
+      try {
+        allPosts = JSON.parse(cached);
+        renderBreakingNewsTicker();
+        renderBreakingNewsCards();
+  displayPostsGrid();
+      } catch (e) {}
+    }
+    if (retry < 3) {
+      setTimeout(() => fetchPostsFromServer(retry + 1), 4000);
+    }
   }
 }
 
@@ -2109,7 +2174,7 @@ function displayPostsGrid() {
   const paginationDiv = document.getElementById('newsPagination');
   if (!grid) return;
 
-  const publishedPosts = allPosts.filter(p => p.status !== 'draft');
+  const publishedPosts = allPosts.filter(p => p.status !== 'draft' && p.showInLatest !== false);
 
   if (publishedPosts.length === 0) {
     grid.innerHTML = '<p style="color: var(--dim-color); text-align: center; grid-column: 1/-1; font-size: 16px; padding: 30px;">لا توجد أخبار منشورة حالياً في الصفحة.</p>';
@@ -2156,7 +2221,7 @@ function displayPostsGrid() {
     const shortText = fullContent.length > 130 ? fullContent.substring(0, 130) + '...' : fullContent;
     const postDate = p.date ? new Date(p.date).toLocaleDateString('ar-IQ') : 'اليوم';
 
-    const pinnedBadgeHtml = p.isPinned ? `<span style="display:inline-flex; align-items:center; gap:5px; font-size:11px; background:rgba(13,43,82,0.12); color:var(--gold-light); border:1px solid var(--gold-primary); padding:3px 8px; border-radius:4px; margin-left:6px;"><i class="fas fa-thumbtack" style="color:var(--gold-primary);"></i> خبر مثبت</span>` : '';
+    const pinnedBadgeHtml = p.isPinned ? `<span style="display:inline-flex; align-items:center; gap:5px; font-size:11px; background:rgba(212,175,55,0.2); color:var(--gold-light); border:1px solid var(--gold-primary); padding:3px 8px; border-radius:4px; margin-left:6px;"><i class="fas fa-thumbtack" style="color:var(--gold-primary);"></i> خبر مثبت</span>` : '';
 
     const card = document.createElement('div');
     card.className = 'campaign-card';
@@ -2176,8 +2241,6 @@ function displayPostsGrid() {
         <div style="font-size: 12px; color: var(--dim-color); margin-bottom: 8px;">
           <i class="fas fa-calendar-alt" style="color: var(--gold-primary);"></i> ${postDate}
         </div>
-        
-        <!-- شريط إحصائيات التفاعل أسفل كل خبر -->
         <div class="news-stats-bar">
           <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
             <span class="news-stats-item" title="عدد الإعجابات"><i class="fas fa-thumbs-up" style="color:var(--gold-primary);"></i> ${p.likesCount || 0}</span>
@@ -2185,7 +2248,6 @@ function displayPostsGrid() {
             <span class="news-stats-item" title="عدد التعليقات المعتمدة"><i class="fas fa-comments" style="color:#3498db;"></i> ${p.commentsCount || 0} تعليق</span>
           </div>
         </div>
-
         <div style="margin-top: 14px;">
           <button class="read-more-btn" onclick="openPublicSingleNews('${p._id}', true)">قراءة المزيد</button>
         </div>
@@ -2234,6 +2296,7 @@ async function renderLiveNews() {
   if (mainListView) mainListView.style.display = 'block';
   if (detailView) detailView.style.display = 'none';
 
+  // إظهار بطاقات الانتظار المتوهجة دائماً أثناء التحميل
   grid.innerHTML = `
     <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
     <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
@@ -2241,6 +2304,7 @@ async function renderLiveNews() {
   `;
 
   await fetchPostsFromServer();
+  renderBreakingNewsCards();
   displayPostsGrid();
 }
 
@@ -2262,7 +2326,7 @@ function openPublicSingleNews(postId, updateHash = true) {
   }
 
   const firstImg = urls[0];
-  const shortDesc = post.content ? post.content.substring(0, 160) : 'وكالة صدى العطاء';
+  const shortDesc = post.content ? post.content.substring(0, 160) : 'وكالة صدى العطاء الإخبارية';
 
   const ogTitle = document.getElementById('ogTitle');
   const ogDesc = document.getElementById('ogDesc');
@@ -2294,12 +2358,12 @@ function openPublicSingleNews(postId, updateHash = true) {
   const encodedUrl = encodeURIComponent(directNewsUrl);
   const encodedTitle = encodeURIComponent(post.title || 'وكالة صدى العطاء');
 
-  const pinnedBadgeHtml = post.isPinned ? `<span style="font-size:12px; color:var(--gold-light); background:rgba(13,43,82,0.12); border:1px solid var(--gold-primary); padding:4px 10px; border-radius:4px; display:inline-flex; align-items:center; gap:5px; margin-left:8px;"><i class="fas fa-thumbtack" style="color:var(--gold-primary);"></i> خبر مثبت</span>` : '';
+  const pinnedBadgeHtml = post.isPinned ? `<span style="font-size:12px; color:var(--gold-light); background:rgba(212,175,55,0.25); border:1px solid var(--gold-primary); padding:4px 10px; border-radius:4px; display:inline-flex; align-items:center; gap:5px; margin-left:8px;"><i class="fas fa-thumbtack" style="color:var(--gold-primary);"></i> خبر مثبت</span>` : '';
 
   detailBox.innerHTML = `
     <div style="display: flex; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
       ${pinnedBadgeHtml}
-      <span style="font-size: 12px; color: var(--gold-light); background: rgba(13,43,82,0.08); padding: 4px 10px; border-radius: 4px;">${escapeText(post.category || 'عام')}</span>
+      <span style="font-size: 12px; color: var(--gold-light); background: rgba(212,175,55,0.15); padding: 4px 10px; border-radius: 4px;">${escapeText(post.category || 'عام')}</span>
     </div>
     
     <h2 style="color: var(--text-color); font-size: 28px; margin-bottom: 15px;">${escapeText(post.title || '')}</h2>
@@ -2313,7 +2377,7 @@ function openPublicSingleNews(postId, updateHash = true) {
       ${post.content || ''}
     </div>
     
-    <!-- شريط التفاعلات المباشرة -->
+    <!-- شريط التفاعلات المباشرة (أعجبني / لم يعجبني) -->
     <div class="reactions-interactive-box">
       <span style="font-size: 14px; font-weight: 700; color: var(--gold-light); margin-left: 10px;">التفاعل مع هذا الخبر:</span>
       <button id="likeBtn_${post._id}" onclick="submitReaction('${post._id}', 'like')" class="react-btn">
@@ -2348,7 +2412,7 @@ function openPublicSingleNews(postId, updateHash = true) {
       </button>
     </div>
 
-    <!-- قسم التعليقات المعتمدة -->
+    <!-- قسم التعليقات المعتمدة وإضافة تعليق جديد -->
     <div class="comments-container">
       <h3 style="color: var(--gold-light); font-size: 20px; margin-bottom: 18px; display:flex; align-items:center; gap:8px;">
         <i class="fas fa-comments" style="color: var(--gold-primary);"></i> التعليقات والآراء (<span id="commentsCountHeader_${post._id}">${post.commentsCount || 0}</span>)
@@ -2388,170 +2452,14 @@ function backToNewsList() {
 
 function changeNewsPage(direction) {
   currentNewsPage += direction;
+  renderBreakingNewsTicker();
+  renderBreakingNewsCards();
   displayPostsGrid();
   document.getElementById('news-section').scrollIntoView({ behavior: 'smooth' });
 }
 
 /* ========================================================
-   دوال التفاعلات والتعليقات على الأخبار
-   ======================================================== */
-async function submitReaction(postId, type) {
-  const token = localStorage.getItem('sada_user_token');
-  if (!token) {
-    showToast('يرجى تسجيل الدخول بحساب معتمد للتفاعل مع الأخبار', 'info');
-    setTimeout(() => { window.location.href = 'profile.html'; }, 1200);
-    return;
-  }
-
-  try {
-    const res = await fetch(`${API_URL}/posts/${postId}/react`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify({ type })
-    });
-    const data = await res.json();
-
-    if (res.ok) {
-      const likesEl = document.getElementById(`likesVal_${postId}`);
-      const dislikesEl = document.getElementById(`dislikesVal_${postId}`);
-      const likeBtn = document.getElementById(`likeBtn_${postId}`);
-      const dislikeBtn = document.getElementById(`dislikeBtn_${postId}`);
-
-      if (likesEl) likesEl.innerText = data.likesCount;
-      if (dislikesEl) dislikesEl.innerText = data.dislikesCount;
-
-      if (likeBtn) likeBtn.classList.remove('active-like');
-      if (dislikeBtn) dislikeBtn.classList.remove('active-dislike');
-
-      if (data.userReaction === 'like' && likeBtn) {
-        likeBtn.classList.add('active-like');
-        showToast('تم تسجيل إعجابك بالخبر!', 'success');
-      } else if (data.userReaction === 'dislike' && dislikeBtn) {
-        likeBtn.classList.add('active-dislike');
-        showToast('تم تسجيل عدم الإعجاب بالخبر', 'info');
-      } else {
-        showToast('تم إلغاء التفاعل مع الخبر', 'info');
-      }
-
-      const post = allPosts.find(p => String(p._id) === String(postId));
-      if (post) {
-        post.likesCount = data.likesCount;
-        post.dislikesCount = data.dislikesCount;
-      }
-    } else {
-      showToast(data.error || 'تعذر تسجيل التفاعل', 'danger');
-    }
-  } catch (err) {
-    showToast('تعذر الاتصال بالسيرفر لتسجيل التفاعل', 'danger');
-  }
-}
-
-async function loadCommentsForPost(postId) {
-  const container = document.getElementById(`commentsList_${postId}`);
-  if (!container) return;
-
-  try {
-    const res = await fetch(`${API_URL}/posts/${postId}/comments`);
-    const comments = await res.json();
-
-    if (!Array.isArray(comments) || comments.length === 0) {
-      container.innerHTML = '<p style="color:var(--dim-color); font-size:14px; padding:12px 0;">لا توجد تعليقات منشورة حتى الآن. كن أول من يشارك برأيه!</p>';
-      return;
-    }
-
-    let html = '';
-    comments.forEach(c => {
-      const dateStr = c.date ? new Date(c.date).toLocaleString('ar-IQ') : 'مؤخراً';
-      const avatarUrl = c.userAvatar || `https://via.placeholder.com/100/111A2E/D4AF37?text=${encodeURIComponent((c.userName || 'U').slice(0, 2).toUpperCase())}`;
-      
-      html += `
-        <div class="comment-item">
-          <img src="${avatarUrl}" alt="صورة المعلق" class="comment-avatar" onerror="this.src='https://via.placeholder.com/100/111A2E/D4AF37?text=U'">
-          <div class="comment-body">
-            <div class="comment-author">${escapeText(c.userName || 'مستخدم')}</div>
-            <div class="comment-date"><i class="fas fa-clock"></i> ${dateStr}</div>
-            <div class="comment-text">${escapeText(c.content || '')}</div>
-          </div>
-        </div>
-      `;
-    });
-    container.innerHTML = html;
-  } catch (e) {
-    container.innerHTML = '<p style="color:var(--danger); font-size:13px;">تعذر تحميل التعليقات حالياً.</p>';
-  }
-}
-
-function initCommentForm(postId) {
-  const container = document.getElementById(`commentFormContainer_${postId}`);
-  if (!container) return;
-
-  const token = localStorage.getItem('sada_user_token');
-  const userData = localStorage.getItem('sada_user_data');
-
-  if (token && userData) {
-    let userObj = {};
-    try { userObj = JSON.parse(userData); } catch(e) {}
-
-    container.innerHTML = `
-      <div class="comment-form-box">
-        <h4 style="color:var(--gold-light); font-size:16px; margin-bottom:12px;">
-          <i class="fas fa-pen"></i> أضف تعليقك باسم: <span style="color:var(--gold-primary);">${escapeText(userObj.fullName || userObj.username || 'أنت')}</span>
-        </h4>
-        <textarea id="newCommentInput_${postId}" rows="3" class="form-control" placeholder="اكتب تعليقك هنا بكل احترام وموضوعية..." style="margin-bottom:12px;"></textarea>
-        <button type="button" onclick="submitCommentAction('${postId}')" class="submit-btn" style="width:auto; padding:8px 24px; font-size:14px; margin-top:0;">
-          <i class="fas fa-paper-plane"></i> إرسال التعليق للمراجعة
-        </button>
-      </div>
-    `;
-  } else {
-    container.innerHTML = `
-      <div class="comment-login-prompt">
-        <i class="fas fa-user-lock" style="font-size:26px; color:var(--gold-primary); margin-bottom:10px; display:block;"></i>
-        <span style="font-size:14px; color:var(--text-color);">هل ترغب في التعليق والتفاعل مع الخبر؟ </span>
-        <a href="profile.html" style="color:var(--gold-light); font-weight:700; text-decoration:underline;">سجل الدخول أو أنشئ حسابك</a> لتشارك برأيك.
-      </div>
-    `;
-  }
-}
-
-async function submitCommentAction(postId) {
-  const input = document.getElementById(`newCommentInput_${postId}`);
-  if (!input) return;
-  const content = input.value.trim();
-
-  if (!content) {
-    showToast('يرجى كتابة نص التعليق قبل الإرسال', 'danger');
-    return;
-  }
-
-  const token = localStorage.getItem('sada_user_token');
-  try {
-    const res = await fetch(`${API_URL}/posts/${postId}/comments`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify({ content })
-    });
-    const data = await res.json();
-
-    if (res.ok) {
-      input.value = '';
-      showToast(data.message || 'تم إرسال التعليق وهو قيد مراجعة الإدارة!', 'success');
-    } else {
-      showToast(data.error || 'تعذر إرسال التعليق', 'danger');
-    }
-  } catch (err) {
-    showToast('تعذر الاتصال بالسيرفر', 'danger');
-  }
-}
-
-/* ========================================================
-   لوحة التحكم وتحديث الإحصائيات
+   لوحة التحكم وتحديث الإحصائيات مع الحماية
    ======================================================== */
 async function updateDashboardStats() {
   const visitsEl = document.getElementById('dashTotalVisitsCount');
@@ -2580,290 +2488,6 @@ async function updateDashboardStats() {
       tickerStatusEl.innerText = 'متوقف حالياً';
       tickerStatusEl.style.color = 'var(--danger)';
     }
-  }
-}
-
-async function renderDashboardUsers() {
-  const token = localStorage.getItem('sada_token');
-  const tableBody = document.getElementById('dashUsersTable');
-  if (!tableBody || !token) return;
-
-  tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);"><i class="fas fa-spinner fa-spin"></i> جاري جلب المستخدمين...</td></tr>';
-
-  try {
-    const res = await fetch(`${API_URL}/admin/users`, {
-      headers: { 'Authorization': token }
-    });
-    const rawUsers = await res.json();
-
-    if (!Array.isArray(rawUsers) || rawUsers.length === 0) {
-      tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);">لا يوجد مستخدمون مسجلون حالياً.</td></tr>';
-      return;
-    }
-
-    const seenIds = new Set();
-    const users = [];
-    rawUsers.forEach(u => {
-      if (u && u._id && !seenIds.has(String(u._id)) && u.username !== 'sada_admin') {
-        seenIds.add(String(u._id));
-        users.push(u);
-      }
-    });
-
-    if (users.length === 0) {
-      tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);">لا يوجد مستخدمون مسجلون حالياً.</td></tr>';
-      return;
-    }
-
-    tableBody.innerHTML = '';
-    users.forEach(u => {
-      let statusBadge = '<span style="color:#f1c40f;">⏳ بانتظار الموافقة</span>';
-      if (u.status === 'approved') statusBadge = '<span style="color:#2ecc71;">✅ مقبول ونشط</span>';
-      if (u.status === 'rejected') statusBadge = '<span style="color:#e74c3c;">❌ مرفوض</span>';
-      if (u.status === 'suspended') statusBadge = '<span style="color:#e67e22;">⚠️ موقوف مؤقتاً</span>';
-
-      let actionsHtml = '';
-      if (u.status === 'pending') {
-        actionsHtml = `
-          <button class="action-btn btn-approve" onclick="setUserStatusAction('${u._id}', 'approved')"><i class="fas fa-check"></i> موافقة</button>
-          <button class="action-btn btn-reject" onclick="setUserStatusAction('${u._id}', 'rejected')"><i class="fas fa-times"></i> رفض</button>
-        `;
-      } else if (u.status === 'approved') {
-        actionsHtml = `
-          <button class="action-btn" style="background:#e67e22; color:#fff;" onclick="setUserStatusAction('${u._id}', 'suspended')"><i class="fas fa-ban"></i> إيقاف</button>
-        `;
-      } else {
-        actionsHtml = `
-          <button class="action-btn btn-approve" onclick="setUserStatusAction('${u._id}', 'approved')"><i class="fas fa-check"></i> تفعيل</button>
-        `;
-      }
-
-      actionsHtml += `
-        <button class="action-btn btn-delete" style="padding:6px 10px; margin-right:4px;" onclick="deleteUserAction('${u._id}', '${escapeText(u.username)}')" title="حذف الحساب نهائياً"><i class="fas fa-trash"></i></button>
-      `;
-
-      let updateReqHtml = '<span style="color:var(--dim-color); font-size:12px;">لا يوجد طلب</span>';
-      let requestsList = [];
-      if (u.updateRequestStatus === 'pending') {
-        if (u.requestedPassword) {
-          requestsList.push(`<div style="margin-bottom:3px;"><i class="fas fa-key" style="color:#f39c12;"></i> ك.المرور: <span style="background:rgba(13,43,82,0.15); padding:1px 5px; border-radius:3px; color:var(--text-color);">${escapeText(u.requestedPassword)}</span></div>`);
-        }
-        if (u.requestedName) {
-          requestsList.push(`<div style="margin-bottom:3px;"><i class="fas fa-user-edit" style="color:#3498db;"></i> الاسم: <b>${escapeText(u.requestedName)}</b></div>`);
-        }
-        if (u.requestedUsername) {
-          requestsList.push(`<div style="margin-bottom:3px;"><i class="fas fa-at" style="color:#9b59b6;"></i> المعرف: <b>@${escapeText(u.requestedUsername)}</b></div>`);
-        }
-
-        if (requestsList.length > 0) {
-          updateReqHtml = `
-            <div style="font-size:12px; margin-bottom:6px; line-height:1.4;">
-              ${requestsList.join('')}
-            </div>
-            <div style="display:flex; gap:5px;">
-              <button class="action-btn btn-approve" style="padding:3px 8px; font-size:11px;" onclick="approveUserUpdateRequest('${u._id}')" title="موافقة على التعديلات"><i class="fas fa-check"></i> موافقة</button>
-              <button class="action-btn btn-reject" style="padding:3px 8px; font-size:11px;" onclick="rejectUserUpdateRequest('${u._id}')" title="رفض الطلب"><i class="fas fa-times"></i> رفض</button>
-            </div>
-          `;
-        }
-      } else if (u.updateRequestStatus === 'approved') {
-        updateReqHtml = '<span style="color:#2ecc71; font-size:12px;"><i class="fas fa-check-circle"></i> تم اعتماد التعديل</span>';
-      } else if (u.updateRequestStatus === 'rejected') {
-        updateReqHtml = '<span style="color:#e74c3c; font-size:12px;"><i class="fas fa-times-circle"></i> تم رفض الطلب</span>';
-      }
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><b>${escapeText(u.fullName || u.username)}</b></td>
-        <td>@${escapeText(u.username)}</td>
-        <td>${escapeText(u.email)}</td>
-        <td>${escapeText(u.phone)}</td>
-        <td>${statusBadge}</td>
-        <td>${updateReqHtml}</td>
-        <td>${actionsHtml}</td>
-      `;
-      tableBody.appendChild(tr);
-    });
-  } catch (e) {
-    tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--danger);">تعذر جلب بيانات المستخدمين.</td></tr>';
-  }
-}
-
-async function approveUserUpdateRequest(userId) {
-  if (!confirm('هل أنت متأكد من الموافقة على تعديل بيانات المستخدم وتطبيقها في حسابه؟')) return;
-  const token = localStorage.getItem('sada_token');
-  try {
-    const res = await fetch(`${API_URL}/admin/users/${userId}/approve-update`, {
-      method: 'PUT',
-      headers: { 'Authorization': token }
-    });
-    const data = await res.json();
-    if (res.ok) {
-      showToast(data.message || 'تمت الموافقة وتحديث بيانات المستخدم بنجاح!', 'success');
-      renderDashboardUsers();
-    } else {
-      showToast(data.error || 'تعذر إتمام العملية', 'danger');
-    }
-  } catch (err) {
-    showToast('تعذر الاتصال بالسيرفر', 'danger');
-  }
-}
-
-async function rejectUserUpdateRequest(userId) {
-  if (!confirm('هل أنت متأكد من رفض طلب تعديل بيانات المستخدم؟')) return;
-  const token = localStorage.getItem('sada_token');
-  try {
-    const res = await fetch(`${API_URL}/admin/users/${userId}/reject-update`, {
-      method: 'PUT',
-      headers: { 'Authorization': token }
-    });
-    const data = await res.json();
-    if (res.ok) {
-      showToast(data.message || 'تم رفض طلب التعديل', 'info');
-      renderDashboardUsers();
-    } else {
-      showToast(data.error || 'تعذر إتمام العملية', 'danger');
-    }
-  } catch (err) {
-    showToast('تعذر الاتصال بالسيرفر', 'danger');
-  }
-}
-
-async function deleteUserAction(userId, username) {
-  if (!confirm(`هل أنت متأكد من حذف حساب (${username}) نهائياً من قاعدة البيانات؟`)) return;
-  const token = localStorage.getItem('sada_token');
-  try {
-    const res = await fetch(`${API_URL}/admin/users/${userId}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': token }
-    });
-    if (res.ok) {
-      showToast('تم حذف الحساب بنجاح!', 'info');
-      renderDashboardUsers();
-    } else {
-      showToast('تعذر حذف الحساب', 'danger');
-    }
-  } catch (err) {
-    showToast('تعذر الاتصال بالسيرفر', 'danger');
-  }
-}
-
-async function setUserStatusAction(userId, status) {
-  const token = localStorage.getItem('sada_token');
-  try {
-    const res = await fetch(`${API_URL}/admin/users/${userId}/status`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify({ status })
-    });
-    if (res.ok) {
-      showToast('تم تحديث حالة المستخدم بنجاح!', 'success');
-      renderDashboardUsers();
-    }
-  } catch (e) {
-    showToast('حدث خطأ أثناء تعديل حالة المستخدم', 'danger');
-  }
-}
-
-async function renderDashboardComments() {
-  const token = localStorage.getItem('sada_token');
-  const tableBody = document.getElementById('dashCommentsTable');
-  if (!tableBody || !token) return;
-
-  try {
-    const res = await fetch(`${API_URL}/admin/comments`, {
-      headers: { 'Authorization': token }
-    });
-    const comments = await res.json();
-
-    if (!Array.isArray(comments) || comments.length === 0) {
-      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--dim-color);">لا توجد تعليقات واردة حالياً.</td></tr>';
-      return;
-    }
-
-    tableBody.innerHTML = '';
-    comments.forEach(c => {
-      let statusBadge = '<span style="color:#f1c40f;">⏳ قيد المراجعة</span>';
-      if (c.status === 'approved') statusBadge = '<span style="color:#2ecc71;">✅ منشور ومعتمد</span>';
-      if (c.status === 'rejected') statusBadge = '<span style="color:#e74c3c;">❌ مرفوض</span>';
-
-      const postTitle = (c.postId && c.postId.title) ? c.postId.title : 'خبر عام';
-      const dateStr = c.date ? new Date(c.date).toLocaleDateString('ar-IQ') : 'اليوم';
-
-      let actionsHtml = '';
-      if (c.status === 'pending') {
-        actionsHtml = `
-          <button class="action-btn btn-approve" onclick="setCommentStatusAction('${c._id}', 'approved')"><i class="fas fa-check"></i> موافقة ونشر</button>
-          <button class="action-btn btn-reject" onclick="setCommentStatusAction('${c._id}', 'rejected')"><i class="fas fa-times"></i> رفض</button>
-          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
-        `;
-      } else if (c.status === 'approved') {
-        actionsHtml = `
-          <button class="action-btn btn-reject" onclick="setCommentStatusAction('${c._id}', 'rejected')"><i class="fas fa-times"></i> إلغاء النشر</button>
-          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
-        `;
-      } else {
-        actionsHtml = `
-          <button class="action-btn btn-approve" onclick="setCommentStatusAction('${c._id}', 'approved')"><i class="fas fa-check"></i> موافقة ونشر</button>
-          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
-        `;
-      }
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><b>${escapeText(postTitle)}</b></td>
-        <td>${escapeText(c.userName || 'مستخدم')}</td>
-        <td style="max-width:280px; font-size:13px;">${escapeText(c.content || '')}</td>
-        <td>${dateStr}</td>
-        <td>${statusBadge}</td>
-        <td>${actionsHtml}</td>
-      `;
-      tableBody.appendChild(tr);
-    });
-  } catch (e) {
-    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--danger);">تعذر جلب التعليقات.</td></tr>';
-  }
-}
-
-async function setCommentStatusAction(commentId, status) {
-  const token = localStorage.getItem('sada_token');
-  try {
-    const res = await fetch(`${API_URL}/admin/comments/${commentId}/status`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify({ status })
-    });
-    if (res.ok) {
-      showToast('تم تحديث حالة التعليق بنجاح!', 'success');
-      renderDashboardComments();
-      fetchPostsFromServer().then(() => displayPostsGrid());
-    }
-  } catch (e) {
-    showToast('تعذر تعديل حالة التعليق', 'danger');
-  }
-}
-
-async function deleteCommentAction(commentId) {
-  if (!confirm('هل تريد حذف هذا التعليق نهائياً؟')) return;
-  const token = localStorage.getItem('sada_token');
-  try {
-    const res = await fetch(`${API_URL}/admin/comments/${commentId}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': token }
-    });
-    if (res.ok) {
-      showToast('تم حذف التعليق بنجاح', 'info');
-      renderDashboardComments();
-      fetchPostsFromServer().then(() => displayPostsGrid());
-    }
-  } catch (e) {
-    showToast('تعذر حذف التعليق', 'danger');
   }
 }
 
@@ -2963,7 +2587,7 @@ async function renderDashboard() {
     return;
   }
 
-document.getElementById('dashUserName').innerText = localStorage.getItem('sada_admin_name') || 'sada_admin';
+  document.getElementById('dashUserName').innerText = localStorage.getItem('sada_admin_name') || 'sada_admin';
   await fetchPostsFromServer();
   
   await updateDashboardStats();
@@ -2984,8 +2608,8 @@ document.getElementById('dashUserName').innerText = localStorage.getItem('sada_a
     const postShares = item.shares || 0;
 
     const statusBadge = item.status === 'draft' 
-      ? `<span style="background:rgba(231,76,60,0.15); color:#c0392b; border:1px solid var(--danger); padding:2px 8px; border-radius:4px; font-size:11px;"><i class="fas fa-file-alt"></i> مسودة</span>`
-      : `<span style="background:rgba(46,204,113,0.15); color:#27ae60; border:1px solid var(--success); padding:2px 8px; border-radius:4px; font-size:11px;"><i class="fas fa-check"></i> منشور</span>`;
+      ? `<span style="background:rgba(231,76,60,0.15); color:#ff9b9b; border:1px solid var(--danger); padding:2px 8px; border-radius:4px; font-size:11px;"><i class="fas fa-file-alt"></i> مسودة</span>`
+      : `<span style="background:rgba(46,204,113,0.15); color:#8bedb1; border:1px solid var(--success); padding:2px 8px; border-radius:4px; font-size:11px;"><i class="fas fa-check"></i> منشور</span>`;
 
     const pinIcon = item.isPinned ? `<i class="fas fa-thumbtack" style="color:var(--gold-primary); margin-left:6px;" title="خبر مثبت"></i>` : '';
 
@@ -2997,7 +2621,10 @@ document.getElementById('dashUserName').innerText = localStorage.getItem('sada_a
       <td><span style="color:#2ecc71; font-weight:bold;"><i class="fas fa-share-alt"></i> ${postShares}</span></td>
       <td><span style="color:var(--dim-color);"><i class="fas fa-images"></i> ${count} صورة</span></td>
       <td>${item.date ? new Date(item.date).toLocaleDateString('ar-IQ') : 'اليوم'}</td>
-      <td>
+      <td style="white-space:nowrap;">
+        <button type="button" class="action-btn" onclick="toggleBreakingNewsState('${item._id}')" style="background:${(item.isBreaking || item.showInBreaking) ? '#e74c3c' : 'var(--surface-light)'}; color:${(item.isBreaking || item.showInBreaking) ? '#fff' : 'var(--text-color)'}; border:1px solid ${(item.isBreaking || item.showInBreaking) ? '#e74c3c' : 'var(--border-gold)'}; margin-left:4px;">
+          <i class="fas fa-bolt"></i> ${(item.isBreaking || item.showInBreaking) ? 'عاجل (نشط)' : 'تفعيل كعاجل'}
+        </button>
         <button class="action-btn btn-edit" onclick="startEditPost('${item._id}')"><i class="fas fa-edit"></i> تعديل</button>
         <button class="action-btn btn-delete" onclick="deletePostAction('${item._id}')"><i class="fas fa-trash"></i> حذف</button>
       </td>
@@ -3030,7 +2657,9 @@ async function savePostAction() {
     mediaUrls = ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"];
   }
 
-  const postData = { title, category, status, isPinned, mediaType: 'image', mediaUrls, content, date: postDate };
+  const displayTarget = document.getElementById('newsDisplayTarget') ? document.getElementById('newsDisplayTarget').value : 'both';
+  const isBreaking = (document.getElementById('newsIsBreaking') && document.getElementById('newsIsBreaking').checked) || (document.getElementById('newsIsTicker') && document.getElementById('newsIsTicker').checked) || false;
+  const postData = { title, category, status, isPinned, isBreaking, showInBreaking: isBreaking, showInLatest: true, mediaType: 'image', mediaUrls, content, date: postDate };
 
   try {
     let response;
@@ -3053,7 +2682,8 @@ async function savePostAction() {
       resetNewsForm();
       await fetchPostsFromServer();
       renderDashboard();
-      displayPostsGrid();
+      renderBreakingNewsCards();
+  displayPostsGrid();
     } else {
       showToast('انتهت الجلسة، يرجى إعادة تسجيل الدخول', 'danger');
       processLogout();
@@ -3064,7 +2694,7 @@ async function savePostAction() {
 }
 
 function startEditPost(id) {
-  const post = allPosts.find(p => p._id === id);
+  const post = allPosts.find(p => String(p._id) === String(id));
   if (!post) return;
 
   document.getElementById('editPostId').value = post._id;
@@ -3072,6 +2702,15 @@ function startEditPost(id) {
   document.getElementById('newsCategory').value = post.category;
   document.getElementById('newsStatus').value = post.status || 'published';
   document.getElementById('newsIsPinned').checked = !!post.isPinned;
+
+  // هنا مكانه الصحيح تماماً (بعد جلب post):
+  if (document.getElementById('newsIsTicker')) {
+    document.getElementById('newsIsTicker').checked = !!(post.showInBreaking || post.isBreaking);
+  }
+  if (document.getElementById('newsIsBreaking')) {
+    document.getElementById('newsIsBreaking').checked = !!(post.showInBreaking || post.isBreaking);
+  }
+
   document.getElementById('newsContent').value = post.content;
   document.getElementById('newsCustomDate').value = post.date ? post.date.slice(0, 16) : '';
 
@@ -3080,37 +2719,163 @@ function startEditPost(id) {
   document.getElementById('cancelEditBtn').style.display = 'inline-block';
   window.scrollTo({ top: 250, behavior: 'smooth' });
 }
-
 function resetNewsForm() {
   document.getElementById('postForm').reset();
   document.getElementById('editPostId').value = '';
+
+  if (document.getElementById('newsIsBreaking')) {
+    document.getElementById('newsIsBreaking').checked = false;
+  }
+
   document.getElementById('panelFormTitle').innerText = 'إضافة ونشر خبر جديد';
+
+  if (document.getElementById('newsDisplayTarget')) {
+    document.getElementById('newsDisplayTarget').value = 'both';
+  }
+
   document.getElementById('saveSubmitBtn').innerText = 'حفظ ونشر الخبر';
   document.getElementById('cancelEditBtn').style.display = 'none';
+
+  if (document.getElementById('newsIsTicker')) {
+    document.getElementById('newsIsTicker').checked = false;
+  }
 }
 
-async function deletePostAction(id) {
-  if (!confirm('هل أنت متأكد من حذف هذا الخبر نهائياً من قاعدة البيانات؟')) return;
-  
+/* ========================================================
+   شريط الأخبار العاجلة الأفقي المتحرك قبل أحدث الأخبار
+   ======================================================== */
+function renderBreakingNewsTicker() {
+  const track = document.getElementById('breakingTickerTrack');
+  const box = document.getElementById('breakingNewsTickerBox');
+  if (!track || !box) return;
+
+  const breakingPosts = allPosts.filter(p => 
+    p.status !== 'draft' && 
+    (p.showInBreaking === true || (p.showInBreaking === undefined && p.isPinned))
+  );
+
+  if (breakingPosts.length === 0) {
+    box.style.display = 'none';
+    return;
+  }
+
+  box.style.display = 'flex';
+  let html = '';
+  const loopCount = breakingPosts.length < 3 ? 4 : 2;
+  for (let i = 0; i < loopCount; i++) {
+    breakingPosts.forEach(p => {
+      const dateStr = p.date ? new Date(p.date).toLocaleDateString('ar-IQ') : '';
+      html += `
+        <span class="breaking-news-item" onclick="openPublicSingleNews('${p._id}', true)" title="اضغط لقراءة الخبر">
+          <i class="fas fa-bolt" style="color:var(--gold-primary); font-size:12px;"></i>
+          <span>${escapeText(p.title)}</span>
+          ${dateStr ? `<span style="font-size:11.5px; opacity:0.75; font-weight:normal;">(${dateStr})</span>` : ''}
+        </span>
+      `;
+    });
+  }
+  track.innerHTML = html;
+}
+
+function pauseBreakingTicker() {
+  const track = document.getElementById('breakingTickerTrack');
+  if (track) track.style.animationPlayState = 'paused';
+}
+
+function resumeBreakingTicker() {
+  const track = document.getElementById('breakingTickerTrack');
+  if (track) track.style.animationPlayState = 'running';
+}
+
+/* ========================================================
+   نظام الحذف التخييري (عاجل / أحدث الأخبار / الاثنان معاً)
+   ======================================================== */
+function deletePostAction(id) {
+  const post = allPosts.find(p => String(p._id) === String(id));
+  if (!post) return;
+
+  const inBreaking = (post.showInBreaking === true || (post.showInBreaking !== false && post.isPinned));
+  const inLatest = (post.showInLatest !== false);
+
+  if (inBreaking && inLatest) {
+    showDeletePostOptionsModal(id, post.title);
+  } else if (inBreaking && !inLatest) {
+    if (confirm(`هذا الخبر معروض في (شريط الأخبار العاجلة فقط).\nهل أنت متأكد من حذفه نهائياً؟`)) {
+      executeDeletePost(id, 'both');
+    }
+  } else {
+    if (confirm(`هذا الخبر معروض في (شبكة أحدث الأخبار فقط).\nهل أنت متأكد من حذفه نهائياً؟`)) {
+      executeDeletePost(id, 'both');
+    }
+  }
+}
+
+function showDeletePostOptionsModal(id, title) {
+  const oldModal = document.getElementById('deletePostOptionsModal');
+  if (oldModal) oldModal.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'deletePostOptionsModal';
+  modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:999999; display:flex; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(8px);';
+  modal.innerHTML = `
+    <div style="background:var(--surface-color); border:2px solid var(--gold-primary); border-radius:12px; padding:28px; max-width:520px; width:100%; box-shadow:0 10px 40px rgba(0,0,0,0.5); text-align:right;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-subtle); padding-bottom:12px; margin-bottom:16px;">
+        <h3 style="color:var(--gold-light); font-size:19px; margin:0;"><i class="fas fa-trash-alt" style="color:var(--danger); margin-left:8px;"></i> تحديد نوع حذف الخبر</h3>
+        <button type="button" onclick="document.getElementById('deletePostOptionsModal').remove()" style="background:none; border:none; color:var(--dim-color); font-size:20px; cursor:pointer;"><i class="fas fa-times"></i></button>
+      </div>
+      <p style="font-size:14.5px; color:var(--text-color); margin-bottom:12px; line-height:1.6;">
+        الخبر: <b style="color:var(--gold-light);">"${escapeText(title)}"</b>
+      </p>
+      <p style="font-size:13.5px; color:var(--dim-color); margin-bottom:22px;">
+        هذا الخبر معروض حالياً في <b style="color:var(--gold-primary);">(شريط الأخبار العاجلة)</b> و <b style="color:#3498db;">(شبكة أحدث الأخبار)</b>. يرجى اختيار الإجراء المطلوب:
+      </p>
+      
+      <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+        <button type="button" onclick="document.getElementById('deletePostOptionsModal').remove(); executeDeletePost('${id}', 'breaking');" class="form-btn" style="background:linear-gradient(135deg, #e67e22 0%, #d35400 100%); color:#fff; padding:12px; font-size:14px; margin:0; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <i class="fas fa-bolt"></i> 1. حذف من الأخبار العاجلة فقط (يبقى في أحدث الأخبار)
+        </button>
+
+        <button type="button" onclick="document.getElementById('deletePostOptionsModal').remove(); executeDeletePost('${id}', 'latest');" class="form-btn" style="background:linear-gradient(135deg, #2980b9 0%, #1f618d 100%); color:#fff; padding:12px; font-size:14px; margin:0; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <i class="fas fa-newspaper"></i> 2. حذف من أحدث الأخبار فقط (يبقى في شريط العاجل)
+        </button>
+
+        <button type="button" onclick="document.getElementById('deletePostOptionsModal').remove(); executeDeletePost('${id}', 'both');" class="form-btn" style="background:linear-gradient(135deg, #c0392b 0%, #962d22 100%); color:#fff; padding:12px; font-size:14px; margin:0; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <i class="fas fa-trash"></i> 3. حذف من الاثنين معاً (حذف نهائي من قاعدة البيانات)
+        </button>
+      </div>
+
+      <div style="text-align:left;">
+        <button type="button" onclick="document.getElementById('deletePostOptionsModal').remove()" class="action-btn" style="background:var(--surface-light); color:var(--text-color);">إلغاء الأمر</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+async function executeDeletePost(id, target = 'both') {
   const token = localStorage.getItem('sada_token');
   try {
-    const response = await fetch(`${API_URL}/posts/${id}`, {
+    const response = await fetch(`${API_URL}/posts/${id}?target=${target}`, {
       method: 'DELETE',
       headers: { 'Authorization': token }
     });
+    const data = await response.json();
 
     if (response.ok) {
-      showToast('تم حذف الخبر نهائياً من قاعدة البيانات', 'info');
+      showToast(data.message || 'تم تنفيذ عملية الحذف بنجاح', 'info');
       await fetchPostsFromServer();
       renderDashboard();
-      displayPostsGrid();
+      renderBreakingNewsCards();
+  displayPostsGrid();
+      renderBreakingNewsTicker();
     } else {
-      showToast('خطأ في عملية الحذف، يرجى إعادة تسجيل الدخول', 'danger');
+      showToast(data.error || 'خطأ في عملية الحذف', 'danger');
     }
   } catch (err) {
-    showToast('تعذر الاتصال بالسيرفر', 'danger');
+    showToast('تعذر الاتصال بالسيرفر لإتمام الحذف', 'danger');
   }
 }
+
 
 function escapeText(str) {
   return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -3122,10 +2887,8 @@ if(menuToggle && navLinks) {
   menuToggle.addEventListener('click', () => {
     navLinks.classList.toggle('active');
     const icon = menuToggle.querySelector('i');
-    if (icon) {
-      icon.classList.toggle('fa-bars');
-      icon.classList.toggle('fa-times');
-    }
+    icon.classList.toggle('fa-bars');
+    icon.classList.toggle('fa-times');
   });
 }
 
@@ -3159,14 +2922,6 @@ window.addEventListener('click', function(e) {
     document.querySelectorAll('.custom-dropdown-content').forEach(menu => {
       menu.style.display = 'none';
     });
-    const fbSub = document.getElementById('fbSubMenu');
-    const igSub = document.getElementById('igSubMenu');
-    const fbArrow = document.getElementById('fbSubArrow');
-    const igArrow = document.getElementById('igSubArrow');
-    if (fbSub) fbSub.style.display = 'none';
-    if (igSub) igSub.style.display = 'none';
-    if (fbArrow) fbArrow.style.transform = 'rotate(0deg)';
-    if (igArrow) igArrow.style.transform = 'rotate(0deg)';
   }
 });
 
@@ -3196,6 +2951,430 @@ window.addEventListener('keydown', (e) => {
 
 window.addEventListener('hashchange', checkUrlHashForAdmin);
 
+
+/* ========================================================
+   دوال التفاعلات والتعليقات على الأخبار في الصفحة الرئيسية
+   ======================================================== */
+
+// إرسال أو تبديل التفاعل مع الخبر (أعجبني / لم يعجبني)
+async function submitReaction(postId, type) {
+  const token = localStorage.getItem('sada_user_token');
+  if (!token) {
+    showToast('يرجى تسجيل الدخول بحساب معتمد للتفاعل مع الأخبار', 'info');
+    setTimeout(() => { window.location.href = 'profile.html'; }, 1200);
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/posts/${postId}/react`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ type })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      const likesEl = document.getElementById(`likesVal_${postId}`);
+      const dislikesEl = document.getElementById(`dislikesVal_${postId}`);
+      const likeBtn = document.getElementById(`likeBtn_${postId}`);
+      const dislikeBtn = document.getElementById(`dislikeBtn_${postId}`);
+
+      if (likesEl) likesEl.innerText = data.likesCount;
+      if (dislikesEl) dislikesEl.innerText = data.dislikesCount;
+
+      if (likeBtn) likeBtn.classList.remove('active-like');
+      if (dislikeBtn) dislikeBtn.classList.remove('active-dislike');
+
+      if (data.userReaction === 'like' && likeBtn) {
+        likeBtn.classList.add('active-like');
+        showToast('تم تسجيل إعجابك بالخبر!', 'success');
+      } else if (data.userReaction === 'dislike' && dislikeBtn) {
+        dislikeBtn.classList.add('active-dislike');
+        showToast('تم تسجيل عدم الإعجاب بالخبر', 'info');
+      } else {
+        showToast('تم إلغاء التفاعل مع الخبر', 'info');
+      }
+
+      // تحديث الكاش المحلي
+      const post = allPosts.find(p => String(p._id) === String(postId));
+      if (post) {
+        post.likesCount = data.likesCount;
+        post.dislikesCount = data.dislikesCount;
+      }
+    } else {
+      showToast(data.error || 'تعذر تسجيل التفاعل', 'danger');
+    }
+  } catch (err) {
+    showToast('تعذر الاتصال بالسيرفر لتسجيل التفاعل', 'danger');
+  }
+}
+
+// جلب وعرض التعليقات المعتمدة للخبر
+async function loadCommentsForPost(postId) {
+  const container = document.getElementById(`commentsList_${postId}`);
+  if (!container) return;
+
+  try {
+    const res = await fetch(`${API_URL}/posts/${postId}/comments`);
+    const comments = await res.json();
+
+    if (!Array.isArray(comments) || comments.length === 0) {
+      container.innerHTML = '<p style="color:var(--dim-color); font-size:14px; padding:12px 0;">لا توجد تعليقات منشورة حتى الآن. كن أول من يشارك برأيه!</p>';
+      return;
+    }
+
+    let html = '';
+    comments.forEach(c => {
+      const dateStr = c.date ? new Date(c.date).toLocaleString('ar-IQ') : 'مؤخراً';
+      const avatarUrl = c.userAvatar || `https://via.placeholder.com/100/111A2E/D4AF37?text=${encodeURIComponent((c.userName || 'U').slice(0, 2).toUpperCase())}`;
+      
+      html += `
+        <div class="comment-item">
+          <img src="${avatarUrl}" alt="صورة المعلق" class="comment-avatar" onerror="this.src='https://via.placeholder.com/100/111A2E/D4AF37?text=U'">
+          <div class="comment-body">
+            <div class="comment-author">${escapeText(c.userName || 'مستخدم')}</div>
+            <div class="comment-date"><i class="fas fa-clock"></i> ${dateStr}</div>
+            <div class="comment-text">${escapeText(c.content || '')}</div>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = '<p style="color:var(--danger); font-size:13px;">تعذر تحميل التعليقات حالياً.</p>';
+  }
+}
+
+// تهيئة نموذج التعليق
+function initCommentForm(postId) {
+  const container = document.getElementById(`commentFormContainer_${postId}`);
+  if (!container) return;
+
+  const token = localStorage.getItem('sada_user_token');
+  const userData = localStorage.getItem('sada_user_data');
+
+  if (token && userData) {
+    let userObj = {};
+    try { userObj = JSON.parse(userData); } catch(e) {}
+
+    container.innerHTML = `
+      <div class="comment-form-box">
+        <h4 style="color:var(--gold-light); font-size:16px; margin-bottom:12px;">
+          <i class="fas fa-pen"></i> أضف تعليقك باسم: <span style="color:var(--gold-primary);">${escapeText(userObj.fullName || userObj.username || 'أنت')}</span>
+        </h4>
+        <textarea id="newCommentInput_${postId}" rows="3" class="form-control" placeholder="اكتب تعليقك هنا بكل احترام وموضوعية..." style="margin-bottom:12px;"></textarea>
+        <button type="button" onclick="submitCommentAction('${postId}')" class="submit-btn" style="width:auto; padding:8px 24px; font-size:14px; margin-top:0;">
+          <i class="fas fa-paper-plane"></i> إرسال التعليق للمراجعة
+        </button>
+      </div>
+    `;
+  } else {
+    container.innerHTML = `
+      <div class="comment-login-prompt">
+        <i class="fas fa-user-lock" style="font-size:26px; color:var(--gold-primary); margin-bottom:10px; display:block;"></i>
+        <span style="font-size:14px; color:var(--text-color);">هل ترغب في التعليق والتفاعل مع الخبر؟ </span>
+        <a href="profile.html" style="color:var(--gold-light); font-weight:700; text-decoration:underline;">سجل الدخول أو أنشئ حسابك</a> لتشارك برأيك.
+      </div>
+    `;
+  }
+}
+
+// إرسال التعليق للخادم
+async function submitCommentAction(postId) {
+  const input = document.getElementById(`newCommentInput_${postId}`);
+  if (!input) return;
+  const content = input.value.trim();
+
+  if (!content) {
+    showToast('يرجى كتابة نص التعليق قبل الإرسال', 'danger');
+    return;
+  }
+
+  const token = localStorage.getItem('sada_user_token');
+  try {
+    const res = await fetch(`${API_URL}/posts/${postId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ content })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      input.value = '';
+      showToast(data.message || 'تم إرسال التعليق وهو قيد مراجعة الإدارة!', 'success');
+    } else {
+      showToast(data.error || 'تعذر إرسال التعليق', 'danger');
+    }
+  } catch (err) {
+    showToast('تعذر الاتصال بالسيرفر', 'danger');
+  }
+}
+
+/* ========================================================
+   دوال إدارة المستخدمين والتعليقات في لوحة تحكم الأدمن
+   ======================================================== */
+
+// جلب وعرض المستخدمين في لوحة الأدمن
+async function renderDashboardUsers() {
+  const token = localStorage.getItem('sada_token');
+  const tableBody = document.getElementById('dashUsersTable');
+  if (!tableBody || !token) return;
+
+  tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);"><i class="fas fa-spinner fa-spin"></i> جاري جلب المستخدمين...</td></tr>';
+
+  try {
+    const res = await fetch(`${API_URL}/admin/users`, {
+      headers: { 'Authorization': token }
+    });
+    const rawUsers = await res.json();
+
+    if (!Array.isArray(rawUsers) || rawUsers.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);">لا يوجد مستخدمون مسجلون حالياً.</td></tr>';
+      return;
+    }
+
+    // فلترة مانعة للتكرار واستبعاد حساب المشرف
+    const seenIds = new Set();
+    const users = [];
+    rawUsers.forEach(u => {
+      if (u && u._id && !seenIds.has(String(u._id)) && u.username !== 'sada_admin') {
+        seenIds.add(String(u._id));
+        users.push(u);
+      }
+    });
+
+    if (users.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);">لا يوجد مستخدمون مسجلون حالياً.</td></tr>';
+      return;
+    }
+
+    tableBody.innerHTML = '';
+    users.forEach(u => {
+      let statusBadge = '<span style="color:#f1c40f;">⏳ بانتظار الموافقة</span>';
+      if (u.status === 'approved') statusBadge = '<span style="color:#2ecc71;">✅ مقبول ونشط</span>';
+      if (u.status === 'rejected') statusBadge = '<span style="color:#e74c3c;">❌ مرفوض</span>';
+      if (u.status === 'suspended') statusBadge = '<span style="color:#e67e22;">⚠️ موقوف مؤقتاً</span>';
+
+      let actionsHtml = '';
+      if (u.status === 'pending') {
+        actionsHtml = `
+          <button class="action-btn btn-approve" onclick="setUserStatusAction('${u._id}', 'approved')"><i class="fas fa-check"></i> موافقة</button>
+          <button class="action-btn btn-reject" onclick="setUserStatusAction('${u._id}', 'rejected')"><i class="fas fa-times"></i> رفض</button>
+        `;
+      } else if (u.status === 'approved') {
+        actionsHtml = `
+          <button class="action-btn" style="background:#e67e22; color:#fff;" onclick="setUserStatusAction('${u._id}', 'suspended')"><i class="fas fa-ban"></i> إيقاف</button>
+        `;
+      } else {
+        actionsHtml = `
+          <button class="action-btn btn-approve" onclick="setUserStatusAction('${u._id}', 'approved')"><i class="fas fa-check"></i> تفعيل</button>
+        `;
+      }
+
+      actionsHtml += `
+        <button class="action-btn btn-delete" style="padding:6px 10px; margin-right:4px;" onclick="deleteUserAction('${u._id}', '${escapeText(u.username)}')" title="حذف الحساب نهائياً"><i class="fas fa-trash"></i></button>
+      `;
+
+            let updateReqHtml = '<span style="color:var(--dim-color); font-size:12px;">لا يوجد طلب</span>';
+      let requestsList = [];
+      if (u.updateRequestStatus === 'pending') {
+        if (u.requestedPassword) {
+          requestsList.push(`<div style="margin-bottom:3px;"><i class="fas fa-key" style="color:#f39c12;"></i> ك.المرور: <span style="background:rgba(212,175,55,0.25); padding:1px 5px; border-radius:3px; color:#fff;">${escapeText(u.requestedPassword)}</span></div>`);
+        }
+        if (u.requestedName) {
+          requestsList.push(`<div style="margin-bottom:3px;"><i class="fas fa-user-edit" style="color:#3498db;"></i> الاسم: <b>${escapeText(u.requestedName)}</b></div>`);
+        }
+        if (u.requestedUsername) {
+          requestsList.push(`<div style="margin-bottom:3px;"><i class="fas fa-at" style="color:#9b59b6;"></i> المعرف: <b>@${escapeText(u.requestedUsername)}</b></div>`);
+        }
+
+        if (requestsList.length > 0) {
+          updateReqHtml = `
+            <div style="font-size:12px; margin-bottom:6px; line-height:1.4;">
+              ${requestsList.join('')}
+            </div>
+            <div style="display:flex; gap:5px;">
+              <button class="action-btn btn-approve" style="padding:3px 8px; font-size:11px;" onclick="approveUserUpdateRequest('${u._id}')" title="موافقة على التعديلات"><i class="fas fa-check"></i> موافقة</button>
+              <button class="action-btn btn-reject" style="padding:3px 8px; font-size:11px;" onclick="rejectUserUpdateRequest('${u._id}')" title="رفض الطلب"><i class="fas fa-times"></i> رفض</button>
+            </div>
+          `;
+        }
+      } else if (u.updateRequestStatus === 'approved') {
+        updateReqHtml = '<span style="color:#2ecc71; font-size:12px;"><i class="fas fa-check-circle"></i> تم اعتماد التعديل</span>';
+      } else if (u.updateRequestStatus === 'rejected') {
+        updateReqHtml = '<span style="color:#e74c3c; font-size:12px;"><i class="fas fa-times-circle"></i> تم رفض الطلب</span>';
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><b>${escapeText(u.fullName || u.username)}</b></td>
+        <td>@${escapeText(u.username)}</td>
+        <td>${escapeText(u.email)}</td>
+        <td>${escapeText(u.phone)}</td>
+        <td>${statusBadge}</td>
+        <td>${updateReqHtml}</td>
+        <td>${actionsHtml}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  } catch (e) {
+    tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--danger);">تعذر جلب بيانات المستخدمين.</td></tr>';
+  }
+}
+
+// دالة حذف المستخدم نهائياً
+async function deleteUserAction(userId, username) {
+  if (!confirm(`هل أنت متأكد من حذف حساب (${username}) نهائياً من قاعدة البيانات؟`)) return;
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/users/${userId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': token }
+    });
+    if (res.ok) {
+      showToast('تم حذف الحساب بنجاح!', 'info');
+      renderDashboardUsers();
+    } else {
+      showToast('تعذر حذف الحساب', 'danger');
+    }
+  } catch (err) {
+    showToast('تعذر الاتصال بالسيرفر', 'danger');
+  }
+}
+
+// تغيير حالة المستخدم من قبل الأدمن
+async function setUserStatusAction(userId, status) {
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/users/${userId}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ status })
+    });
+    if (res.ok) {
+      showToast('تم تحديث حالة المستخدم بنجاح!', 'success');
+      renderDashboardUsers();
+    }
+  } catch (e) {
+    showToast('حدث خطأ أثناء تعديل حالة المستخدم', 'danger');
+  }
+}
+
+// جلب وعرض التعليقات في لوحة الأدمن
+async function renderDashboardComments() {
+  const token = localStorage.getItem('sada_token');
+  const tableBody = document.getElementById('dashCommentsTable');
+  if (!tableBody || !token) return;
+
+  try {
+    const res = await fetch(`${API_URL}/admin/comments`, {
+      headers: { 'Authorization': token }
+    });
+    const comments = await res.json();
+
+    if (!Array.isArray(comments) || comments.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--dim-color);">لا توجد تعليقات واردة حالياً.</td></tr>';
+      return;
+    }
+
+    tableBody.innerHTML = '';
+    comments.forEach(c => {
+      let statusBadge = '<span style="color:#f1c40f;">⏳ قيد المراجعة</span>';
+      if (c.status === 'approved') statusBadge = '<span style="color:#2ecc71;">✅ منشور ومعتمد</span>';
+      if (c.status === 'rejected') statusBadge = '<span style="color:#e74c3c;">❌ مرفوض</span>';
+
+      const postTitle = (c.postId && c.postId.title) ? c.postId.title : 'خبر عام';
+      const dateStr = c.date ? new Date(c.date).toLocaleDateString('ar-IQ') : 'اليوم';
+
+      let actionsHtml = '';
+      if (c.status === 'pending') {
+        actionsHtml = `
+          <button class="action-btn btn-approve" onclick="setCommentStatusAction('${c._id}', 'approved')"><i class="fas fa-check"></i> موافقة ونشر</button>
+          <button class="action-btn btn-reject" onclick="setCommentStatusAction('${c._id}', 'rejected')"><i class="fas fa-times"></i> رفض</button>
+          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
+        `;
+      } else if (c.status === 'approved') {
+        actionsHtml = `
+          <button class="action-btn btn-reject" onclick="setCommentStatusAction('${c._id}', 'rejected')"><i class="fas fa-times"></i> إلغاء النشر</button>
+          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
+        `;
+      } else {
+        actionsHtml = `
+          <button class="action-btn btn-approve" onclick="setCommentStatusAction('${c._id}', 'approved')"><i class="fas fa-check"></i> موافقة ونشر</button>
+          <button class="action-btn btn-delete" onclick="deleteCommentAction('${c._id}')"><i class="fas fa-trash"></i></button>
+        `;
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><b>${escapeText(postTitle)}</b></td>
+        <td>${escapeText(c.userName || 'مستخدم')}</td>
+        <td style="max-width:280px; font-size:13px;">${escapeText(c.content || '')}</td>
+        <td>${dateStr}</td>
+        <td>${statusBadge}</td>
+        <td>${actionsHtml}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  } catch (e) {
+    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--danger);">تعذر جلب التعليقات.</td></tr>';
+  }
+}
+
+// تعديل حالة التعليق (موافقة / رفض)
+async function setCommentStatusAction(commentId, status) {
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/comments/${commentId}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ status })
+    });
+    if (res.ok) {
+      showToast('تم تحديث حالة التعليق بنجاح!', 'success');
+      renderDashboardComments();
+  renderDashboardCards();
+  renderDashboardMemberPosts();
+      fetchPostsFromServer().then(() => displayPostsGrid());
+    }
+  } catch (e) {
+    showToast('تعذر تعديل حالة التعليق', 'danger');
+  }
+}
+
+// حذف التعليق نهائياً
+async function deleteCommentAction(commentId) {
+  if (!confirm('هل تريد حذف هذا التعليق نهائياً؟')) return;
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/comments/${commentId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': token }
+    });
+    if (res.ok) {
+      showToast('تم حذف التعليق بنجاح', 'info');
+      renderDashboardComments();
+  renderDashboardCards();
+  renderDashboardMemberPosts();
+      fetchPostsFromServer().then(() => displayPostsGrid());
+    }
+  } catch (e) {
+    showToast('تعذر حذف التعليق', 'danger');
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('sada_theme') || 'dark';
   document.documentElement.setAttribute('data-theme', savedTheme);
@@ -3204,10 +3383,12 @@ window.addEventListener('DOMContentLoaded', () => {
   initTicker();
   renderLiveNews();
   checkUrlHashForAdmin();
-  loadFeaturedAuthors(); // <--- تمت الإضافة هنا لتشغيل فحص المتميزين تلقائياً
+  loadFeaturedAuthors();
 });
-  /* ========================================================
-   لوحة تحكم الإدارة: إدارة كروت العضوية (جديد مضاف)
+
+
+/* ========================================================
+   لوحة تحكم الإدارة: إدارة كروت العضوية (Membership Cards)
    ======================================================== */
 let latestGeneratedCards = [];
 let allAdminCards = [];
@@ -3410,7 +3591,7 @@ async function cancelMembershipCardAction(cardId, serialNumber) {
 }
 
 /* ========================================================
-   لوحة تحكم الإدارة: مراجعة وتدقيق منشورات الأعضاء (جديد مضاف)
+   لوحة تحكم الإدارة: مراجعة وتدقيق منشورات الأعضاء
    ======================================================== */
 async function renderDashboardMemberPosts() {
   const token = localStorage.getItem('sada_token');
@@ -3586,6 +3767,379 @@ function viewMemberPostDetailModal(postId) {
   `;
   document.body.appendChild(modalOverlay);
 }
+
+
+
+/* ========================================================
+   تحميل وعرض ناشري المقالات المتميزين لهذا الشهر
+   (تختفي الميزة تماماً إذا لم يكن هناك ناشر نشط تجاوز 10 منشورات)
+   ======================================================== */
+async function loadFeaturedAuthors() {
+  const section = document.getElementById('featured-authors-section');
+  const container = document.getElementById('featuredAuthorsGrid');
+  if (!section || !container) return;
+
+  try {
+    const res = await fetch(`${API_URL}/members/featured`);
+    const authors = await res.json();
+
+    // إخفاء الميزة تماماً إذا لم يتوفر أي ناشر متميز هذا الشهر
+    if (!Array.isArray(authors) || authors.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    // إظهار القسم وعرض البطاقات للأعضاء الذين حققوا الشرط
+    section.style.display = 'block';
+    let html = '';
+    authors.forEach(a => {
+      const postsCount = a.monthPosts;
+      const defaultAvatar = `https://via.placeholder.com/120/111A2E/D4AF37?text=${encodeURIComponent((a.username || 'U').slice(0, 2).toUpperCase())}`;
+      const avatarUrl = a.avatar || defaultAvatar;
+      const profileUrl = `member.html?user=${encodeURIComponent(a.username)}`;
+
+      html += `
+        <div class="featured-author-card">
+          <span class="featured-badge-crown"><i class="fas fa-crown"></i> كاتب الشهر المتميز</span>
+          <div class="author-avatar-wrapper">
+            <img src="${avatarUrl}" alt="${escapeText(a.fullName || a.username)}" class="featured-author-avatar" onerror="this.src='${defaultAvatar}'">
+          </div>
+          <h3 style="font-size:18px; color:var(--gold-light); margin-bottom:4px; font-weight:800;">${escapeText(a.fullName || a.username)}</h3>
+          <p style="font-size:13px; color:var(--dim-color); margin-bottom:12px;">@${escapeText(a.username)}</p>
+          
+          <div class="author-posts-counter">
+            <i class="fas fa-feather-alt"></i> ${postsCount} مقالاً معتمداً هذا الشهر
+          </div>
+
+          <div class="author-card-actions">
+            <a href="${profileUrl}" class="btn-author-profile">
+              <i class="fas fa-id-badge"></i> عرض الملف
+            </a>
+            <a href="${profileUrl}" class="btn-author-articles">
+              <i class="fas fa-newspaper"></i> عرض المقالات
+            </a>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  } catch (err) {
+    section.style.display = 'none';
+  }
+}
+
+/* ========================================================
+   محرك البحث الشامل (المعرف @ / الاسم / عنوان المقال)
+   ======================================================== */
+let searchDebounceTimer = null;
+
+function handleGlobalSearchInput(val) {
+  const clearBtn = document.getElementById('clearSearchBtn');
+  if (clearBtn) {
+    clearBtn.style.display = val.trim() ? 'block' : 'none';
+  }
+
+  clearTimeout(searchDebounceTimer);
+  if (!val || val.trim().length < 2) {
+    closeGlobalSearchResults();
+    return;
+  }
+
+  searchDebounceTimer = setTimeout(() => {
+    executeGlobalSearch();
+  }, 350);
+}
+
+function clearGlobalSearch() {
+  const input = document.getElementById('globalSearchInput');
+  const clearBtn = document.getElementById('clearSearchBtn');
+  if (input) input.value = '';
+  if (clearBtn) clearBtn.style.display = 'none';
+  closeGlobalSearchResults();
+}
+
+function closeGlobalSearchResults() {
+  const box = document.getElementById('globalSearchResultsBox');
+  if (box) box.style.display = 'none';
+}
+
+
+function quickFillSearch(keyword) {
+  const input = document.getElementById('globalSearchInput');
+  if (!input) return;
+  input.value = keyword;
+  const clearBtn = document.getElementById('clearSearchBtn');
+  if (clearBtn) clearBtn.style.display = 'block';
+  executeGlobalSearch();
+}
+
+async function executeGlobalSearch() {
+  const input = document.getElementById('globalSearchInput');
+  const box = document.getElementById('globalSearchResultsBox');
+  const content = document.getElementById('searchResultsContent');
+  const label = document.getElementById('searchKeywordLabel');
+
+  if (!input || !box || !content) return;
+  const q = input.value.trim();
+  if (q.length < 2) {
+    showToast('يرجى إدخال حرفين على الأقل للبدء بالبحث', 'info');
+    return;
+  }
+
+  if (label) label.innerText = q;
+  content.innerHTML = `
+    <div style="text-align:center; padding:30px 10px; color:var(--dim-color);">
+      <i class="fas fa-circle-notch fa-spin" style="font-size:26px; color:var(--gold-primary); margin-bottom:10px;"></i>
+      <p style="font-size:14px;">جاري البحث في تغطيات الوكالة ومقالات الأعضاء...</p>
+    </div>
+  `;
+  box.style.display = 'block';
+
+  try {
+    const res = await fetch(`${API_URL}/search?q=${encodeURIComponent(q)}`);
+    const data = await res.json();
+    const authors = data.authors || [];
+    const memberPosts = data.memberPosts || [];
+    const posts = data.posts || [];
+
+    const totalCount = authors.length + memberPosts.length + posts.length;
+
+    if (totalCount === 0) {
+      content.innerHTML = `
+        <div style="text-align:center; padding:35px 15px;">
+          <div style="width:60px; height:60px; border-radius:50%; background:rgba(212,175,55,0.1); border:1px solid var(--border-gold); margin:0 auto 14px; display:flex; align-items:center; justify-content:center; color:var(--gold-primary); font-size:24px;">
+            <i class="fas fa-search"></i>
+          </div>
+          <h4 style="color:var(--gold-light); font-size:16px; margin-bottom:6px;">لم يتم العثور على نتائج مطابقة لـ "${escapeText(q)}"</h4>
+          <p style="color:var(--dim-color); font-size:13px; max-width:420px; margin:0 auto;">
+            جرّب البحث بكلمات أبسط أو كتابة اسم المعرف مثل <b style="color:var(--gold-primary);">@username</b> أو جزء من عنوان المقال.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    let resultsHtml = '';
+
+    // 1. قسم الكتاب والأعضاء المعتمدين
+    if (authors.length > 0) {
+      resultsHtml += `
+        <div style="margin-bottom: 22px;">
+          <div class="search-group-badge">
+            <i class="fas fa-users-crown" style="color:var(--gold-primary);"></i> كتاب وأعضاء الوكالة (${authors.length})
+          </div>
+      `;
+      authors.forEach(a => {
+        const defaultAvatar = `https://via.placeholder.com/80/111A2E/D4AF37?text=${encodeURIComponent((a.username || 'U').slice(0, 2).toUpperCase())}`;
+        resultsHtml += `
+          <div class="search-card-item">
+            <div style="display:flex; align-items:center; gap:14px;">
+              <img src="${a.avatar || defaultAvatar}" style="width:48px; height:48px; border-radius:50%; border:2px solid var(--gold-primary); object-fit:cover; box-shadow:0 2px 10px rgba(212,175,55,0.25);" onerror="this.src='${defaultAvatar}'">
+              <div>
+                <b style="color:var(--gold-light); font-size:15px; display:block;">${escapeText(a.fullName || a.username)}</b>
+                <span style="color:var(--gold-primary); font-size:12.5px; font-weight:600;">@${escapeText(a.username)}</span>
+              </div>
+            </div>
+            <a href="member.html?user=${encodeURIComponent(a.username)}" class="btn-outline" style="padding:6px 16px; font-size:12.5px; border-color:var(--gold-primary); color:var(--gold-light); border-radius:20px; font-weight:700;">
+              <i class="fas fa-user-circle"></i> زيارة مساحة الكاتب
+            </a>
+          </div>
+        `;
+      });
+      resultsHtml += `</div>`;
+    }
+
+    // 2. قسم مقالات الأعضاء
+    if (memberPosts.length > 0) {
+      resultsHtml += `
+        <div style="margin-bottom: 22px;">
+          <div class="search-group-badge">
+            <i class="fas fa-feather-alt" style="color:#2ecc71;"></i> مقالات الأعضاء المعتمدة (${memberPosts.length})
+          </div>
+      `;
+      memberPosts.forEach(mp => {
+        const dateStr = mp.publishedAt ? new Date(mp.publishedAt).toLocaleDateString('ar-IQ') : 'مؤخراً';
+        const imgUrl = (Array.isArray(mp.mediaUrls) && mp.mediaUrls[0]) ? mp.mediaUrls[0] : null;
+        resultsHtml += `
+          <div class="search-card-item" onclick="window.location.href='member.html?user=${encodeURIComponent(mp.authorUsername)}'" style="cursor:pointer;">
+            <div style="display:flex; align-items:center; gap:12px; flex:1;">
+              ${imgUrl ? `<img src="${imgUrl}" style="width:52px; height:44px; border-radius:6px; object-fit:cover; border:1px solid var(--border-gold);" alt="صورة">` : ''}
+              <div>
+                <b style="color:var(--text-color); font-size:15px; display:block; margin-bottom:4px;">${escapeText(mp.title)}</b>
+                <span style="color:var(--dim-color); font-size:12px;">
+                  <i class="fas fa-pen-nib" style="color:var(--gold-primary);"></i> الكاتب: <b style="color:var(--gold-light);">${escapeText(mp.authorName || mp.authorUsername)}</b> | <i class="fas fa-calendar-alt"></i> ${dateStr}
+                </span>
+              </div>
+            </div>
+            <span class="action-btn" style="background:rgba(46,204,113,0.12); color:#2ecc71; border:1px solid #2ecc71; border-radius:20px; font-size:12px; padding:4px 12px; white-space:nowrap;">
+              قراءة المقال <i class="fas fa-arrow-left" style="margin-right:4px;"></i>
+            </span>
+          </div>
+        `;
+      });
+      resultsHtml += `</div>`;
+    }
+
+    // 3. قسم الأخبار الرسمية للوكالة
+    if (posts.length > 0) {
+      resultsHtml += `
+        <div>
+          <div class="search-group-badge">
+            <i class="fas fa-newspaper" style="color:#3498db;"></i> أخبار وتغطيات الوكالة الرسمية (${posts.length})
+          </div>
+      `;
+      posts.forEach(p => {
+        const dateStr = p.date ? new Date(p.date).toLocaleDateString('ar-IQ') : 'اليوم';
+        const firstImg = (Array.isArray(p.mediaUrls) && p.mediaUrls[0]) ? p.mediaUrls[0] : (p.mediaUrl || 'https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg');
+        resultsHtml += `
+          <div class="search-card-item" onclick="clearGlobalSearch(); openPublicSingleNews('${p._id}', true);" style="cursor:pointer;">
+            <div style="display:flex; align-items:center; gap:12px; flex:1;">
+              <img src="${firstImg}" style="width:52px; height:44px; border-radius:6px; object-fit:cover; border:1px solid var(--border-gold);" alt="صورة">
+              <div>
+                <b style="color:var(--text-color); font-size:15px; display:block; margin-bottom:4px;">${escapeText(p.title)}</b>
+                <span style="color:var(--dim-color); font-size:12px; display:flex; align-items:center; gap:8px;">
+                  <span class="news-badge" style="padding:1px 8px; font-size:11px; border-radius:4px;">${escapeText(p.category || 'عام')}</span>
+                  <span><i class="fas fa-eye" style="color:var(--gold-primary);"></i> ${p.views || 0}</span>
+                  <span><i class="fas fa-calendar-alt"></i> ${dateStr}</span>
+                </span>
+              </div>
+            </div>
+            <span class="action-btn" style="background:rgba(52,152,219,0.12); color:#3498db; border:1px solid #3498db; border-radius:20px; font-size:12px; padding:4px 12px; white-space:nowrap;">
+              عرض التغطية <i class="fas fa-arrow-left" style="margin-right:4px;"></i>
+            </span>
+          </div>
+        `;
+      });
+      resultsHtml += `</div>`;
+    }
+
+    content.innerHTML = resultsHtml;
+  } catch (err) {
+    content.innerHTML = '<p style="text-align:center; color:var(--danger); padding:15px;">تعذر إتمام البحث حالياً، يرجى إعادة المحاولة.</p>';
+  }
+}
+
+
+
+
+/* ========================================================
+   تشغيل شريط كروت الأخبار العاجلة الأفقي المتحرك
+   (منشورات كاملة مع صور وعناوين وزر قراءة المزيد)
+   ======================================================== */
+/* ========================================================
+   تشغيل شريط كروت الأخبار العاجلة الأفقي المتحرك
+   ======================================================== */
+function renderBreakingNewsCards() {
+  const container = document.getElementById('breakingCardsStream') || document.getElementById('breakingCardsTrack');
+  const section = document.getElementById('breaking-news-horizontal-section') || document.getElementById('breakingNewsCardsSection');
+  if (!container || !section) return;
+
+  let breakingPosts = allPosts.filter(p => 
+    p.status !== 'draft' && 
+    (p.showInBreaking === true || p.isBreaking === true)
+  );
+
+  // إذا لم يتم تحديد خبر كعاجل بعد، يعرض أحدث الأخبار كنموذج تلقائي ليبقى القسم ظاهراً دائماً
+  if (breakingPosts.length === 0) {
+    breakingPosts = allPosts.filter(p => p.status !== 'draft').slice(0, 4);
+  }
+
+  section.style.display = 'block';
+
+  if (breakingPosts.length === 0) {
+    container.innerHTML = '<p style="color:var(--dim-color); padding:20px; font-size:14px;">لا توجد منشورات حالياً في الموقع.</p>';
+    return;
+  }
+
+  let html = '';
+  breakingPosts.forEach(p => {
+    let urls = (Array.isArray(p.mediaUrls) && p.mediaUrls.length > 0 && p.mediaUrls[0])
+      ? p.mediaUrls
+      : (p.mediaUrl ? [p.mediaUrl] : ["https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg"]);
+    
+    const firstImg = urls[0];
+    const fullContent = p.content || '';
+    const shortText = fullContent.length > 95 ? fullContent.substring(0, 95) + '...' : fullContent;
+    const postDate = p.date ? new Date(p.date).toLocaleDateString('ar-IQ') : 'اليوم';
+
+    html += `
+      <div class="breaking-stream-card" onclick="openPublicSingleNews('${p._id}', true)" title="اضغط لقراءة الخبر كاملاً">
+        <div>
+          <img src="${firstImg}" alt="${escapeText(p.title || '')}" class="breaking-stream-img" loading="lazy" onerror="this.src='https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg'">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span class="breaking-card-tag"><i class="fas fa-bolt"></i> عاجل</span>
+            <span style="font-size: 11px; color: var(--gold-primary); border: 1px solid var(--border-gold); padding: 2px 7px; border-radius: 4px; font-weight: 700;">${escapeText(p.category || 'خبر عاجل')}</span>
+          </div>
+          <h4 class="breaking-stream-title">${escapeText(p.title || '')}</h4>
+          <p class="breaking-stream-desc">${shortText}</p>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-subtle);">
+          <span style="font-size: 11.5px; color: var(--dim-color);"><i class="fas fa-calendar-alt" style="color: var(--gold-primary);"></i> ${postDate}</span>
+          <button type="button" class="read-more-btn" style="padding: 4px 10px; font-size: 11.5px;" onclick="event.stopPropagation(); openPublicSingleNews('${p._id}', true)">التفاصيل</button>
+        </div>
+      </div>
+    `;
+  });
+
+  const loopCount = breakingPosts.length < 3 ? 4 : 2;
+  container.innerHTML = html.repeat(loopCount);
+}
+
+function pauseBreakingCardsScroll() {
+  const track = document.getElementById('breakingCardsTrack');
+  if (track) track.style.animationPlayState = 'paused';
+}
+
+function resumeBreakingCardsScroll() {
+  const track = document.getElementById('breakingCardsTrack');
+  if (track) track.style.animationPlayState = 'running';
+}
+
+/* ========================================================
+   التبديل المباشر لحالة الخبر العاجل من لوحة التحكم
+   ======================================================== */
+async function toggleBreakingNewsState(postId) {
+  const post = allPosts.find(p => String(p._id) === String(postId));
+  if (!post) return;
+
+  const currentBreaking = !!(post.isBreaking || post.showInBreaking);
+  const newBreaking = !currentBreaking;
+
+  post.isBreaking = newBreaking;
+  post.showInBreaking = newBreaking;
+
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/posts/${postId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({
+        isBreaking: newBreaking,
+        showInBreaking: newBreaking,
+        showInLatest: true
+      })
+    });
+    if (res.ok) {
+      showToast(newBreaking ? 'تمت إضافة الخبر إلى شريط المنشورات العاجلة بنجاح!' : 'تمت إزالة الخبر من الشريط العاجل', 'info');
+    }
+  } catch(e) {}
+
+  renderBreakingNewsCards();
+  renderDashboard();
+}
+  /* تهيئة وتشغيل الصفحة تلقائياً */
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('sada_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  trackPageVisit();
+  initTicker();
+  renderLiveNews();
+  checkUrlHashForAdmin();
+  if (typeof loadFeaturedAuthors === 'function') loadFeaturedAuthors();
+});
 </script>
 </body>
 </html>

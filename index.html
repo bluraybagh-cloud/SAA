@@ -2134,11 +2134,13 @@ function processLogout() {
 }
 
 async function fetchPostsFromServer(retry = 0) {
+  const grid = document.getElementById('liveNewsGrid');
+  
   try {
     const res = await fetch(`${API_URL}/posts`);
     if (res.ok) {
       const fetched = await res.json();
-      if (Array.isArray(fetched) && fetched.length > 0) {
+      if (Array.isArray(fetched)) {
         allPosts = fetched;
         allPosts.sort((a, b) => {
           const aPinned = a.isPinned ? 1 : 0;
@@ -2149,22 +2151,29 @@ async function fetchPostsFromServer(retry = 0) {
         localStorage.setItem('sada_cached_posts', JSON.stringify(allPosts));
         renderBreakingNewsTicker();
         renderBreakingNewsCards();
-  displayPostsGrid();
+        displayPostsGrid();
+        return;
       }
     }
+    throw new Error("استجابة غير صالحة من السيرفر");
   } catch (err) {
-    console.log("استخدام الكاش المحلي للأخبار:", err.message);
+    console.log("استخدام الكاش المحلي للأخبار بسبب:", err.message);
     const cached = localStorage.getItem('sada_cached_posts');
     if (cached) {
       try {
         allPosts = JSON.parse(cached);
         renderBreakingNewsTicker();
         renderBreakingNewsCards();
-  displayPostsGrid();
+        displayPostsGrid();
+        return;
       } catch (e) {}
     }
+    
+    // محاولة إعادة الاتصال تلقائياً حتى 3 مرات في حال كان خادم Render نائماً
     if (retry < 3) {
-      setTimeout(() => fetchPostsFromServer(retry + 1), 4000);
+      setTimeout(() => fetchPostsFromServer(retry + 1), 3000);
+    } else if (grid) {
+      grid.innerHTML = '<p style="color: var(--danger); text-align: center; grid-column: 1/-1; font-size: 15px; padding: 30px;">تعذر الاتصال بقاعدة البيانات. يرجى التحقق من اتصال الإنترنت أو تحديث الصفحة.</p>';
     }
   }
 }

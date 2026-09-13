@@ -3250,24 +3250,65 @@ async function renderDashboardCards() {
   const tableBody = document.getElementById('dashCardsTable');
   if (!tableBody || !token) return;
 
+  const statusFilter = document.getElementById('filterCardsStatus') ? document.getElementById('filterCardsStatus').value : '';
+  const typeFilter = document.getElementById('filterCardsType') ? document.getElementById('filterCardsType').value : '';
+
+  tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);"><i class="fas fa-spinner fa-spin"></i> جاري جلب كروت العضوية...</td></tr>';
+
+  let url = `${API_URL}/admin/membership-cards?`;
+  if (statusFilter) url += `status=${encodeURIComponent(statusFilter)}&`;
+  if (typeFilter) url += `type=${encodeURIComponent(typeFilter)}&`;
+
   try {
-    const res = await fetch(`${API_URL}/admin/membership-cards`, {
+    const res = await fetch(url, {
       headers: { 'Authorization': token }
     });
     const data = await res.json();
+
     if (res.ok) {
       allAdminCards = data.cards || [];
+      
+      // تحديث الأعداد في الواجهة بدقة
       if (data.stats) {
-        document.getElementById('cardsStatTotal').innerText = data.stats.total || 0;
-        document.getElementById('cardsStatUnused').innerText = data.stats.unused || 0;
-        document.getElementById('cardsStatUsed').innerText = data.stats.used || 0;
-        document.getElementById('cardsStatCancelled').innerText = data.stats.cancelled || 0;
-      }
-      tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);">تم جلب كروت العضوية بنجاح.</td></tr>';
-    }
-  } catch (err) {}
-}
+        const totalEl = document.getElementById('cardsStatTotal');
+        const unusedEl = document.getElementById('cardsStatUnused');
+        const usedEl = document.getElementById('cardsStatUsed');
+        const cancelledEl = document.getElementById('cardsStatCancelled');
 
+        if (totalEl) totalEl.innerText = data.stats.total || 0;
+        if (unusedEl) unusedEl.innerText = data.stats.unused || 0;
+        if (usedEl) usedEl.innerText = data.stats.used || 0;
+        if (cancelledEl) cancelledEl.innerText = data.stats.cancelled || 0;
+      }
+
+      if (allAdminCards.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--dim-color);">لا توجد كروت عضوية مطابقة للفلاتر.</td></tr>';
+        return;
+      }
+
+      tableBody.innerHTML = '';
+      allAdminCards.forEach((c) => {
+        let statusBadge = '<span style="color:#2ecc71; font-weight:700;">جاهز للتفعيل</span>';
+        if (c.status === 'used') statusBadge = '<span style="color:var(--gold-primary); font-weight:700;">تم تفعيله</span>';
+        if (c.status === 'cancelled') statusBadge = '<span style="color:var(--danger); font-weight:700;">ملغى</span>';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><b>${escapeText(c.serialNumber)}</b></td>
+          <td>${c.type === 'annual' ? 'سنوي' : 'شهري'}</td>
+          <td>${statusBadge}</td>
+          <td>${c.usedBy ? escapeText(c.usedBy.username) : '---'}</td>
+          <td>${c.usedAt ? new Date(c.usedAt).toLocaleDateString('ar-IQ') : '---'}</td>
+          <td>${c.createdAt ? new Date(c.createdAt).toLocaleDateString('ar-IQ') : '---'}</td>
+          <td>${c.status === 'unused' ? `<button class="action-btn btn-reject" onclick="cancelMembershipCardAction('${c._id}', '${c.serialNumber}')">إلغاء</button>` : 'مكتمل'}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+  } catch (err) {
+    tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--danger);">تعذر جلب كروت العضوية.</td></tr>';
+  }
+}
 async function generateMembershipCardsAction() {
   const type = document.getElementById('genCardType').value;
   const count = parseInt(document.getElementById('genCardCount').value, 10);

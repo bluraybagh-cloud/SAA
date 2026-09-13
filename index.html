@@ -2128,29 +2128,95 @@ function processLogout() {
   navigateTo('main-page', '#home');
 }
 
-async function fetchPostsFromServer(retry = 0) {
+/* ========================================================
+   دالة عرض كروت الأخبار العاجلة الأفقية (كانت مفقودة تماماً وتسبب توقف الكود)
+   ======================================================== */
+/* ========================================================
+   1. دالة كروت الأخبار العاجلة (مهمة جداً لأن fetchPostsFromServer تستدعيها)
+   ======================================================== */
+function renderBreakingNewsCards() {
+  const stream = document.getElementById('breakingCardsStream');
+  const section = document.getElementById('breaking-news-horizontal-section');
+  if (!stream) return;
+
+  const breakingPosts = allPosts.filter(p => 
+    p.status !== 'draft' && 
+    (p.showInBreaking === true || p.isBreaking === true || p.isPinned === true)
+  );
+
+  if (breakingPosts.length === 0) {
+    if (section) section.style.display = 'none';
+    return;
+  }
+
+  if (section) section.style.display = 'block';
+
+  let html = '';
+  const repeatCount = breakingPosts.length < 3 ? 3 : 2;
+  for (let i = 0; i < repeatCount; i++) {
+    breakingPosts.forEach(p => {
+      const img = (p.mediaUrls && p.mediaUrls.length > 0 && p.mediaUrls[0]) 
+                  ? p.mediaUrls[0] 
+                  : (p.mediaUrl || 'https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg');
+      
+      const fullContent = p.content || '';
+      const shortDesc = fullContent.length > 85 ? fullContent.substring(0, 85) + '...' : fullContent;
+
+      html += `
+        <div class="breaking-stream-card" onclick="openPublicSingleNews('${p._id}', true)">
+          <img src="${img}" alt="${escapeText(p.title)}" class="breaking-stream-img" loading="lazy" onerror="this.src='https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg'">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span class="breaking-card-tag"><i class="fas fa-bolt"></i> عاجل</span>
+              <span style="font-size:11px; color:var(--dim-color);">${p.date ? new Date(p.date).toLocaleDateString('ar-IQ') : 'اليوم'}</span>
+            </div>
+            <h4 class="breaking-stream-title">${escapeText(p.title)}</h4>
+            <p class="breaking-stream-desc">${escapeText(shortDesc)}</p>
+          </div>
+        </div>
+      `;
+    });
+  }
+  stream.innerHTML = html;
+}
+
+/* ========================================================
+   2. دالة جلب الأخبار الجديدة والسريعة
+   ======================================================== */
+async function fetchPostsFromServer(isRetry = false) {
   const newsGrid = document.getElementById('liveNewsGrid');
-  const breakingStream = document.getElementById('breakingCardsStream') || document.getElementById('breakingCardsTrack');
+  const breakingStream = document.getElementById('breakingCardsStream');
 
-  // 1. إظهار بطاقات الانتظار في شبكة أحدث الأخبار فوراً عند بدء التحميل
-  if (newsGrid) {
-    newsGrid.innerHTML = `
-      <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
-      <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
-      <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
-    `;
+  // 1. عرض الأخبار المخزنة مسبقاً فوراً بدون انتظار
+  const cached = localStorage.getItem('sada_cached_posts');
+  if (cached && !isRetry && (!allPosts || allPosts.length === 0)) {
+    try {
+      allPosts = JSON.parse(cached);
+      renderBreakingNewsCards();
+      displayPostsGrid();
+    } catch(e) {}
   }
 
-  // 2. إظهار بطاقات انتظار مصغرة في شريط الأخبار العاجلة أيضاً
-  if (breakingStream) {
-    breakingStream.innerHTML = `
-      <div class="skeleton-card" style="width: 280px; display:inline-block;"><div class="skeleton-box skeleton-img" style="height: 120px;"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc-short"></div></div>
-      <div class="skeleton-card" style="width: 280px; display:inline-block;"><div class="skeleton-box skeleton-img" style="height: 120px;"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc-short"></div></div>
-    `;
+  // 2. إذا لم تكن هناك أي أخبار، أظهر كروت الانتظار المتوهجة (Skeleton)
+  if (!allPosts || allPosts.length === 0) {
+    if (newsGrid) {
+      newsGrid.innerHTML = `
+        <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+        <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+        <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+      `;
+    }
+    if (breakingStream) {
+      breakingStream.innerHTML = `
+        <div class="skeleton-card" style="width: 280px; display:inline-block;"><div class="skeleton-box skeleton-img" style="height: 120px;"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc-short"></div></div>
+        <div class="skeleton-card" style="width: 280px; display:inline-block;"><div class="skeleton-box skeleton-img" style="height: 120px;"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc-short"></div></div>
+      `;
+    }
   }
 
+  // إعطاء مهلة 60 ثانية لسيرفر Render المجاني حتى يستيقظ
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  const timeoutId = setTimeout(() => controller.abort(), 60000);
 
   try {
     const res = await fetch(`${API_URL}/posts`, { signal: controller.signal });
@@ -2166,40 +2232,33 @@ async function fetchPostsFromServer(retry = 0) {
           if (bPinned !== aPinned) return bPinned - aPinned;
           return new Date(b.date || 0) - new Date(a.date || 0);
         });
+
         localStorage.setItem('sada_cached_posts', JSON.stringify(allPosts));
         
-        renderBreakingNewsTicker();
         renderBreakingNewsCards();
         displayPostsGrid();
         return;
       }
     }
-    throw new Error("استجابة غير صالحة");
+    throw new Error("استجابة غير صحيحة من الخادم");
   } catch (err) {
     clearTimeout(timeoutId);
-    console.log("التحول إلى التخزين المحلي:", err.message);
+    console.warn("تنبيه الاتصال:", err.message);
 
-    const cached = localStorage.getItem('sada_cached_posts');
-    if (cached) {
-      try {
-        allPosts = JSON.parse(cached);
-        renderBreakingNewsTicker();
-        renderBreakingNewsCards();
-        displayPostsGrid();
-        return;
-      } catch (e) {}
-    }
-
-    if (retry < 2) {
-      setTimeout(() => fetchPostsFromServer(retry + 1), 3000);
-    } else {
+    if (!allPosts || allPosts.length === 0) {
       if (newsGrid) {
-        newsGrid.innerHTML = '<p style="color: var(--dim-color); text-align: center; grid-column: 1/-1; font-size: 15px; padding: 30px;">جاري تشغيل الخادم السحابي... يرجى تحديث الصفحة بعد ثوانٍ.</p>';
+        newsGrid.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 40px 20px;">
+            <i class="fas fa-satellite-dish fa-spin" style="font-size: 32px; color: var(--gold-primary); margin-bottom: 15px; display: block;"></i>
+            <p style="color: var(--gold-light); font-size: 16px; font-weight: bold; margin-bottom: 8px;">جاري إيقاظ الخادم السحابي وجلب الأخبار...</p>
+            <p style="color: var(--dim-color); font-size: 13.5px;">الخادم المجاني يستغرق ثوانٍ للتشغيل، ستظهر الأخبار تلقائياً فور الاتصال.</p>
+          </div>
+        `;
       }
+      setTimeout(() => fetchPostsFromServer(true), 4000);
     }
   }
 }
-
 function displayPostsGrid() {
   const grid = document.getElementById('liveNewsGrid');
   const paginationDiv = document.getElementById('newsPagination');
@@ -2302,7 +2361,6 @@ function checkUrlHashForAdmin() {
     handleSecretAdminEntry();
   }
 }
-
 async function renderLiveNews() {
   const grid = document.getElementById('liveNewsGrid');
   const mainListView = document.getElementById('mainNewsListView');
@@ -2313,7 +2371,7 @@ async function renderLiveNews() {
   const hash = window.location.hash;
   if (hash && hash.startsWith('#news-')) {
     const targetId = hash.replace('#news-', '');
-    if (allPosts.length > 0) {
+    if (allPosts && allPosts.length > 0) {
       openPublicSingleNews(targetId, false);
       return;
     }
@@ -2328,8 +2386,6 @@ async function renderLiveNews() {
   if (detailView) detailView.style.display = 'none';
 
   await fetchPostsFromServer();
-  renderBreakingNewsCards();
-  displayPostsGrid();
 }
 
 function openPublicSingleNews(postId, updateHash = true) {
@@ -3362,7 +3418,69 @@ async function loadFeaturedAuthors() {
     section.style.display = 'none';
   }
 }
+/* ========================================================
+   دوال إضافية للوحة التحكم (زر تفعيل كعاجل وإدارة الكروت)
+   ======================================================== */
+async function toggleBreakingNewsState(postId) {
+  const token = localStorage.getItem('sada_token');
+  const post = allPosts.find(p => String(p._id) === String(postId));
+  if (!post) return;
 
+  const newState = !(post.isBreaking || post.showInBreaking);
+  try {
+    const res = await fetch(`${API_URL}/posts/${postId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': token },
+      body: JSON.stringify({ isBreaking: newState, showInBreaking: newState })
+    });
+    if (res.ok) {
+      showToast(newState ? 'تم إدراج الخبر في الشريط العاجل!' : 'تمت إزالة الخبر من الشريط العاجل', 'info');
+      await fetchPostsFromServer();
+      renderDashboard();
+    }
+  } catch(e) {
+    showToast('تعذر تغيير حالة الخبر العاجل', 'danger');
+  }
+}
+
+function closeGeneratedCardsBox() {
+  const box = document.getElementById('generatedCardsResultBox');
+  if (box) box.style.display = 'none';
+}
+
+function exportLatestGeneratedCardsCSV() {
+  if (!allAdminCards || allAdminCards.length === 0) {
+    showToast('لا توجد كروت متاحة للتصدير حالياً', 'danger');
+    return;
+  }
+  let csv = "\uFEFFالرقم التسلسلي,نوع العضوية,الحالة,تاريخ الإنشاء\n";
+  allAdminCards.forEach(c => {
+    csv += `"${c.serialNumber}","${c.type === 'annual' ? 'سنوي' : 'شهري'}","${c.status}","${c.createdAt || ''}"\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `كروت_العضوية_${new Date().toISOString().slice(0,10)}.csv`;
+  link.click();
+  showToast('تم تصدير ملف الكروت بنجاح!', 'success');
+}
+
+async function cancelMembershipCardAction(cardId, serial) {
+  if (!confirm(`هل أنت متأكد من إلغاء كارت العضوية رقم (${serial})؟`)) return;
+  const token = localStorage.getItem('sada_token');
+  try {
+    const res = await fetch(`${API_URL}/admin/membership-cards/${cardId}/cancel`, {
+      method: 'PUT',
+      headers: { 'Authorization': token }
+    });
+    if (res.ok) {
+      showToast('تم إلغاء الكارت بنجاح', 'success');
+      renderDashboardCards();
+    }
+  } catch (err) {
+    showToast('تعذر إلغاء الكارت', 'danger');
+  }
+}
 /* التهيئة العامة عند التحميل */
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('sada_theme') || 'dark';

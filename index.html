@@ -2070,7 +2070,6 @@ function navigateTo(pageId, targetSectionId = null) {
 
   if (pageId === 'dashboard-page') renderDashboard();
 }
-
 async function handleSecretAdminEntry() {
   const token = localStorage.getItem('sada_token');
   if (!token) {
@@ -2093,6 +2092,39 @@ async function handleSecretAdminEntry() {
   }
 }
 
+function navigateTo(pageId, targetSectionId = null) {
+  // إخفاء جميع الصفحات الرئيسية والفرعية
+  const pages = ['main-page', 'campaigns-page', 'login-page', 'dashboard-page'];
+  pages.forEach(p => {
+    const el = document.getElementById(p);
+    if (el) el.classList.add('hidden-page');
+  });
+
+  // إظهار الصفحة المستهدفة
+  const target = document.getElementById(pageId);
+  if (target) {
+    target.classList.remove('hidden-page');
+  }
+
+  closeMobileMenu();
+
+  if (pageId === 'main-page') {
+    renderLiveNews();
+    if (targetSectionId) {
+      setTimeout(() => {
+        const sec = document.querySelector(targetSectionId);
+        if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+      }, 60);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  } else if (pageId === 'dashboard-page') {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    renderDashboard();
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
 async function processLogin() {
   const loginId = document.getElementById('loginId').value.trim();
   const pass = document.getElementById('loginPass').value;
@@ -2973,21 +3005,21 @@ function cycleTheme() {
     nextTheme = 'dark';
   }
 
-  document.documentElement.setAttribute('data-theme', nextTheme);
-  localStorage.setItem('sada_theme', nextTheme);
-  showToast(`تم التبديل إلى الثيم: ${nextTheme === 'dark' ? 'الداكن' : nextTheme === 'light' ? 'المضيء' : 'النيون'}`, 'info');
-}
-
-window.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a' || e.key === 'ش')) {
-    e.preventDefault();
-    handleSecretAdminEntry();
-  }
+window.addEventListener('DOMContentLoaded', () => {
+  // 1. تطبيق الثيم المحفوظ
+  const savedTheme = localStorage.getItem('sada_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  
+  // 2. تتبع الزيارات وتشغيل الشريط العاجل
+  trackPageVisit();
+  initTicker();
+  
+  // 3. جلب الأخبار (التي تعرض بطاقات الانتظار تلقائياً في بدايتها)
+  renderLiveNews();
+  
+  // 4. فحص الرابط إن كان يحمل مسار الآدمن
+  checkUrlHashForAdmin();
 });
-
-window.addEventListener('hashchange', checkUrlHashForAdmin);
-
-
 /* ========================================================
    دوال التفاعلات والتعليقات على الأخبار في الصفحة الرئيسية
    ======================================================== */

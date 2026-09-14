@@ -27,11 +27,19 @@
 <meta name="twitter:description" content="وكالة صدى العطاء" id="twDesc">
 <meta name="twitter:image" content="https://i.postimg.cc/vBQyqJ4V/IMG-7018.png" id="twImage">
 
+<link rel="preconnect" href="https://sada-backend-mm3p.onrender.com" crossorigin>
+<link rel="dns-prefetch" href="//sada-backend-mm3p.onrender.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+  /* تقليل كلفة الرسم الأول للصفحة الطويلة */
+  .campaign-section, .services-section, .about-section, .contact-section, footer {
+    content-visibility: auto;
+    contain-intrinsic-size: 700px;
+  }
+
   :root {
     --gold-primary: #D4AF37;
     --gold-light: #F3E5AB;
@@ -1806,6 +1814,16 @@ let currentNewsPage = 1;
 const newsPerPage = 6;
 let globalVisitsCount = 0;
 
+// تحسين سرعة جلب الأخبار بدون حذف أي ميزة
+let postsFetchPromise = null;
+let postsLastFetchAt = 0;
+const POSTS_CACHE_TTL = 15000;
+const POSTS_FETCH_TIMEOUT = 3500;
+const PUBLIC_POST_LIMIT = 6;
+const ADMIN_POST_LIMIT = 20;
+const POSTS_CACHE_KEY = 'sada_cached_posts';
+const POSTS_CACHE_TIME_KEY = 'sada_cached_posts_time';
+
 /* ========================================================
    نظام الإشعارات Toast
    ======================================================== */
@@ -2154,7 +2172,7 @@ function renderBreakingNewsCards() {
                   ? p.mediaUrls[0] 
                   : (p.mediaUrl || 'https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg');
       
-      const fullContent = p.content || '';
+      const fullContent = p.content || p.excerpt || '';
       const shortDesc = fullContent.length > 85 ? fullContent.substring(0, 85) + '...' : fullContent;
 
       html += `
@@ -2178,54 +2196,93 @@ function renderBreakingNewsCards() {
 /* ========================================================
    دالة جلب الأخبار (خفيفة وسريعة للموبايل)
    ======================================================== */
-async function fetchPostsFromServer() {
+async function fetchPostsFromServer(options = {}) {
   const newsGrid = document.getElementById('liveNewsGrid');
+  const force = options.force === true;
+  const limit = Number(options.limit) || PUBLIC_POST_LIMIT;
+  const now = Date.now();
 
-  // 1. عرض الكاش فوراً إن وجد
+  // منع تكرار الطلبات المتزامنة
+  if (postsFetchPromise && !force) return postsFetchPromise;
+
+  let hasUsableData = Array.isArray(allPosts) && allPosts.length > 0;
+
+  // عرض الكاش فوراً حتى لا ينتظر المستخدم استجابة السيرفر
   try {
-    const cached = localStorage.getItem('sada_cached_posts');
-    if (cached && (!allPosts || allPosts.length === 0)) {
-      allPosts = JSON.parse(cached);
-      renderBreakingNewsCards();
-      displayPostsGrid();
-    }
-  } catch(e) {}
-
-  // 2. كروت الانتظار في أول تحميل فقط
-  if (!allPosts || allPosts.length === 0) {
-    if (newsGrid) {
-      newsGrid.innerHTML = `
-        <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
-        <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
-        <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
-      `;
-    }
-  }
-
-  try {
-    const res = await fetch(`${API_URL}/posts?limit=20`);
-    if (res.ok) {
-      const fetched = await res.json();
-      if (Array.isArray(fetched)) {
-        allPosts = fetched;
-        allPosts.sort((a, b) => {
-          const aPinned = a.isPinned ? 1 : 0;
-          const bPinned = b.isPinned ? 1 : 0;
-          if (bPinned !== aPinned) return bPinned - aPinned;
-          return new Date(b.date || 0) - new Date(a.date || 0);
-        });
-
-        try {
-          localStorage.setItem('sada_cached_posts', JSON.stringify(allPosts));
-        } catch(quotaErr) {}
-
+    const cached = localStorage.getItem(POSTS_CACHE_KEY);
+    if (!hasUsableData && cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed)) {
+        allPosts = parsed;
+        hasUsableData = allPosts.length > 0;
         renderBreakingNewsCards();
         displayPostsGrid();
       }
     }
-  } catch (err) {
-    console.warn("تنبيه الاتصال:", err.message);
+  } catch (e) {}
+
+  const cachedAt = Number(localStorage.getItem(POSTS_CACHE_TIME_KEY) || 0);
+  if (!force && hasUsableData && (now - Math.max(postsLastFetchAt, cachedAt)) < POSTS_CACHE_TTL) {
+    return allPosts;
   }
+
+  // بطاقات الانتظار تبقى ولا تظهر إلا عند عدم وجود أخبار قابلة للعرض
+  if (!hasUsableData && newsGrid && !newsGrid.querySelector('.skeleton-card')) {
+    newsGrid.innerHTML = `
+      <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+      <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+      <div class="skeleton-card"><div class="skeleton-box skeleton-img"></div><div class="skeleton-box skeleton-title"></div><div class="skeleton-box skeleton-desc"></div><div class="skeleton-box skeleton-desc-short"></div><div class="skeleton-box skeleton-btn"></div></div>
+    `;
+  }
+
+  postsFetchPromise = (async () => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), POSTS_FETCH_TIMEOUT);
+
+    try {
+      const res = await fetch(`${API_URL}/posts?view=${limit <= PUBLIC_POST_LIMIT ? 'public' : 'admin'}&limit=${limit}`, {
+        signal: controller.signal,
+        cache: 'default'
+      });
+
+      if (res.ok) {
+        const fetched = await res.json();
+
+        if (Array.isArray(fetched)) {
+          allPosts = fetched;
+          allPosts.sort((a, b) => {
+            const aPinned = a.isPinned ? 1 : 0;
+            const bPinned = b.isPinned ? 1 : 0;
+            if (bPinned !== aPinned) return bPinned - aPinned;
+            return new Date(b.date || 0) - new Date(a.date || 0);
+          });
+
+          postsLastFetchAt = Date.now();
+
+          try {
+            localStorage.setItem(POSTS_CACHE_KEY, JSON.stringify(allPosts));
+            localStorage.setItem(POSTS_CACHE_TIME_KEY, String(postsLastFetchAt));
+          } catch (quotaErr) {}
+
+          renderBreakingNewsCards();
+          displayPostsGrid();
+        }
+      }
+    } catch (err) {
+      if (err && err.name === 'AbortError') {
+        console.warn('انتهت مهلة جلب الأخبار، تم الاحتفاظ بالأخبار المخزنة مؤقتاً.');
+      } else {
+        console.warn('تنبيه الاتصال:', err.message);
+      }
+    } finally {
+      clearTimeout(timeoutId);
+      postsFetchPromise = null;
+    }
+
+    return allPosts;
+  })();
+
+  return postsFetchPromise;
 }
 
 /* ========================================================
@@ -2258,7 +2315,7 @@ function displayPostsGrid() {
   const start = (currentNewsPage - 1) * newsPerPage;
   const paginatedPosts = publishedPosts.slice(start, start + newsPerPage);
 
-  paginatedPosts.forEach((p) => {
+  paginatedPosts.forEach((p, cardIndex) => {
     let urls = [];
     if (Array.isArray(p.mediaUrls) && p.mediaUrls.length > 0 && p.mediaUrls[0]) {
       urls = p.mediaUrls;
@@ -2270,7 +2327,7 @@ function displayPostsGrid() {
 
     let mediaHtml = '';
     if (urls.length === 1) {
-      mediaHtml = `<img src="${urls[0]}" alt="${escapeText(p.title || '')}" class="campaign-img" loading="lazy" onerror="this.src='https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg'">`;
+      mediaHtml = `<img src="${urls[0]}" alt="${escapeText(p.title || '')}" class="campaign-img" loading="${cardIndex === 0 ? 'eager' : 'lazy'}" fetchpriority="${cardIndex === 0 ? 'high' : 'low'}" decoding="async" onerror="this.src='https://i.postimg.cc/pTtr2cpX/IMG-6997.jpg'">`;
     } else {
       mediaHtml = `<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 12px;">`;
       urls.forEach(imgUrl => {
@@ -2279,7 +2336,7 @@ function displayPostsGrid() {
       mediaHtml += `</div>`;
     }
 
-    const fullContent = p.content || '';
+    const fullContent = p.content || p.excerpt || '';
     const shortText = fullContent.length > 130 ? fullContent.substring(0, 130) + '...' : fullContent;
     const postDate = p.date ? new Date(p.date).toLocaleDateString('ar-IQ') : 'اليوم';
 
@@ -2358,17 +2415,38 @@ async function renderLiveNews() {
   if (mainListView) mainListView.style.display = 'block';
   if (detailView) detailView.style.display = 'none';
 
-  await fetchPostsFromServer();
+  // لا ننتظر السيرفر حتى تظهر الصفحة فوراً؛ الكاش/السكيليتون يظهران أولاً.
+  // جلب الأخبار يعمل بالخلفية ويحدّث الكروت عند وصول البيانات.
+  fetchPostsFromServer({ limit: PUBLIC_POST_LIMIT }).catch(() => {});
 }
 
 /* ========================================================
    فتح تفاصيل الخبر (المشاهدات محجوبة عن الجمهور)
    ======================================================== */
-function openPublicSingleNews(postId, updateHash = true) {
-  incrementPostViews(postId);
-  
-  const post = allPosts.find(p => String(p._id) === String(postId));
+async function openPublicSingleNews(postId, updateHash = true) {
+  let post = allPosts.find(p => String(p._id) === String(postId));
   if(!post) return;
+
+  // الصفحة العامة تجلب ملخص الخبر فقط لتقليل حجم الاستجابة؛ التفاصيل الكاملة تُجلب عند فتح الخبر.
+  if (!post.content && !post.__detailsLoaded) {
+    try {
+      const detailRes = await fetch(`${API_URL}/posts/${encodeURIComponent(postId)}`, { cache: 'default' });
+      if (detailRes.ok) {
+        const fullPost = await detailRes.json();
+        const index = allPosts.findIndex(p => String(p._id) === String(postId));
+        if (index !== -1) {
+          allPosts[index] = { ...allPosts[index], ...fullPost, __detailsLoaded: true };
+        }
+      }
+    } catch (e) {
+      console.warn('تعذر جلب تفاصيل الخبر:', e.message);
+    }
+  }
+
+  const freshPost = allPosts.find(p => String(p._id) === String(postId));
+  if (!freshPost) return;
+  post = freshPost;
+  incrementPostViews(postId);
 
   document.title = `${post.title} - وكالة صدى العطاء`;
 
@@ -2598,7 +2676,7 @@ async function approveAdAction(id) {
     if (res.ok) {
       showToast('تمت الموافقة على الإعلان ونشره كخبر في الموقع!', 'success');
       renderDashboardAds();
-      fetchPostsFromServer().then(() => displayPostsGrid());
+      fetchPostsFromServer({ force: true, limit: ADMIN_POST_LIMIT }).then(() => displayPostsGrid());
     }
   } catch(e) {
     showToast('حدث خطأ في الموافقة', 'danger');
@@ -2640,15 +2718,19 @@ async function renderDashboard() {
   }
 
   document.getElementById('dashUserName').innerText = localStorage.getItem('sada_admin_name') || 'sada_admin';
-  await fetchPostsFromServer();
-  
-  await updateDashboardStats();
+
+  // الأخبار أولاً، ثم بقية أقسام لوحة التحكم بالتوازي
+  await fetchPostsFromServer({ limit: ADMIN_POST_LIMIT });
   initTicker();
-  renderDashboardAds();
-  renderDashboardUsers();
-  renderDashboardComments();
-  renderDashboardCards();
-  renderDashboardMemberPosts();
+
+  await Promise.allSettled([
+    updateDashboardStats(),
+    renderDashboardAds(),
+    renderDashboardUsers(),
+    renderDashboardComments(),
+    renderDashboardCards(),
+    renderDashboardMemberPosts()
+  ]);
 
   const tableBody = document.getElementById('dashPostsTable');
   tableBody.innerHTML = '';
@@ -2677,6 +2759,10 @@ async function renderDashboard() {
         <button type="button" class="action-btn" onclick="toggleBreakingNewsState('${item._id}')" style="background:${(item.isBreaking || item.showInBreaking) ? '#e74c3c' : 'var(--surface-light)'}; color:${(item.isBreaking || item.showInBreaking) ? '#fff' : 'var(--text-color)'}; border:1px solid ${(item.isBreaking || item.showInBreaking) ? '#e74c3c' : 'var(--border-gold)'}; margin-left:4px;">
           <i class="fas fa-bolt"></i> ${(item.isBreaking || item.showInBreaking) ? 'عاجل (نشط)' : 'تفعيل كعاجل'}
         </button>
+        ${(item.isBreaking || item.showInBreaking) ? `
+        <button type="button" class="action-btn btn-delete" onclick="removeBreakingNewsOnly('${item._id}', event)" title="إزالة الخبر من الأخبار العاجلة فقط" style="margin-left:4px;">
+          <i class="fas fa-bolt"></i> حذف من العاجل
+        </button>` : ''}
         <button class="action-btn btn-edit" onclick="startEditPost('${item._id}')"><i class="fas fa-edit"></i> تعديل</button>
         <button class="action-btn btn-delete" onclick="deletePostAction('${item._id}')"><i class="fas fa-trash"></i> حذف</button>
       </td>
@@ -2731,10 +2817,11 @@ async function savePostAction() {
     if (response.ok) {
       showToast(editId ? 'تم تحديث بيانات الخبر بنجاح!' : (status === 'draft' ? 'تم حفظ المسودة بنجاح!' : 'تم نشر الخبر الجديد بنجاح!'), 'success');
       resetNewsForm();
-      await fetchPostsFromServer();
-      renderDashboard();
+      postsLastFetchAt = 0;
       renderBreakingNewsCards();
       displayPostsGrid();
+      renderDashboard();
+      fetchPostsFromServer({ force: true, limit: ADMIN_POST_LIMIT });
     } else {
       showToast('انتهت الجلسة، يرجى إعادة تسجيل الدخول', 'danger');
       processLogout();
@@ -2855,11 +2942,31 @@ async function executeDeletePost(id, target = 'both') {
     const data = await response.json();
 
     if (response.ok) {
-      showToast(data.message || 'تم تنفيذ عملية الحذف بنجاح', 'info');
-      await fetchPostsFromServer();
-      renderDashboard();
+      if (target === 'breaking') {
+        const localPost = allPosts.find(p => String(p._id) === String(id));
+        if (localPost) {
+          localPost.isBreaking = false;
+          localPost.showInBreaking = false;
+        }
+      } else if (target === 'latest') {
+        const localPost = allPosts.find(p => String(p._id) === String(id));
+        if (localPost) localPost.showInLatest = false;
+      } else {
+        allPosts = allPosts.filter(p => String(p._id) !== String(id));
+      }
+
+      try {
+        localStorage.setItem(POSTS_CACHE_KEY, JSON.stringify(allPosts));
+        localStorage.setItem(POSTS_CACHE_TIME_KEY, String(Date.now()));
+      } catch (e) {}
+
       renderBreakingNewsCards();
       displayPostsGrid();
+      renderDashboard();
+      showToast(data.message || 'تم تنفيذ عملية الحذف بنجاح', 'success');
+
+      // مزامنة هادئة بالخلفية
+      fetchPostsFromServer({ force: true, limit: ADMIN_POST_LIMIT });
     } else {
       showToast(data.error || 'خطأ في عملية الحذف', 'danger');
     }
@@ -3350,6 +3457,58 @@ async function loadFeaturedAuthors() {
     section.style.display = 'block';
   } catch (err) {
     section.style.display = 'none';
+  }
+}
+
+/* ========================================================
+   حذف الخبر من الأخبار العاجلة فقط — يبقى في أحدث الأخبار
+   ======================================================== */
+async function removeBreakingNewsOnly(postId, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  const token = localStorage.getItem('sada_token');
+  const post = allPosts.find(p => String(p._id) === String(postId));
+  if (!post || !token) return;
+
+  if (!confirm(`هل تريد إزالة الخبر "${post.title || ''}" من الأخبار العاجلة فقط؟\nسيبقى الخبر منشوراً في أحدث الأخبار.`)) {
+    return;
+  }
+
+  // تغيير فوري في الواجهة
+  post.isBreaking = false;
+  post.showInBreaking = false;
+
+  try {
+    localStorage.setItem(POSTS_CACHE_KEY, JSON.stringify(allPosts));
+    localStorage.setItem(POSTS_CACHE_TIME_KEY, String(Date.now()));
+  } catch (e) {}
+
+  renderBreakingNewsCards();
+  displayPostsGrid();
+
+  try {
+    const res = await fetch(`${API_URL}/posts/${postId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ isBreaking: false, showInBreaking: false })
+    });
+
+    if (res.ok) {
+      showToast('تم حذف الخبر من الأخبار العاجلة فقط، وبقي في أحدث الأخبار', 'success');
+      renderDashboard();
+    } else {
+      await fetchPostsFromServer({ force: true, limit: ADMIN_POST_LIMIT });
+      showToast('تعذر إزالة الخبر من الأخبار العاجلة', 'danger');
+    }
+  } catch (e) {
+    await fetchPostsFromServer({ force: true, limit: ADMIN_POST_LIMIT });
+    showToast('تعذر الاتصال بالسيرفر لإزالة الخبر العاجل', 'danger');
   }
 }
 

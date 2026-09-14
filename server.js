@@ -29,8 +29,11 @@ app.use(express.json({ limit: '30mb' }));
 
 
 const PORT = process.env.PORT || 5000;
-const SECRET_KEY = process.env.JWT_SECRET || "Sada@Agency_Secret_Key_2026_Secure_Token";
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sada_admin:Sada%402026%23Secure_Pass99!@cluster0.hrvqt9v.mongodb.net/sada_agency?appName=Cluster0';
+const SECRET_KEY = process.env.JWT_SECRET || '';
+const MONGODB_URI = process.env.MONGODB_URI || '';
+
+if (!SECRET_KEY) console.warn('تنبيه: JWT_SECRET غير مضبوط في متغيرات البيئة.');
+if (!MONGODB_URI) console.error('خطأ: MONGODB_URI غير مضبوط في متغيرات البيئة.');
 
 
 // ==========================================
@@ -53,8 +56,9 @@ async function verifyPassword(plainPassword, storedPassword) {
     }
     if (storedPassword.startsWith('pbkdf2:')) {
       const parts = storedPassword.split(':');
-const salt = parts;
-const originalHash = parts;
+        if (parts.length !== 3) return false;
+        const salt = parts[1];
+        const originalHash = parts[2];
         const hash = crypto.pbkdf2Sync(plainPassword, salt, 1000, 64, 'sha512').toString('hex');
         return hash === originalHash;
     }
@@ -188,6 +192,9 @@ const PostSchema = new mongoose.Schema({
     commentsCount: { type: Number, default: 0 },
     date: { type: String, default: () => new Date().toISOString().split('T')[0] }
 }, { timestamps: true });
+PostSchema.index({ status: 1, showInLatest: 1, isPinned: -1, date: -1 });
+PostSchema.index({ status: 1, showInBreaking: 1, date: -1 });
+PostSchema.index({ date: -1 });
 const Post = mongoose.model('Post', PostSchema);
 
 const ReactionSchema = new mongoose.Schema({
@@ -281,45 +288,55 @@ const MemberPost = mongoose.model('MemberPost', MemberPostSchema);
 // ==========================================
 // 4. الاتصال بقاعدة البيانات والتهيئة
 // ==========================================
-mongoose.connect(MONGODB_URI)
-  .then(async () => {
-      console.log("تم الاتصال بقاعدة البيانات السحابية بنجاح وبأمان.");
-      try {
-          const adminUsername = "sada_admin";
-          const adminPasswordRaw = "Sada@2026#Secure_Pass99!";
-          const existingAdmin = await User.findOne({ username: adminUsername });
+const mongoOptions = {
+    maxPoolSize: 10,
+    minPoolSize: 1,
+    serverSelectionTimeoutMS: 5000,
+    connectTimeoutMS: 5000,
+    socketTimeoutMS: 10000,
+    family: 4
+};
 
+let dbReady = false;
 
-          if (!existingAdmin) {
-              const secureHashedPassword = await hashPassword(adminPasswordRaw);
-              await new User({
-                  fullName: "مشرف الوكالة الرئيسي",
-                  username: adminUsername,
-                  email: "admin@sadaalataa.com",
-                  phone: "07827992437",
-                  password: secureHashedPassword,
-                  status: "approved",
-                  role: "ADMIN"
-              }).save();
-          }
+async function initializeDatabase() {
+    if (!MONGODB_URI) throw new Error('MONGODB_URI غير مضبوط');
+    await mongoose.connect(MONGODB_URI, mongoOptions);
+    dbReady = true;
+    console.log('تم الاتصال بقاعدة البيانات السحابية بنجاح.');
 
+    try {
+        const adminUsername = process.env.ADMIN_USERNAME || 'sada_admin';
+        const adminPasswordRaw = process.env.ADMIN_PASSWORD || '';
+        const adminEmail = process.env.ADMIN_EMAIL || 'admin@sadaalataa.com';
+        const adminPhone = process.env.ADMIN_PHONE || '';
+        const existingAdmin = await User.findOne({ username: adminUsername }).lean();
 
-          const existingStat = await Stat.findOne({ key: 'global_visits' });
-          if (!existingStat) {
-              await new Stat({ key: 'global_visits', visits: 0 }).save();
-          }
+        if (!existingAdmin && adminPasswordRaw) {
+            const secureHashedPassword = await hashPassword(adminPasswordRaw);
+            await new User({
+                fullName: process.env.ADMIN_FULL_NAME || 'مشرف الوكالة الرئيسي',
+                username: adminUsername,
+                email: adminEmail,
+                phone: adminPhone,
+                password: secureHashedPassword,
+                status: 'approved',
+                role: 'ADMIN'
+            }).save();
+            console.log('تم إنشاء حساب الإدارة من متغيرات البيئة.');
+        }
 
+        const existingStat = await Stat.findOne({ key: 'global_visits' }).lean();
+        if (!existingStat) {
+            await new Stat({ key: 'global_visits', visits: 0 }).save();
+        }
 
-          await Post.updateMany(
-              { views: { $exists: false } },
-              { $set: { views: 0, shares: 0, likesCount: 0, dislikesCount: 0, commentsCount: 0, status: 'published', isPinned: false } }
-          );
-      } catch (e) {
-          console.error("تنبيه تهيئة:", e.message);
-      }
-  })
-  .catch(err => console.error("خطأ اتصال مونغو:", err.message));
-
+        // لا ننفذ Post.updateMany عند كل إعادة تشغيل؛ كانت عملية ثقيلة تؤخر أول طلب.
+        // إذا احتجت ترحيل بيانات قديمة، نفّذه مرة واحدة بشكل منفصل.
+    } catch (e) {
+        console.error('تنبيه تهيئة:', e.message);
+    }
+}
 
 // ==========================================
 // 5. طبقات الصلاحيات والـ Middlewares
@@ -1519,16 +1536,71 @@ app.post('/api/posts/:id/comments', verifyActiveUser, async (req, res) => {
 // ==========================================
 // 14. مسارات لوحة تحكم الأدمن للمستخدمين والتعليقات والأخبار
 // ==========================================
+// كاش قصير للواجهة العامة لتقليل استعلامات Mongo المتكررة.
+let publicPostsCache = { data: null, expiresAt: 0 };
+const PUBLIC_CACHE_TTL = 5000;
+
+function invalidatePublicPostsCache() {
+    publicPostsCache.data = null;
+    publicPostsCache.expiresAt = 0;
+}
+
 app.get('/api/posts', async (req, res) => {
     try {
-        const limit = parseInt(req.query.limit) || 20;
+        const isPublic = req.query.view === 'public' || req.query.public === '1';
+        const requestedLimit = Number.parseInt(req.query.limit, 10);
+        const limit = Math.min(Math.max(Number.isFinite(requestedLimit) ? requestedLimit : (isPublic ? 6 : 20), 1), isPublic ? 12 : 100);
+
+        if (isPublic) {
+            const now = Date.now();
+            if (publicPostsCache.data && publicPostsCache.expiresAt > now) {
+                res.set('Cache-Control', 'public, max-age=5, stale-while-revalidate=20');
+                return res.json(publicPostsCache.data);
+            }
+
+            const [latest, breaking] = await Promise.all([
+                Post.find({ status: 'published', showInLatest: { $ne: false } })
+                    .sort({ isPinned: -1, date: -1, _id: -1 })
+                    .limit(limit)
+                    .select('_id title category mediaType mediaUrls date isPinned showInBreaking showInLatest likesCount dislikesCount commentsCount content')
+                    .lean(),
+                Post.find({ status: 'published', showInBreaking: true })
+                    .sort({ date: -1, _id: -1 })
+                    .limit(3)
+                    .select('_id title category mediaType mediaUrls date isPinned showInBreaking showInLatest likesCount dislikesCount commentsCount content')
+                    .lean()
+            ]);
+
+            const byId = new Map();
+            [...latest, ...breaking].forEach(post => {
+                if (!byId.has(String(post._id))) {
+                    const excerpt = (post.content || '').replace(/\s+/g, ' ').trim().slice(0, 180);
+                    byId.set(String(post._id), { ...post, excerpt, content: undefined });
+                }
+            });
+
+            const result = Array.from(byId.values())
+                .sort((a, b) => {
+                    const pinDiff = Number(Boolean(b.isPinned)) - Number(Boolean(a.isPinned));
+                    if (pinDiff) return pinDiff;
+                    return new Date(b.date || 0) - new Date(a.date || 0);
+                })
+                .slice(0, Math.max(limit, 6));
+
+            publicPostsCache = { data: result, expiresAt: now + PUBLIC_CACHE_TTL };
+            res.set('Cache-Control', 'public, max-age=5, stale-while-revalidate=20');
+            return res.json(result);
+        }
+
         const posts = await Post.find()
-            .sort({ _id: -1 })
+            .sort({ isPinned: -1, date: -1, _id: -1 })
             .limit(limit)
             .select('-__v')
             .lean();
+        res.set('Cache-Control', 'private, no-cache');
         res.json(posts || []);
     } catch (err) {
+        console.error('GET /api/posts:', err.message);
         res.status(500).json({ error: "تعذر جلب الأخبار" });
     }
 });
@@ -1585,6 +1657,7 @@ app.post('/api/posts', verifyAdmin, async (req, res) => {
         });
 
         await newPost.save();
+        invalidatePublicPostsCache();
         res.json({ message: "تم نشر الخبر بنجاح", post: newPost });
     } catch (err) {
         res.status(500).json({ error: "تعذر نشر الخبر" });
@@ -1612,6 +1685,7 @@ app.put('/api/posts/:id', verifyAdmin, async (req, res) => {
         }
 
         await Post.findByIdAndUpdate(req.params.id, updateData);
+        invalidatePublicPostsCache();
         res.json({ message: "تم التعديل بنجاح" });
     } catch (err) {
         res.status(500).json({ error: "تعذر تعديل الخبر" });
@@ -1629,23 +1703,28 @@ app.delete('/api/posts/:id', verifyAdmin, async (req, res) => {
             if (!post) return res.status(404).json({ error: "الخبر غير موجود" });
             if (!post.showInLatest) {
                 await Post.findByIdAndDelete(req.params.id);
+                invalidatePublicPostsCache();
                 return res.json({ message: "تم حذف الخبر نهائياً لعدم ظهوره في أحدث الأخبار" });
             }
             post.showInBreaking = false;
             await post.save();
+            invalidatePublicPostsCache();
             return res.json({ message: "تمت إزالة الخبر من الأخبار العاجلة بنجاح", post });
         } else if (target === 'latest') {
             const post = await Post.findById(req.params.id);
             if (!post) return res.status(404).json({ error: "الخبر غير موجود" });
             if (!post.showInBreaking) {
                 await Post.findByIdAndDelete(req.params.id);
+                invalidatePublicPostsCache();
                 return res.json({ message: "تم حذف الخبر نهائياً لعدم ظهوره في الأخبار العاجلة" });
             }
             post.showInLatest = false;
             await post.save();
+            invalidatePublicPostsCache();
             return res.json({ message: "تمت إزالة الخبر من أحدث الأخبار بنجاح", post });
         } else {
             await Post.findByIdAndDelete(req.params.id);
+            invalidatePublicPostsCache();
             res.json({ message: "تم حذف الخبر بالكامل بنجاح" });
         }
     } catch (err) {
@@ -1877,7 +1956,17 @@ app.get('/api/search', async (req, res) => {
         res.status(500).json({ error: "تعذر إجراء عملية البحث" });
     }
 });
-// تشغيل السيرفر
-app.listen(PORT, () => {
-    console.log(`السيرفر يعمل الآن بأمان كامل على المنفذ ${PORT}`);
-});
+// تشغيل السيرفر بعد جاهزية Mongo حتى لا يستقبل أول طلب قبل اكتمال الاتصال.
+async function startServer() {
+    try {
+        await initializeDatabase();
+        app.listen(PORT, () => {
+            console.log(`السيرفر يعمل الآن على المنفذ ${PORT}`);
+        });
+    } catch (err) {
+        console.error('فشل تشغيل السيرفر:', err.message);
+        process.exit(1);
+    }
+}
+
+startServer();
